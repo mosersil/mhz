@@ -23,3 +23,7 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+
+#Data files
+/src/main/resources/db/static/*.csv
