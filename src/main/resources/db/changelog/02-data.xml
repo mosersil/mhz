@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="02" author="silvio">
+
+
+        <loadData tableName="CALENDAR_EVENT" file="../static/calendar.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="USER" file="../static/user.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="MEMBERSHIP" file="../static/membership.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="ORGANIZATION" file="../static/organization.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="PERSON" file="../static/person.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="ROLE" file="../static/role.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="USER_ROLE" file="../static/user_role.csv" relativeToChangelogFile="true" quotchar="'" />
+
+<!--
+        <insert tableName="PERSON">
+            <column name="FIRST_NAME" value="Max" />
+            <column name="LAST_NAME" value="Muster" />
+            <column name="GENDER" value="1" />
+        </insert>
+-->
+
+    </changeSet>
+</databaseChangeLog>

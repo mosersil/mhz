@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="01" author="silvio">
+        <createTable tableName="CALENDAR_EVENT"
+                     remarks="Calendar events">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="ADVERTISE" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DATE" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DRESS_CODE" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FULL_DAY" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PUBLIC_EVENT" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="REMARKS" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="TITLE" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+
+
+
+        <createTable tableName="USER">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+
+            <column name="USERNAME" type="varchar">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="PASSWORD" type="varchar">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="CREATED_DATE" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="LAST_MODIFIED_DATE" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="PERSON_ID" type="long">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+        <createTable tableName="ROLE">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="ROLE_TYPE" type="int">
+                <constraints nullable="false" />
+            </column>
+            <!--
+            <column name="USER_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+            -->
+        </createTable>
+
+        <createTable tableName="USER_ROLE">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="USER_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+            <column name="ROLE_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+
+        <createTable tableName="PERSON">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="FIRST_NAME" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="LAST_NAME" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="GENDER" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="ORGANIZATION">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="NAME" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="MEMBERSHIP">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="PERSON_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+            <column name="ORGANIZATION_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+            <column name="JOIN_DATE" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="LEAVE_DATE" type="datetime">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+
+        <!--
+        <createTable tableName="authors"
+                     remarks="A table to contain all the authors">
+            <column name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="books" baseColumnNames="author"
+                                 constraintName="author_fk"
+                                 referencedTableName="authors" referencedColumnNames="id"/>
+                                 -->
+    </changeSet>
+</databaseChangeLog>
