@@ -17,6 +17,9 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
+            <a class="nav-link" href="#cont_news">Aktuell</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#cont_aboutus">Über uns</a>
           </li>
           <li class="nav-item">
@@ -28,29 +31,41 @@
           <li class="nav-item">
             <a class="nav-link" href="#cont_contact">Kontakt</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/app"><i class="fa d-inline fa-lg fa-user-circle-o"></i>&nbsp;Intern</a></a>
+          </li>
         </ul>
       </div>
     </div>
-    <a class="btn navbar-btn ml-2 text-white btn-secondary" href="/app">
-      <i class="fa d-inline fa-lg fa-user-circle-o"></i>&nbsp;Intern</a>
   </nav>
-  <div class="py-5 text-center" style="background-image: url(&quot;http://via.placeholder.com/1173x781&quot;);">
+  <div class="py-5 text-center" style="background-image: url(http://via.placeholder.com/1200x800);">
     <div class="container py-5">
       <div class="row">
         <div class="col-md-12">
           <h1 class="display-3 mb-4 text-primary">Musikverein Harmonie Zürich-Oberstrass</h1>
-          <p class="lead mb-5">Kurzer Introtext, z.b. Hinweis zu nächstem Anlass, usw.</p>
-          <a href="#" class="btn btn-lg mx-1 btn-secondary">Button für z.b. Programm download</a>
+          <p id="banner_title" class="lead mb-5">Kurzer Introtext, z.b. Hinweis zu nächstem Anlass, usw.</p>
+          <a href="#cont_news" class="btn btn-lg mx-1 btn-secondary">Mehr...</a>
         </div>
       </div>
     </div>
   </div>
   <div class="py-5">
-    <div class="container">
+    <div id="cont_news" class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="cont_news_title" class="text-primary">
+          </h1>
+          <p id="cont_news_content" class=""></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div id="cont_aboutus" class="container">
       <div class="row">
         <div class="col-md-12">
           <h1 class="text-primary">
-            <a name="cont_aboutus" class="text-primary">Über uns</a>
+            Über uns
           </h1>
           <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
             irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -59,11 +74,11 @@
     </div>
   </div>
   <div class="py-5">
-    <div class="container">
+    <div id="cont_agenda" class="container">
       <div class="row">
         <div class="col-md-12">
           <h1 class="text-primary">
-            <a name="cont_agenda" class="text-primary">Hier können Sie uns hören</a>
+            Hier können Sie uns hören
           </h1>
           <ul id="ul_next_vents" class="">
             <li>One</li>
@@ -76,11 +91,11 @@
     </div>
   </div>
   <div class="py-5 text-white">
-    <div class="container">
+    <div id="cont_social" class="container">
       <div class="row">
         <div class="col-md-12">
           <h1 class="text-primary">
-            <a name="cont_social" class="text-primary">Interaktiv</a>
+            Interaktiv
           </h1>
           <div class="row">
             <div class="p-0 col-md-2 col-6">
@@ -113,11 +128,11 @@
     </div>
   </div>
   <div class="py-5 text-white">
-    <div class="container">
+    <div id="cont_contact" class="container">
       <div class="row">
         <div class="col-md-12">
           <h1 class="text-primary">
-            <a name="cont_contact" class="text-primary">Kontaktieren Sie uns</a>
+             Kontaktieren Sie uns
           </h1>
           <p>Es freut uns, von Ihnen zu hören</p>
           <form>
@@ -160,11 +175,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script language="JavaScript">
-    var url = "/public/api/calendar";
+      $.getJSON("/public/api/article" , function (json) {
+          document.getElementById("cont_news_title").innerHTML = json.title;
+          document.getElementById("banner_title").innerHTML = json.title;
+          document.getElementById("cont_news_content").innerHTML = json.text;
+      });
 
-      $.getJSON(url , function (json) {
-          var html = '',
-              el = document.getElementById("ul_next_vents");
+      $.getJSON("/public/api/calendar" , function (json) {
+          var html = '', el = document.getElementById("ul_next_vents");
 
           $.each(json, function (key, val) {
               startDate = new Date(val.date);
@@ -176,8 +194,6 @@
                   html += "<li>"+startDate.getDay()+'.'+startDate.getMonth()+'.'+startDate.getFullYear()+": "+ val.title+" ("+startDate.getHours()+':' + startDate.getMinutes() +' Uhr, '+ val.remarks +")</li>"
 
               }
-
-
           });
           el.innerHTML = html;
       });

@@ -133,6 +133,24 @@
             </column>
         </createTable>
 
+        <createTable tableName="ARTICLE">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="TITLE" type="varchar(60)">
+                <constraints nullable="false" />
+            </column>
+            <column name="TEXT" type="varchar(5000)">
+                <constraints nullable="false" />
+            </column>
+            <column name="START_DATE" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="END_DATE" type="datetime">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
 
         <!--
         <createTable tableName="authors"
