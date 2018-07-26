@@ -1,6 +1,8 @@
 package com.silviomoser.demo.ui;
 
+import com.silviomoser.demo.data.Article;
 import com.silviomoser.demo.security.utils.SecurityUtils;
+import com.silviomoser.demo.views.ArticleView;
 import com.silviomoser.demo.views.CalendarView;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
@@ -21,6 +23,7 @@ public class NavigationBar {
         final HorizontalLayout navigationBar = new HorizontalLayout();
         //navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         navigationBar.addComponent(createNavigationButton(layout, "Home", ""));
+        navigationBar.addComponent(createNavigationButton(layout, "Head-Artikel", ArticleView.VIEW_NAME));
         navigationBar.addComponent(createNavigationButton(layout, "Kalender", CalendarView.VIEW_NAME));
         navigationBar.addComponent(createNavigationButton(layout, "Vereinsmitglieder", "notImplementedYet"));
         navigationBar.addComponent(createNavigationButton(layout, "Notenverwaltung", "notImplementedYet"));

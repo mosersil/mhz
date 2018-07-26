@@ -15,6 +15,7 @@
         <loadData tableName="PERSON" file="../static/person.csv" relativeToChangelogFile="true" quotchar="'" />
         <loadData tableName="ROLE" file="../static/role.csv" relativeToChangelogFile="true" quotchar="'" />
         <loadData tableName="USER_ROLE" file="../static/user_role.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="ARTICLE" file="../static/article.csv" relativeToChangelogFile="true" quotchar="'" />
 
 <!--
         <insert tableName="PERSON">

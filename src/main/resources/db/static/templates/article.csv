@@ -1,0 +1,4 @@
+'TITLE','TEXT','START_DATE','END_DATE'
+'Alter Text', 'Ein alter text, der schon lange nicht mehr aktuell ist, aber für Archivzwecke noch da bleibt','2018-05-17 20:00:00','2018-05-17 20:00:00'
+'Nächster Top Anlass Titel', 'Ein aktueller Text, zu einem Anlass der kurz bevor steht. Hier können auch Bilder oder Downloads hinzugefügt werden. Am 10. August wird er automatisch verschwinden um 20 Uhr.','2018-07-17 20:00:00','2018-08-10 20:00:00'
+'Anlass weiter in der Zukunft', 'Ein Text zu einem Anlass, in der Zukunft stattfinden wird. Auf der Homepage wird dieser noch nicht angezeigt, erst ab dem 1. November wird er automatisch erscheinen.','2018-11-01 20:00:00','2018-11-01 20:00:00'

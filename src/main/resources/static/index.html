@@ -46,6 +46,19 @@
     </div>
   </div>
   <div class="py-5">
+    <div id="cont_news" class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="cont_news_title" class="text-primary">
+             Über uns
+          </h1>
+          <p id="cont_news_content" class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+            irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -160,6 +173,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script language="JavaScript">
+      var url = "/public/api/article";
+
+      $.getJSON(url , function (json) {
+          var html = '',
+              el = document.getElementById("ul_next_vents");
+
+          el.innerHTML = html;
+      });
+
+
     var url = "/public/api/calendar";
 
       $.getJSON(url , function (json) {
