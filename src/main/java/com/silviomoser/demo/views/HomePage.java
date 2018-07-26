@@ -50,13 +50,6 @@ public class HomePage extends VerticalLayout implements View {
         addComponent(NavigationBar.buildNavigationBar(this));
         addComponent(homePanel);
 
-        //VerticalLayout mainLayout = new VerticalLayout(new Button("Click me", e -> Notification.show("Hello Spring+Vaadin user!")));
-
-
-        //addComponent(mainLayout);
-
-
-
     }
 
 }

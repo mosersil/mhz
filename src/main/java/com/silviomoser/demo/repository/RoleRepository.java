@@ -12,8 +12,4 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    /*
-    @Query("SELECT r FROM Role r where :user member r.users")
-    List<Role> findByUser(User user);
-    */
 }

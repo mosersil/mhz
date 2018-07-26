@@ -18,12 +18,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "MEMBERSHIP")
-public class Membership {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private long id;
+public class Membership extends AbstractEntity<Long> {
 
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
@@ -38,14 +33,6 @@ public class Membership {
 
     @Column(name = "LEAVE_DATE")
     private LocalDateTime leaveDate;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public Person getPerson() {
         return person;
@@ -79,27 +66,4 @@ public class Membership {
         this.leaveDate = leaveDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Membership that = (Membership) o;
-
-        if (id != that.id) return false;
-        if (person != null ? !person.equals(that.person) : that.person != null) return false;
-        if (organization != null ? !organization.equals(that.organization) : that.organization != null) return false;
-        if (joinDate != null ? !joinDate.equals(that.joinDate) : that.joinDate != null) return false;
-        return leaveDate != null ? leaveDate.equals(that.leaveDate) : that.leaveDate == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (person != null ? person.hashCode() : 0);
-        result = 31 * result + (organization != null ? organization.hashCode() : 0);
-        result = 31 * result + (joinDate != null ? joinDate.hashCode() : 0);
-        result = 31 * result + (leaveDate != null ? leaveDate.hashCode() : 0);
-        return result;
-    }
 }

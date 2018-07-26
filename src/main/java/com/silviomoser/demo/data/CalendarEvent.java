@@ -3,18 +3,13 @@ package com.silviomoser.demo.data;
 import com.silviomoser.demo.data.type.DressCode;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-public class CalendarEvent implements Comparable<CalendarEvent>{
+public class CalendarEvent extends AbstractEntity<Long> implements Comparable<CalendarEvent>{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
     @NotNull
     private LocalDateTime date;
     private String title;
@@ -46,14 +41,6 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public boolean isFullDay() {

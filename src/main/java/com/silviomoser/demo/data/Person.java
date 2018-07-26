@@ -6,16 +6,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,14 +16,9 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "PERSON")
-public class Person {
+public class Person extends AbstractEntity<Long> {
 
 
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private long id;
     @Column(name = "FIRST_NAME", nullable = false, length = 30)
     private String firstName;
     @Column(name = "LAST_NAME", nullable = false, length = 30)
@@ -45,31 +33,12 @@ public class Person {
     )
     private Set<Membership> memberships;
 
-    /*
-
-    @JoinTable(name = "PERSON_ORGANIZATION", joinColumns = {
-            @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "ORGANIZATION_ID", referencedColumnName = "ID")})
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Organization> organizations;
-
-    */
-
-
-    public long getId() {
-        return id;
-    }
-
     public Set<Membership> getMemberships() {
         return memberships;
     }
 
     public void setMemberships(Set<Membership> memberships) {
         this.memberships = memberships;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -105,15 +74,4 @@ public class Person {
         this.user = user;
     }
 
-    /*
-
-    public Set<Organization> getOrganizations() {
-        return organizations;
-    }
-
-    public void setOrganizations(Set<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
-    */
 }

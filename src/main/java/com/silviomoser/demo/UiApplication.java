@@ -28,43 +28,13 @@ import java.util.Locale;
 public class UiApplication implements CommandLineRunner {
 
 
-
-	@Autowired
-	UserRepository userRepository;
-
-	//@Autowired
-    //PasswordEncoder passwordEncoder;
-
-	@Autowired
-    CalendarEventRepository repository;
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping("/api/calendar")
-	public List<CalendarEvent> home() {
-		return repository.findAll();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(UiApplication.class, args);
 	}
 
 
-
-	private Date parseDate(String dateString) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.GERMAN);
-		LocalDate dateLocal = LocalDate.parse(dateString, formatter);
-		Date date = Date.from(dateLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		return date;
-	}
-
 	@Override
 	public void run(String... strings) throws Exception {
-		//repository.save(new CalendarEvent("Test Anlass", LocalDateTime.now()));
-			//repository.save(new CalendarEvent("Test event 2", new Date()));
-
-		PasswordEncoder encoder = new BCryptPasswordEncoder(11);
-//		userRepository.save(new User("demo", encoder.encode("demo")));
 	}
-
 
 }
