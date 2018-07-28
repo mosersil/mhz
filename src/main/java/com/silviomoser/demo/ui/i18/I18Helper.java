@@ -1,4 +1,4 @@
-package com.silviomoser.demo.utils;
+package com.silviomoser.demo.ui.i18;
 
 import java.io.IOException;
 import java.io.InputStream;

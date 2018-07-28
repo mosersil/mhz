@@ -1,13 +1,12 @@
 package com.silviomoser.demo.ui;
 
-import com.silviomoser.demo.data.Article;
 import com.silviomoser.demo.security.utils.SecurityUtils;
-import com.silviomoser.demo.views.ArticleView;
-import com.silviomoser.demo.views.CalendarView;
+import com.silviomoser.demo.ui.editor.ArticleEditor;
+import com.silviomoser.demo.ui.view.ArticleView;
+import com.silviomoser.demo.ui.view.CalendarView;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
