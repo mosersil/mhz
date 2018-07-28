@@ -1,4 +1,4 @@
-package com.silviomoser.demo.data;
+package com.silviomoser.demo.data.type;
 
 
 public enum RoleType {

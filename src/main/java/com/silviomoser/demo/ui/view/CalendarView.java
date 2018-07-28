@@ -1,9 +1,9 @@
-package com.silviomoser.demo.views;
+package com.silviomoser.demo.ui.view;
 
-import com.silviomoser.demo.data.Article;
 import com.silviomoser.demo.data.CalendarEvent;
-import com.silviomoser.demo.repository.ArticleRepository;
+import com.silviomoser.demo.repository.CalendarEventRepository;
 import com.silviomoser.demo.ui.NavigationBar;
+import com.silviomoser.demo.ui.editor.CalendarEditor;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -27,19 +27,23 @@ import java.util.Locale;
 
 import static com.silviomoser.demo.utils.VaadinUtils.booleanToHtmlValueProvider;
 
-@SpringView(name = ArticleView.VIEW_NAME)
-public class ArticleView extends VerticalLayout implements View {
-    public static final String VIEW_NAME = "article";
+/**
+ * Created by silvio on 28.07.18.
+ */
+
+@SpringView(name = CalendarView.VIEW_NAME)
+public class CalendarView extends VerticalLayout implements View {
+    public static final String VIEW_NAME = "calendar";
 
     @Autowired
-    private ArticleRepository repository;
+    private CalendarEventRepository repository;
 
     @Autowired
-    private ArticleEditor window;
+    private CalendarEditor window;
 
-    private final Grid<Article> grid = new Grid<>();
+    private final Grid<CalendarEvent> grid = new Grid<>();
 
-    private final Button addNewBtn = new Button("Neuer Head-Artikel", VaadinIcons.PLUS);
+    private final Button addNewBtn = new Button("New event", VaadinIcons.PLUS);
 
     private final TextField filter = new TextField();
 
@@ -55,18 +59,17 @@ public class ArticleView extends VerticalLayout implements View {
 
         grid.setHeight(400, Unit.PIXELS);
         grid.setWidth(1200, Unit.PIXELS);
-        grid.addColumn(Article::getId).setCaption("#").setWidth(70);
-        grid.addColumn(Article::getTitle).setCaption("Titel");
-        grid.addColumn(Article::getStartDate).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
-                .ofLocalizedDate(FormatStyle.LONG)
-                .withLocale(Locale.GERMAN))).setCaption("Von").setWidth(150);
-        grid.addColumn(Article::getEndDate).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
-                .ofLocalizedDate(FormatStyle.LONG)
-                .withLocale(Locale.GERMAN))).setCaption("Bis").setWidth(150);
-        //grid.addColumn(Article::getText).setCaption("Text");
+        grid.addColumn(CalendarEvent::getId).setCaption("#").setWidth(70);
 
+        grid.addColumn(CalendarEvent::getDate).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.LONG)
+                .withLocale(Locale.GERMAN))).setCaption("Datum/Zeit").setWidth(150);
+        grid.addColumn(CalendarEvent::getTitle).setCaption("Anlass");
 
-        filter.setPlaceholder("Nach Titel filtern");
+        grid.addColumn(CalendarEvent::isFullDay).setRenderer(booleanToHtmlValueProvider(), new HtmlRenderer()).setCaption("Ganztägig").setWidth(70);
+        grid.addColumn(CalendarEvent::getRemarks).setCaption("Bemerkungen").setMaximumWidth(500);
+
+        filter.setPlaceholder("Filter by title");
 
         // Replace listing with filtered content when user changes filter
         filter.setValueChangeMode(ValueChangeMode.LAZY);
@@ -76,10 +79,10 @@ public class ArticleView extends VerticalLayout implements View {
             //Check, if it is a double-click event
             if (event.getMouseEventDetails().isDoubleClick()) {
                 //get the item which has been clicked
-                Article article = event.getItem();
+                CalendarEvent calendarEventData = event.getItem();
                 //open the item in a window
                 getUI().addWindow(window);
-                window.editArticle(article);
+                window.editItem(calendarEventData);
                 //window.setVisible(true);
 
                 //add a listener, which will be executed when the window will be closed
@@ -91,16 +94,16 @@ public class ArticleView extends VerticalLayout implements View {
             }
         });
 
-        /*
-        // Connect selected Customer to editor or hide if none is selected
-        grid.asSingleSelect().addValueChangeListener(e -> {
-            editor.editCalendarEvent(e.getValue());
-        });
-        */
+            /*
+            // Connect selected Customer to editor or hide if none is selected
+            grid.asSingleSelect().addValueChangeListener(e -> {
+                editor.editCalendarEvent(e.getValue());
+            });
+            */
 
         // Instantiate and edit new Customer the new button is clicked
         addNewBtn.addClickListener(e -> {
-            window.editArticle(new Article("Neuer Head-Artikel", LocalDateTime.now()));
+            window.editItem(new CalendarEvent("Neuer Anlass", LocalDateTime.now()));
             getUI().addWindow(window);
             //add a listener, which will be executed when the window will be closed
             window.addCloseListener(closeEvent -> {
@@ -111,12 +114,12 @@ public class ArticleView extends VerticalLayout implements View {
         });
 
         // Listen changes made by the editor, refresh data from backend
-        /*
-        window.setChangeHandler(() -> {
-            window.setVisible(false);
-            listEvents(filter.getValue());
-        });
-        */
+            /*
+            window.setChangeHandler(() -> {
+                window.setVisible(false);
+                listEvents(filter.getValue());
+            });
+            */
 
         // Initialize listing
         listEvents(null);
@@ -126,8 +129,7 @@ public class ArticleView extends VerticalLayout implements View {
     private void listEvents(String filterText) {
         if (StringUtils.isEmpty(filterText)) {
             grid.setItems(repository.findAll());
-        }
-        else {
+        } else {
             grid.setItems(repository.findAll());
         }
 
@@ -138,3 +140,4 @@ public class ArticleView extends VerticalLayout implements View {
         // This view is constructed in the init() method()
     }
 }
+

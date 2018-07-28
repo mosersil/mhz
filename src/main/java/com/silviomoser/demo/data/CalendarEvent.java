@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-public class CalendarEvent extends AbstractEntity<Long> implements Comparable<CalendarEvent>{
+public class CalendarEvent extends AbstractEntity implements Comparable<CalendarEvent>{
 
 
     @NotNull

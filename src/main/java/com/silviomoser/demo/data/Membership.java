@@ -18,7 +18,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "MEMBERSHIP")
-public class Membership extends AbstractEntity<Long> {
+public class Membership extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")

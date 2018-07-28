@@ -23,7 +23,7 @@ import java.util.List;
 
 @Entity
 @EntityListeners(value = AuditingEntityListener.class)
-public class User extends AbstractEntity<Long> {
+public class User extends AbstractEntity{
 
     private static final long serialVersionUID = 1L;
 

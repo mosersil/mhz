@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "PERSON")
-public class Person extends AbstractEntity<Long> {
+public class Person extends AbstractEntity {
 
 
     @Column(name = "FIRST_NAME", nullable = false, length = 30)

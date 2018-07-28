@@ -1,8 +1,9 @@
-package com.silviomoser.demo.views;
+package com.silviomoser.demo.ui.view;
 
-import com.silviomoser.demo.data.CalendarEvent;
-import com.silviomoser.demo.repository.CalendarEventRepository;
+import com.silviomoser.demo.data.Article;
+import com.silviomoser.demo.repository.ArticleRepository;
 import com.silviomoser.demo.ui.NavigationBar;
+import com.silviomoser.demo.ui.editor.ArticleEditor;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -13,7 +14,6 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.LocalDateTimeRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -24,23 +24,23 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-import static com.silviomoser.demo.utils.VaadinUtils.booleanToHtmlValueProvider;
-
-@SpringView(name = CalendarView.VIEW_NAME)
-public class CalendarView extends VerticalLayout implements View {
-    public static final String VIEW_NAME = "calendar";
+@SpringView(name = ArticleView.VIEW_NAME)
+public class ArticleView extends VerticalLayout implements View {
+    public static final String VIEW_NAME = "article";
 
     @Autowired
-    private CalendarEventRepository repository;
+    private ArticleRepository repository;
 
     @Autowired
-    private CalendarDataEditor window;
+    private ArticleEditor window;
 
-    private final Grid<CalendarEvent> grid = new Grid<>();
+    private final Grid<Article> grid = new Grid<>();
 
-    private final Button addNewBtn = new Button("New event", VaadinIcons.PLUS);
+    private final Button addNewBtn = new Button("Neuer Head-Artikel", VaadinIcons.PLUS);
 
     private final TextField filter = new TextField();
+
+
 
     @PostConstruct
     void init() {
@@ -54,17 +54,18 @@ public class CalendarView extends VerticalLayout implements View {
 
         grid.setHeight(400, Unit.PIXELS);
         grid.setWidth(1200, Unit.PIXELS);
-        grid.addColumn(CalendarEvent::getId).setCaption("#").setWidth(70);
-
-        grid.addColumn(CalendarEvent::getDate).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
+        grid.addColumn(Article::getId).setCaption("#").setWidth(70);
+        grid.addColumn(Article::getTitle).setCaption("Titel");
+        grid.addColumn(Article::getStartDate).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
                 .ofLocalizedDate(FormatStyle.LONG)
-                .withLocale(Locale.GERMAN))).setCaption("Datum/Zeit").setWidth(150);
-        grid.addColumn(CalendarEvent::getTitle).setCaption("Anlass");
+                .withLocale(Locale.GERMAN))).setCaption("Von").setWidth(150);
+        grid.addColumn(Article::getEndDate).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.LONG)
+                .withLocale(Locale.GERMAN))).setCaption("Bis").setWidth(150);
+        //grid.addColumn(Article::getText).setCaption("Text");
 
-        grid.addColumn(CalendarEvent::isFullDay).setRenderer(booleanToHtmlValueProvider(), new HtmlRenderer()).setCaption("Ganztägig").setWidth(70);
-        grid.addColumn(CalendarEvent::getRemarks).setCaption("Bemerkungen").setMaximumWidth(500);
 
-        filter.setPlaceholder("Filter by title");
+        filter.setPlaceholder("Nach Titel filtern");
 
         // Replace listing with filtered content when user changes filter
         filter.setValueChangeMode(ValueChangeMode.LAZY);
@@ -74,10 +75,10 @@ public class CalendarView extends VerticalLayout implements View {
             //Check, if it is a double-click event
             if (event.getMouseEventDetails().isDoubleClick()) {
                 //get the item which has been clicked
-                CalendarEvent calendarEventData = event.getItem();
+                Article article = event.getItem();
                 //open the item in a window
                 getUI().addWindow(window);
-                window.editCalendarEvent(calendarEventData);
+                window.editItem(article);
                 //window.setVisible(true);
 
                 //add a listener, which will be executed when the window will be closed
@@ -98,7 +99,7 @@ public class CalendarView extends VerticalLayout implements View {
 
         // Instantiate and edit new Customer the new button is clicked
         addNewBtn.addClickListener(e -> {
-            window.editCalendarEvent(new CalendarEvent("Neuer Anlass", LocalDateTime.now()));
+            window.editItem(new Article("Neuer Head-Artikel", LocalDateTime.now()));
             getUI().addWindow(window);
             //add a listener, which will be executed when the window will be closed
             window.addCloseListener(closeEvent -> {

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "ARTICLE")
-public class Article extends AbstractEntity<Long> {
+public class Article extends AbstractEntity {
 
 
     @Column(name = "TITLE")

@@ -1,5 +1,6 @@
 package com.silviomoser.demo.data;
 
+import com.silviomoser.demo.data.type.RoleType;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -7,16 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import java.io.Serializable;
 import java.util.Set;
 
 
 @Entity
 @EntityListeners(value = AuditingEntityListener.class)
-public class Role extends AbstractEntity<Long> {
+public class Role extends AbstractEntity {
 
     public Role() {
     }

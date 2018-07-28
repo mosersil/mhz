@@ -9,7 +9,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ORGANIZATION")
-public class Organization extends AbstractEntity<Long> {
+public class Organization extends AbstractEntity {
 
     @Column(name = "NAME")
     private String name;

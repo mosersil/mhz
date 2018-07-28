@@ -11,19 +11,19 @@ import java.io.Serializable;
  * Created by silvio on 26.07.18.
  */
 @MappedSuperclass
-public abstract class AbstractEntity<PK extends Serializable> {
+public abstract class AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private PK id;
+    private Long id;
 
 
-    public PK getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(PK id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -36,23 +36,12 @@ public abstract class AbstractEntity<PK extends Serializable> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        AbstractEntity<?> other = (AbstractEntity<?>) obj;
-        if (getId() == null || other.getId() == null) {
-            return false;
-        }
-        if (!getId().equals(other.getId())) {
-            return false;
-        }
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AbstractEntity that = (AbstractEntity) o;
+
+        return id != null ? id.equals(that.id) : that.id == null;
     }
 }

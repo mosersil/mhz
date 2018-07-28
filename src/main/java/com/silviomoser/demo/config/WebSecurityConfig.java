@@ -41,13 +41,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    /*
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new MosiAuthenticationProvider());
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-    */
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
