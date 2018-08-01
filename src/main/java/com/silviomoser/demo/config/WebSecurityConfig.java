@@ -119,6 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(authenticationFilter(), CustomFilter.class);
 
+        http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/");
 
         http.headers().frameOptions().disable();
         http.rememberMe().rememberMeServices(rememberMeServices()).key("myAppKey");

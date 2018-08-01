@@ -5,6 +5,38 @@
 </head>
 
 <body>
+
+<nav class="navbar navbar-expand-md bg-secondary navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Brand</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/#cont_news">Aktuell</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/#cont_aboutus">Über uns</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/#cont_agenda">Agenda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/#cont_social">Interaktiv</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/#cont_contact">Kontakt</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!intra"><i class="fa d-inline fa-lg fa-user-circle-o"></i>&nbsp;Intern</a></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="col-md-6 col-md-offset-3" ng-controller="intralogin_controller">
     <h2>Login</h2>
     <div ng-if="errorMessage" class="alert alert-warning">
