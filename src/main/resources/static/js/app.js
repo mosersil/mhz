@@ -10,6 +10,17 @@ demoApp.controller("calendar_controller", function ($scope, $http) {
         });
 });
 
+demoApp.controller("news_controller", function ($scope, $http) {
+    $http.get("/public/api/article")
+        .then(function (response) {
+            if (response != null) {
+                $scope.news_show = true;
+                $scope.news_title = response.data.title;
+                $scope.news_text = response.data.text;
+            }
+        });
+});
+
 demoApp.controller("intralogin_controller", function ($scope, $http, $location) {
     $scope.submit = function () {
 
@@ -46,7 +57,7 @@ demoApp.controller("intra_controller", function ($scope, $http, $location, $filt
 
             console.log("Admin: " + isAdmin);
 
-            if (isAdmin != null) {
+            if (isAdmin != "") {
                 $scope.isAdmin = true;
             }
 

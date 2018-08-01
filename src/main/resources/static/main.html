@@ -40,11 +40,12 @@
                 <h1 class="display-3 mb-4 text-primary">{{title}}</h1>
             </div>
         </div>
-        <div class="row main_banner">
+        <div class="row main_banner" ng-controller="news_controller">
             <div class="p-10">
-                <p id="banner_title" class="lead"></p>
+                <p class="lead">{{news_title}}</p>
                 <a href="#cont_news" class="btn btn-lg mx-1 btn-secondary">Mehr...</a>
             </div>
+        </div>
         </div>
     </div>
 </div>
@@ -61,13 +62,14 @@
         </div>
     </div>
 </div>
-<div class="py-5">
-    <div id="cont_news" class="container">
+<div id="cont_news" class="py-5" ng-controller="news_controller" ng-switch on="news_show">
+    <div class="container" ng-switch-when="true">
         <div class="row">
             <div class="col-md-12">
                 <h1 id="cont_news_title" class="text-primary">
+                    {{news_title}}
                 </h1>
-                <p id="cont_news_content" class=""></p>
+                <p>{{news_text}}</p>
             </div>
         </div>
     </div>
@@ -171,7 +173,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 mt-3">
-                <p class="text-center text-white">© Copyright 2018 Musikverein Harmonie Zürich-Oberstrass </p>
+                <p class="text-center text-white">© Copyright 2018 </p>
             </div>
         </div>
     </div>
