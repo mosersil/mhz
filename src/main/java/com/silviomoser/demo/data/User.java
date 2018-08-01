@@ -1,5 +1,6 @@
 package com.silviomoser.demo.data;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,6 +35,7 @@ public class User extends AbstractEntity{
         this.password=password;
     }
 
+    @JsonView(Views.Public.class)
     private String username;
 
     private String password;
@@ -48,11 +50,13 @@ public class User extends AbstractEntity{
     @Column(updatable = false)
     private Date lastModifiedDate;
 
+    @JsonView(Views.Public.class)
     @JoinTable(name = "USER_ROLE", joinColumns = {
             @JoinColumn(name = "USER_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Role> roles;
+
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERSON_ID")
