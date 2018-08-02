@@ -1,5 +1,6 @@
 package com.silviomoser.demo.data;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.Gender;
 
 import javax.persistence.CascadeType;
@@ -19,12 +20,16 @@ import java.util.Set;
 public class Person extends AbstractEntity {
 
 
+    @JsonView(Views.Public.class)
     @Column(name = "FIRST_NAME", nullable = false, length = 30)
     private String firstName;
+    @JsonView(Views.Public.class)
     @Column(name = "LAST_NAME", nullable = false, length = 30)
     private String lastName;
+    @JsonView(Views.Public.class)
     @Column(name = "GENDER")
     private Gender gender;
+    @JsonView(Views.Public.class)
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 

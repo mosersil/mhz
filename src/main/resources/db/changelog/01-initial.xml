@@ -36,7 +36,6 @@
 
 
 
-
         <createTable tableName="USER">
             <column name="ID" autoIncrement="true" type="long">
                 <constraints nullable="false" unique="true" primaryKey="true" />
@@ -68,7 +67,7 @@
             <column name="ID" autoIncrement="true" type="long">
                 <constraints nullable="false" unique="true" primaryKey="true" />
             </column>
-            <column name="ROLE_TYPE" type="int">
+            <column name="ROLE_TYPE" type="varchar(10)">
                 <constraints nullable="false" />
             </column>
             <!--
@@ -151,6 +150,10 @@
             </column>
         </createTable>
 
+
+        <createView viewName="USERDATA">
+            select FIRST_NAME from PERSON
+        </createView>
 
         <!--
         <createTable tableName="authors"

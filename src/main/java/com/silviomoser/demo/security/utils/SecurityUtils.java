@@ -1,5 +1,6 @@
 package com.silviomoser.demo.security.utils;
 
+import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.Role;
 import com.silviomoser.demo.security.SecurityUserDetails;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -17,21 +18,37 @@ public class SecurityUtils {
 
     public static final String ANONYMOUS = "Anonymous";
 
+
+    public static Person getMy() {
+        SecurityUserDetails securityUserDetails = null;
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (!(auth instanceof AnonymousAuthenticationToken)) {
+                securityUserDetails = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            }
+        }
+        Person my = null;
+        if (securityUserDetails!=null) {
+            my = securityUserDetails.getPerson();
+        }
+
+        return my;
+    }
+
     public static String getLoggedInUserFullName() {
         final StringBuilder stringBuilder = new StringBuilder();
-        if (SecurityContextHolder.getContext()!=null && SecurityContextHolder.getContext().getAuthentication()!=null) {
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (!(auth instanceof AnonymousAuthenticationToken)) {
                 SecurityUserDetails userDetails = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 stringBuilder.append(userDetails.getPerson().getFirstName())
                         .append(" ")
                         .append(userDetails.getPerson().getLastName());
-            }
-            else {
+            } else {
                 stringBuilder.append(ANONYMOUS);
             }
-        }
-        else {
+        } else {
             stringBuilder.append(ANONYMOUS);
         }
         return stringBuilder.toString();
@@ -40,7 +57,7 @@ public class SecurityUtils {
 
     public static Set<String> getGroups() {
         final HashSet<String> groups = new HashSet<>();
-        if (SecurityContextHolder.getContext()!=null && SecurityContextHolder.getContext().getAuthentication()!=null) {
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (!(auth instanceof AnonymousAuthenticationToken)) {
                 SecurityUserDetails userDetails = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -50,8 +67,6 @@ public class SecurityUtils {
         }
         return groups;
     }
-
-
 
 
 }
