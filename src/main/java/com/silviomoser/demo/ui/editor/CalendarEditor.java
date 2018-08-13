@@ -26,6 +26,7 @@ public class CalendarEditor extends AbstractEditor<CalendarEvent> {
     TextField title = new TextField("Anlass");
     DateTimeField date = new DateTimeField("Datum/Zeit");
     CheckBox fullDay = new CheckBox("Ganztägiger Anlass");
+    CheckBox publicEvent = new CheckBox("Öffentlicher Anlass");
     TextArea remarks = new TextArea("Bemerkungen");
     RadioButtonGroup<DressCode> dressCodeRadioButtonGroup = new RadioButtonGroup<>("Dresscode", DataProvider.ofItems(DressCode.values()));
 
@@ -38,7 +39,12 @@ public class CalendarEditor extends AbstractEditor<CalendarEvent> {
         layout.setSpacing(true);
         setWidth(700);
         remarks.setSizeFull();
-        layout.addComponents(title, date, fullDay, remarks, dressCodeRadioButtonGroup);
+
+        title.setWidth(400, Unit.PIXELS);
+        fullDay.setDescription("Ein ganztägiger Anlass erscheint ohne genaue von/bis Zeitangabe im Veranstaltungskalender");
+        publicEvent.setDescription("Ein öffentlicher Anlass erscheint im Veranstaltungskalender auf der Homepage");
+
+        layout.addComponents(title, date, fullDay, publicEvent, remarks, dressCodeRadioButtonGroup);
         return layout;
     }
 
@@ -46,8 +52,8 @@ public class CalendarEditor extends AbstractEditor<CalendarEvent> {
     public Binder initBinder() {
         Binder<CalendarEvent> binder = new Binder<>(CalendarEvent.class);
         binder.forField(title)
-                .asRequired("test")
-                .withValidator(new StringLengthValidator("Invalid", 3, 30))
+                .asRequired("Bitte Titel vom Anlass angeben")
+                .withValidator(new StringLengthValidator("Ungültige Eingabe", 3, 30))
                 .bind(CalendarEvent::getTitle, CalendarEvent::setTitle);
         binder.forField(dressCodeRadioButtonGroup)
                 .asRequired("Bitte Dresscode wählen")

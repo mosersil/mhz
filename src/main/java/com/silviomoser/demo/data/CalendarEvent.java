@@ -1,6 +1,7 @@
 package com.silviomoser.demo.data;
 
 import com.silviomoser.demo.data.type.DressCode;
+import com.silviomoser.demo.utils.PdfReport;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -11,12 +12,17 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
 
 
     @NotNull
+    @PdfReport(header = "Datum")
     private LocalDateTime date;
+
+    @PdfReport(header = "Anlass")
     private String title;
     private boolean fullDay;
     private boolean publicEvent;
     private boolean advertise;
+    @PdfReport(header = "Bemerkungen")
     private String remarks;
+    @PdfReport(header = "Tenue")
     private DressCode dressCode;
 
     public CalendarEvent(String title, LocalDateTime date) {
