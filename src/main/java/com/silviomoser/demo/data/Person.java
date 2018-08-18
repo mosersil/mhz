@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -32,6 +34,11 @@ public class Person extends AbstractEntity {
     @JsonView(Views.Public.class)
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
+
+    @JsonView(Views.Public.class)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="ADDRESS_ID")
+    private Address address;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "person"
@@ -79,4 +86,11 @@ public class Person extends AbstractEntity {
         this.user = user;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }

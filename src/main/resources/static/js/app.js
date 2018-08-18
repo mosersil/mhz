@@ -52,6 +52,10 @@ demoApp.controller("intra_controller", function ($scope, $http, $location, $filt
             $scope.firstName = response.data.firstName;
             $scope.lastName = response.data.lastName;
 
+            var now  = new Date();
+            $scope.year_actual = (new Date()).getFullYear();
+            $scope.year_next = (new Date()).getFullYear()+1;
+
 
             var isAdmin = $filter('filter')(response.data.user.roles, {'type':"ADMIN"});
 
