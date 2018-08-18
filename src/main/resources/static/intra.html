@@ -34,13 +34,34 @@
 <div class="col-md-6 col-md-offset-3" ng-controller="intra_controller">
     <h1>Interner Bereich</h1>
     <p>Herzlich willkommen, {{firstName}} {{lastName}}</p>
-    <p>Hier findest du:
-    <ul>
-        <li>Downloads</li>
-        <li>Probepläne</li>
-        <li>Adresslisten</li>
-    <li><a href="/internal/api/calendar" target="_blank">Jahresprogramm</a></li>
-    </ul>
+
+    <div class="col-md-6 col-md-offset-3" ng-controller="intra_controller">
+        <h2>Adresslisten</h2>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="/internal/api/calendar?year={{year_actual}}" target="_blank">Jahresprogramm {{year_actual}}</a>
+            </li>
+            <li class="list-group-item">
+                <a href="/internal/api/calendar?year={{year_next}}" target="_blank">Jahresprogramm {{year_next}}</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="col-md-6 col-md-offset-3" ng-controller="intra_controller">
+        <h2>Adresslisten</h2>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="/internal/api/addresslist?organization=Aktivmitglied" target="_blank">Adressliste Aktivmitglieder</a>
+            </li>
+            <li class="list-group-item">
+                <a href="/internal/api/addresslist?organization=Passivmitglied" target="_blank">Adressliste Passivmitglieder</a>
+            </li>
+            <li class="list-group-item">
+                <a href="/internal/api/addresslist?organization=Vorstand" target="_blank">Adressliste Vorstand</a>
+            </li>
+        </ul>
+    </div>
 
     <div class="col-md-6 col-md-offset-3" ng-controller="intra_controller" ng-switch on="isAdmin">
         <div ng-switch-when="true">

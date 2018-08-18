@@ -103,6 +103,9 @@
             <column name="GENDER" type="int">
                 <constraints nullable="false" />
             </column>
+            <column name="ADDRESS_ID" type="int">
+                <constraints nullable="true" />
+            </column>
         </createTable>
 
         <createTable tableName="ORGANIZATION">
@@ -151,9 +154,53 @@
         </createTable>
 
 
+        <createTable tableName="ADDRESS">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="ADDRESS1" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ADDRESS2" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ZIP" type="varchar(10)">
+                <constraints nullable="false" />
+            </column>
+            <column name="CITY" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createView viewName="VIEW_ADDRESSLIST">
+            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, CONCAT(A.ADDRESS1, CHAR(13), A.ADDRESS2) AS ADDRESS, A.ZIP, A.CITY, O.NAME AS ORGANIZATION
+            FROM PERSON AS P
+            INNER JOIN ADDRESS AS A ON A.ID=P.ADDRESS_ID
+            INNER JOIN MEMBERSHIP AS M ON P.ID=M.PERSON_ID
+            INNER JOIN ORGANIZATION AS O ON O.ID=M.ORGANIZATION_ID
+            WHERE M.LEAVE_DATE IS NULL
+            ORDER BY P.LAST_NAME;
+        </createView>
+
+
+        <!--
+        <createTable tableName="PERSON_ADDRESS">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="PERSON_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+            <column name="ADDRESS_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+-->
+        <!--
         <createView viewName="USERDATA">
             select FIRST_NAME from PERSON
         </createView>
+        -->
 
         <!--
         <createTable tableName="authors"
