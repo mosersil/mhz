@@ -177,14 +177,14 @@
         </div>
     </div>
 </div>
-<div class="py-5 text-white" ng-controller="form_controller">
+<div class="py-5">
     <div id="cont_contact" class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" ng-controller="form_controller">
                 <h1 class="text-primary">
                     Kontaktieren Sie uns
                 </h1>
-                <p>Sie möchten uns etwas mitteilen? Bitte nutzen Sie das folgende Formular für Ihre Nachricht an uns.</p>
+                <p class="text-left">Sie möchten uns etwas mitteilen? Bitte nutzen Sie das folgende Formular für Ihre Nachricht an uns.</p>
                 <div ng-show="contact_message_display" class="{{contact_message_class}}" role="alert">
                     {{contact_message_text}}
                 </div>
@@ -194,11 +194,11 @@
                         <label for="InputName">Name</label>
                         <input type="text" class="form-control" id="InputName" placeholder="Name" ng-model="formContact.name" required> </div>
                     <div class="form-group">
-                        <label for="InputEmail1">E-Mail</label>
+                        <label for="InputEmail1">E-Mail Adresse</label>
                         <input type="email" class="form-control" id="InputEmail1" placeholder="Email" ng-model="formContact.email" maxlength="100" ng-minlength="5" required> </div>
                     <div class="form-group">
-                        <label for="Textarea">Write here</label>
-                        <textarea class="form-control" id="Textarea" rows="3" placeholder="Type here" ng-model="formContact.message" ng-minlength="10" ng-maxlength="2000" required></textarea>
+                        <label for="Textarea">Ihre Nachricht an uns</label>
+                        <textarea class="form-control" id="Textarea" rows="3" placeholder="Ihre Nachricht" ng-model="formContact.message" ng-maxlength="2000" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-secondary">Submit</button>
                 </form>

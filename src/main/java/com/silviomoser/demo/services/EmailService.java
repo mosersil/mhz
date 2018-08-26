@@ -59,7 +59,7 @@ public class EmailService {
                 helper.setFrom(emailModel.getEmail());
                 helper.setTo(contactConfiguration.getContactEmailTo());
                 helper.setSubject(contactConfiguration.getGetContactEmailSubject());
-                helper.setText(emailModel.getName()+"\n\n"+emailModel.getMessage());
+                helper.setText(emailModel.getName()+" ("+emailModel.getEmail()+")\n\n"+emailModel.getMessage());
                 javaMailSender.send(message);
                 emailStatus.setSuccess(true);
             } catch (Exception e) {
