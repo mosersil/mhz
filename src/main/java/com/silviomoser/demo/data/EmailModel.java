@@ -1,15 +1,20 @@
 package com.silviomoser.demo.data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * Created by silvio on 20.08.18.
  */
 
 public class EmailModel {
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String email;
 
+    @NotBlank
     private String message;
 
     public String getName() {

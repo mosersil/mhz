@@ -41,10 +41,10 @@
                     <a class="nav-link" href="#!/#cont_agenda">Agenda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#!/#cont_social">Interaktiv</a>
+                    <a class="nav-link" href="#!/#cont_contact">Kontakt</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#!/#cont_contact">Kontakt</a>
+                    <a class="nav-link" href="#!/#cont_social">Impressionen</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#!intra"><i class="fa d-inline fa-lg fa-user-circle-o"></i>&nbsp;Intern</a></a>
@@ -119,18 +119,6 @@
         </div>
     </div>
 </div>
-<div class="py-5 text-white">
-    <div id="cont_social" class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-primary">
-                    Interaktiv
-                </h1>
-                <ul class="juicer-feed" data-feed-id="test-7caab2bc-0d73-4327-b326-e3ba0353c974" data-per="10"><h1 class="referral"><a href="https://www.juicer.io">Powered by Juicer</a></h1></ul>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="py-5">
     <div id="cont_contact" class="container">
         <div class="row">
@@ -143,7 +131,6 @@
                     {{contact_message_text}}
                 </div>
                 <form ng-show="contact_form_display" ng-submit="processForm()">
-                    <div class="g-recaptcha" data-sitekey="6LeJWWwUAAAAAKP0vveE8Mg8Qriq3IxggkvslDOQ"></div>
                     <div class="form-group">
                         <label for="InputName">Name</label>
                         <input type="text" class="form-control" id="InputName" placeholder="Name" ng-model="formContact.name" required> </div>
@@ -156,6 +143,21 @@
                     </div>
                     <button type="submit" class="btn btn-secondary">Submit</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="py-5 text-white">
+    <div id="cont_social" class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-primary">
+                    Impressionen
+                </h1>
+                <p>
+                    Von und mit MV Harmonie Zürich-Oberstrass
+                </p>
+                <ul class="juicer-feed" data-feed-id="test-7caab2bc-0d73-4327-b326-e3ba0353c974" data-per="10"><h1 class="referral"><a href="https://www.juicer.io">Powered by Juicer</a></h1></ul>
             </div>
         </div>
     </div>
