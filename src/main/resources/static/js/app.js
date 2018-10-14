@@ -21,6 +21,36 @@ demoApp.controller("news_controller", function ($scope, $http) {
         });
 });
 
+demoApp.controller("form_controller", function ($scope, $http) {
+
+    $scope.formData = {};
+    $scope.contact_form_display=true;
+
+    $scope.processForm = function () {
+        $http({
+            method: 'POST',
+            url: '/api/contact',
+            data: $.param($scope.formContact),  // pass in data as strings
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
+        }).then(function (success) {
+            if (success.data.success) {
+                console.log(success.data);
+                $scope.contact_message_class="alert alert-success"
+                $scope.contact_message_text="Vielen Dank!";
+                $scope.contact_message_display=true;
+                $scope.contact_form_display=false;
+            } else {
+                console.log("fehler"+success.data);
+                $scope.contact_message_class="alert alert-danger"
+                $scope.contact_message_text=success.data.errorDetails;
+                $scope.contact_message_display=true;
+                $scope.contact_form_display=true;
+
+            }
+        });
+    }
+});
+
 demoApp.controller("intralogin_controller", function ($scope, $http, $location) {
     $scope.submit = function () {
 
@@ -35,7 +65,7 @@ demoApp.controller("intralogin_controller", function ($scope, $http, $location) 
                 console.log("Login succcessful");
                 $location.path("/intra");
             } else {
-                $scope.errorMessage=success.data.message;
+                $scope.errorMessage = success.data.message;
                 console.log("Login failed " + success.data.message);
             }
         });
@@ -52,19 +82,18 @@ demoApp.controller("intra_controller", function ($scope, $http, $location, $filt
             $scope.firstName = response.data.firstName;
             $scope.lastName = response.data.lastName;
 
-            var now  = new Date();
+            var now = new Date();
             $scope.year_actual = (new Date()).getFullYear();
-            $scope.year_next = (new Date()).getFullYear()+1;
+            $scope.year_next = (new Date()).getFullYear() + 1;
 
 
-            var isAdmin = $filter('filter')(response.data.user.roles, {'type':"ADMIN"});
+            var isAdmin = $filter('filter')(response.data.user.roles, {'type': "ADMIN"});
 
             console.log("Admin: " + isAdmin);
 
             if (isAdmin != "") {
                 $scope.isAdmin = true;
             }
-
 
 
         },
