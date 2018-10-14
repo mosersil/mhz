@@ -103,7 +103,22 @@
             <column name="GENDER" type="int">
                 <constraints nullable="false" />
             </column>
-            <column name="ADDRESS_ID" type="int">
+            <column name="ADDRESS1" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ADDRESS2" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ZIP" type="varchar(10)">
+                <constraints nullable="true" />
+            </column>
+            <column name="CITY" type="varchar(30)">
+                <constraints nullable="true" />
+            </column>
+            <column name="LANDLINE" type="varchar(20)">
+                <constraints nullable="true" />
+            </column>
+            <column name="MOBILE" type="varchar(20)">
                 <constraints nullable="true" />
             </column>
         </createTable>
@@ -133,6 +148,9 @@
             <column name="LEAVE_DATE" type="datetime">
                 <constraints nullable="true" />
             </column>
+            <column name="FUNCTION" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
         </createTable>
 
         <createTable tableName="ARTICLE">
@@ -154,33 +172,17 @@
         </createTable>
 
 
-        <createTable tableName="ADDRESS">
-            <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
-            </column>
-            <column name="ADDRESS1" type="varchar(50)">
-                <constraints nullable="false" />
-            </column>
-            <column name="ADDRESS2" type="varchar(50)">
-                <constraints nullable="true" />
-            </column>
-            <column name="ZIP" type="varchar(10)">
-                <constraints nullable="false" />
-            </column>
-            <column name="CITY" type="varchar(30)">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
 
         <createView viewName="VIEW_ADDRESSLIST">
-            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, CONCAT(A.ADDRESS1, CHAR(13), A.ADDRESS2) AS ADDRESS, A.ZIP, A.CITY, O.NAME AS ORGANIZATION
+            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, CONCAT(P.ADDRESS1, CHAR(13), P.ADDRESS2) AS ADDRESS, P.ZIP, P.CITY, O.NAME AS ORGANIZATION
             FROM PERSON AS P
-            INNER JOIN ADDRESS AS A ON A.ID=P.ADDRESS_ID
             INNER JOIN MEMBERSHIP AS M ON P.ID=M.PERSON_ID
             INNER JOIN ORGANIZATION AS O ON O.ID=M.ORGANIZATION_ID
             WHERE M.LEAVE_DATE IS NULL
             ORDER BY P.LAST_NAME;
         </createView>
+
+
 
 
         <!--

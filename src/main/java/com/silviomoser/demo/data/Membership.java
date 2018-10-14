@@ -34,6 +34,9 @@ public class Membership extends AbstractEntity {
     @Column(name = "LEAVE_DATE")
     private LocalDateTime leaveDate;
 
+    @Column(name = "FUNCTION")
+    private String function;
+
     public Person getPerson() {
         return person;
     }
@@ -66,4 +69,11 @@ public class Membership extends AbstractEntity {
         this.leaveDate = leaveDate;
     }
 
+    public String getFunction() {
+        return function;
+    }
+
+    public void setFunction(String function) {
+        this.function = function;
+    }
 }

@@ -9,7 +9,6 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Window;
@@ -34,7 +33,7 @@ public abstract class AbstractEditor<T extends AbstractEntity> extends Window {
 
     CssLayout actions = new CssLayout(save, cancel, delete);
 
-    private T actualEntity;
+    protected T actualEntity;
 
 
     @Autowired
@@ -101,10 +100,11 @@ public abstract class AbstractEditor<T extends AbstractEntity> extends Window {
                     });
         });
         cancel.addClickListener(e -> close());
+        postInit();
     }
 
 
-    public final void editItem(T t) {
+    public void editItem(T t) {
         if (t == null) {
             setVisible(false);
             return;
@@ -114,11 +114,20 @@ public abstract class AbstractEditor<T extends AbstractEntity> extends Window {
             t = repository.findById(t.getId()).get();
         }
         actualEntity = t;
-        cancel.setVisible(persisted);
-        binder.setBean(t);
+        delete.setVisible(persisted);
+
         setVisible(true);
 
         // A hack to ensure the whole form is visible
         save.focus();
+        binder.setBean(t);
+
+        populateFields();
     }
+
+    public void postInit(){
+
+    }
+
+    public void populateFields() {}
 }
