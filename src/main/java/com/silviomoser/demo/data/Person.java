@@ -32,18 +32,30 @@ public class Person extends AbstractEntity {
     @Column(name = "GENDER")
     private Gender gender;
     @JsonView(Views.Public.class)
-    @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private User user;
-
+    @Column(name = "ADDRESS1", nullable = false, length = 50)
+    private String address1;
     @JsonView(Views.Public.class)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name="ADDRESS_ID")
-    private Address address;
+    @Column(name = "ADDRESS2", length = 50)
+    private String address2;
+    @JsonView(Views.Public.class)
+    @Column(name = "ZIP", nullable = false, length = 10)
+    private String zip;
+    @JsonView(Views.Public.class)
+    @Column(name = "CITY", nullable = false, length = 30)
+    private String city;
+    @Column(name = "LANDLINE", nullable = false, length = 20)
+    private String landline;
+    @Column(name = "MOBILE", nullable = false, length = 20)
+    private String mobile;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "person"
     )
     private Set<Membership> memberships;
+
+    @JsonView(Views.Public.class)
+    @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private User user;
 
     public Set<Membership> getMemberships() {
         return memberships;
@@ -77,7 +89,6 @@ public class Person extends AbstractEntity {
         this.gender = gender;
     }
 
-
     public User getUser() {
         return user;
     }
@@ -86,11 +97,51 @@ public class Person extends AbstractEntity {
         this.user = user;
     }
 
-    public Address getAddress() {
-        return address;
+    public String getAddress1() {
+        return address1;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getLandline() {
+        return landline;
+    }
+
+    public void setLandline(String landline) {
+        this.landline = landline;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

@@ -7,8 +7,8 @@ import com.silviomoser.demo.utils.HasLabel;
  * Created by silvio on 26.05.18.
  */
 public enum Gender implements HasLabel {
-    MALE("title_male"),
-    FEMALE("title_female");
+    MALE("tag_male"),
+    FEMALE("tag_female");
 
     String tag;
 
