@@ -113,6 +113,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/vaadinServlet/UIDL/**").permitAll()
+                .antMatchers("/shop/**").permitAll()
                 .antMatchers("/vaadinServlet/HEARTBEAT/**").permitAll()
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/internal/api/**").hasRole("USER")
@@ -130,6 +131,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/")
+                .antMatchers("/vaadinServlet/UIDL/**")
+                .antMatchers("/shop")
                 .antMatchers("/assets/**")
                 .antMatchers("/VAADIN/**")
                 .antMatchers("/public/api/**")

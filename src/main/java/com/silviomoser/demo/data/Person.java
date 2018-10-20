@@ -47,6 +47,8 @@ public class Person extends AbstractEntity {
     private String landline;
     @Column(name = "MOBILE", nullable = false, length = 20)
     private String mobile;
+    @Column(name = "Email", length = 50)
+    private String email;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "person"
@@ -143,5 +145,13 @@ public class Person extends AbstractEntity {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demo" ng-controller="AppCtrl" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/angular-route.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+
+    <script src="js/angular-locale_de-ch.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+
+</head>
+
+<body ng-controller="shop_controller">
+
+<nav class="navbar navbar-expand-md bg-secondary navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">&lt;Logo&gt;</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+<div class="container" ng-controller="shop_controller">
+    <h1>Shop</h1>
+
+
+    <form ng-controller="shop_controller">
+
+
+        <div class="row" ng-show="process.step==1">
+            <div class="col-sm-8">
+                <div class="card" ng-repeat="shopitem in shopitems">
+                    <div class="card-body">
+                        <h5 class="card-title">{{shopitem.name}}: {{shopitem.price}}</h5>
+                        <p class="card-text">{{shopitem.description}}</p>
+                        <input class="btn btn-primary" ng-click="addItemToCart(shopitem)" value="Kaufen"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card" ng-repeat="c in cart">
+                    <div class="card-body">
+                        <h7 class="card-title">{{c.count}} x {{c.name}}</h7>
+                        <p class="card-text">{{c.price*c.count | currency}}</p>
+                        <input class="btn btn-link" ng-click="removeItemCart(c)" value="Entfernen" />
+                    </div>
+                </div>
+                Total : {{total | currency}}
+                <button type="submit" class="btn btn-primary" ng-click="submitOrder()">Ab die Post!</button>
+            </div>
+        </div>
+
+        <div class="row" ng-show="process.step==2">
+            <div class="col-sm-8 form-group">
+                <label for="inputEmail">Email address</label>
+                <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email" required="true" ng-model="client.email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <label for="inputName">Vor-/Nachname</label>
+                <input type="text" class="form-control" id="inputName" placeholder="Max Muster" required="true" ng-model="client.name">
+                <small id="nameHelp" class="form-text text-muted">Ihr Vor-/Nachname oder Firmenname</small>
+            </div>
+            <div class="col-sm-4">
+                <div class="card" ng-repeat="c in cart">
+                    <div class="card-body">
+                        <h7 class="card-title">{{c.count}} x {{c.name}}</h7>
+                        <p class="card-text">{{c.price*c.count | currency}}</p>
+                    </div>
+                </div>
+                Total : {{total | currency}}
+                <button type="submit" class="btn btn-primary" ng-click="submitPersonalData()">Ab die Post!</button>
+            </div>
+        </div>
+
+        <div class="row" ng-show="process.step==3">
+            <div class="col-sm-8 form-group">
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+
+                    <!-- Identify your business so that you can collect the payments. -->
+                    <input type="hidden" name="business" value="herschelgomez@xyzzyu.com">
+
+                    <!-- Specify a Buy Now button. -->
+                    <input type="hidden" name="cmd" value="_xclick">
+
+                    <!-- Specify details about the item that buyers will purchase. -->
+                    <input type="hidden" name="item_name" value="Hot Sauce-12oz. Bottle">
+                    <input type="hidden" name="amount" value="5.95">
+                    <input type="hidden" name="currency_code" value="USD">
+
+                    <!-- Display the payment button. -->
+                    <input type="image" name="submit" border="0"
+                           src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
+                           alt="Buy Now">
+                    <img alt="" border="0" width="1" height="1"
+                         src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" >
+
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <div class="card" ng-repeat="c in cart">
+                    <div class="card-body">
+                        <h7 class="card-title">{{c.count}} x {{c.name}}</h7>
+                        <p class="card-text">{{c.price*c.count | currency}}</p>
+                    </div>
+                </div>
+                Total : {{total | currency}}
+                <button type="submit" class="btn btn-primary" ng-click="submitPersonalData()">Ab die Post!</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+
+</body>
+
+</html>
