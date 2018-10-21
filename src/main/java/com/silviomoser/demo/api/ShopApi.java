@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -69,15 +70,74 @@ public class ShopApi {
     }
 
     @RequestMapping(value = "/public/api/shopclient", method = RequestMethod.POST)
-    public void shopClient(@RequestBody ClientDataSubmission clientDataSubmission) {
+    public long shopClient(@RequestBody ClientDataSubmission clientDataSubmission) {
 
-        Person client = personRepository.findByEmail(clientDataSubmission.getEmail());
+        Optional<Person> client = personRepository.findByEmail(clientDataSubmission.getEmail());
         Optional<ShopOrder> order = shopOrderRepository.findById(clientDataSubmission.getId());
 
-        if (order.isPresent()) {
+        if (order.isPresent() && client.isPresent()) {
             ShopOrder shopOrder = order.get();
-            shopOrder.setPerson(client);
-            shopOrderRepository.save(shopOrder);
+            shopOrder.setPerson(client.get());
+            return shopOrderRepository.save(shopOrder).getId();
+        }
+        return 0;
+    }
+
+    @RequestMapping(value = "/public/api/createpayment", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
+    public int createPayPalPayment(HttpServletRequest request, CreatePaymentSubmission createPaymentSubmission) {
+
+        System.out.println("prepare payment " + createPaymentSubmission);
+        return 200;
+    }
+
+    public static class CreatePaymentSubmission {
+        public CreatePaymentSubmission() {}
+
+        private int amount;
+        private String currency;
+        private String description;
+        private String token;
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public void setAmount(int amount) {
+            this.amount = amount;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
+
+        public void setCurrency(String currency) {
+            this.currency = currency;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        @Override
+        public String toString() {
+            return "CreatePaymentSubmission{" +
+                    "amount=" + amount +
+                    ", currency='" + currency + '\'' +
+                    ", description='" + description + '\'' +
+                    ", token='" + token + '\'' +
+                    '}';
         }
     }
 
@@ -121,7 +181,6 @@ public class ShopApi {
         public ClientDataSubmission() {}
 
         private long id;
-        private String name;
         private String email;
 
         public long getId() {
@@ -130,14 +189,6 @@ public class ShopApi {
 
         public void setId(long id) {
             this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
 
         public String getEmail() {

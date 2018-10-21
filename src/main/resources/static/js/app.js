@@ -219,7 +219,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         console.log($scope.purchaseId + " " + $scope.client.name)
 
         var data = { email: $scope.client.email,
-                     name: $scope.client.name,
                      id: $scope.purchaseId
         };
 
