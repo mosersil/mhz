@@ -8,7 +8,6 @@ import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.repository.AddressListRepository;
 import com.silviomoser.demo.repository.CalendarEventRepository;
-import com.silviomoser.demo.repository.UserRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.utils.PdfBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

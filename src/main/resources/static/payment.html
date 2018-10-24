@@ -7,6 +7,7 @@
             crossorigin="anonymous"></script>
     <script src="https://bridge.paymill.com/"></script>
     <script>
+        PAYMILL_PUBLIC_KEY = "40433965467839fe8b5288527a260995"; // Insert your Public API Key here
         // Callback for the PayFrame
         var payFrameCallback = function (error) {
             if (error) {
@@ -30,6 +31,7 @@
                     console.log(error.apierror, error.message);
                 } else {
                     // Token was created successfully and can be sent to backend.
+                    console.log("token has been created")
                     var form = $("#payment-form");
                     var token = result.token;
                     form.append("<input type='hidden' name='token' value='" + token + "'/>");
@@ -45,7 +47,6 @@
             paymill.embedFrame('credit-card-fields', {
                 lang: 'de'
             }, payFrameCallback);
-
             $("#payment-form").submit(submit);
         });
     </script>

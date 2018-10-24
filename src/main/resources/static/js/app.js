@@ -5,8 +5,32 @@ var demoApp = angular
 demoApp.factory('ShopService', function () {
     return {
         cart: [],
-        total: 0
+        total: 0,
+        currentStep: 1
     };
+});
+
+
+demoApp.service('AuthenticationService', function ($http) {
+    this.isAuthenticated = function () {
+        var authenticated = false
+
+        $http.get('/auth/user').then(
+            function (success) {
+                authenticated = true;
+                return authenticated;
+            },
+            function (error) {
+                if (error.status == 401) {
+                    authenticated = false;
+                }
+                if (error.status == 403) {
+                    authenticated = false;
+                }
+                authenticated = false;
+                return authenticated;
+            });
+    }
 });
 
 
@@ -41,13 +65,11 @@ demoApp.controller("form_controller", function ($scope, $http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
         }).then(function (success) {
             if (success.data.success) {
-                console.log(success.data);
                 $scope.contact_message_class = "alert alert-success"
                 $scope.contact_message_text = "Vielen Dank!";
                 $scope.contact_message_display = true;
                 $scope.contact_form_display = false;
             } else {
-                console.log("fehler" + success.data);
                 $scope.contact_message_class = "alert alert-danger"
                 $scope.contact_message_text = success.data.errorDetails;
                 $scope.contact_message_display = true;
@@ -116,27 +138,116 @@ demoApp.controller("intra_controller", function ($scope, $http, $location, $filt
 });
 
 
-demoApp.controller("shop_controller", function ($scope, $http, $httpParamSerializerJQLike, ShopService) {
+demoApp.controller("shop_controller", function ($scope, $http, $httpParamSerializerJQLike, ShopService, AuthenticationService) {
 
     $scope.cart = ShopService.cart;
     $scope.total = ShopService.total;
+    $scope.currentStep = null;
 
+
+    AuthenticationService.isAuthenticated();
+
+
+    // Check the currentStep value in EVERY DIGEST to see if it's changed.
+    // And, if so, update the local view-model.
+    $scope.$watch(
+        function checkCurrentStep() {
+            return (ShopService.currentStep);
+        },
+        function handleStepChange(newValue, oldValue) {
+            $scope.currentStep = newValue;
+        }
+    );
+
+
+    //Check whether the current user is already authenticated
+    /*
+    var isAuthenticated = function () {
+        $http.get('/auth/user').then(
+            function (response) {
+                return true;
+            },
+            function (error) {
+                if (error.status == 401) {
+                    return false;
+                }
+            }
+        );
+    }
+    */
 
     $http.get("/public/api/shopitems")
         .then(function (response) {
             $scope.shopitems = response.data;
         });
 
-    $scope.process = {
-        step: 1
+
+    // Callback for the PayFrame
+    var payFrameCallback = function (error) {
+        if (error) {
+            // Frame could not be loaded, check error object for reason.
+            console.log(error.apierror, error.message);
+        } else {
+            // Frame was loaded successfully and is ready to be used.
+            console.log("PayFrame successfully loaded");
+            $("#payment-form").show(300);
+        }
     }
 
+    var submit = function (event) {
+        paymill.createTokenViaFrame({
+            amount_int: $scope.total * 100,
+            currency: 'CHF'
+        }, function (error, result) {
+            // Handle error or process result.
+            if (error) {
+                // Token could not be created, check error object for reason.
+                console.log(error.apierror, error.message);
+            } else {
+                // Token was created successfully and can be sent to backend.
+                console.log("token has been created")
+                var form = $("#payment-form");
+                var token = result.token;
+                form.append("<input type='hidden' name='token' value='" + token + "'/>");
+                form.get(0).submit();
+            }
+        });
+
+        return false;
+    }
+
+
+    angular.element(document).ready(function () {
+        paymill.embedFrame('credit-card-fields', {
+            lang: 'de'
+        }, payFrameCallback);
+        $("#payment-form").submit(submit);
+    });
+
+
+    $scope.submitLogin = function () {
+        var data = {
+            username: $scope.username,
+            password: $scope.password
+        };
+        $http.post('/login', data).then(function (success) {
+            if (success.data.errorCode == 0) {
+                console.log("Login succcessful");
+                ShopService.currentStep += 1;
+            } else {
+                $scope.errorMessage = success.data.message;
+                console.log("Login failed " + success.data.message);
+            }
+        });
+    };
+
+
     $scope.nextStep = function () {
-        $scope.process.step += 1;
+        ShopService.currentStep += 1;
     }
 
     $scope.previousStep = function () {
-        $scope.process.step -= 1;
+        ShopService.currentStep -= 1;
     }
 
 
@@ -145,7 +256,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         if ($scope.cart.length === 0) {
             product.count = 1;
             $scope.cart.push(product);
-            console.log(product);
 
         } else {
             var repeat = false;
@@ -185,13 +295,8 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
 
     $scope.submitOrder = function () {
-        console.log(ShopService.cart);
-
-
         var data = [];
-
         angular.forEach(ShopService.cart, function (value, key) {
-
             var orderLine = {
                 count: value.count,
                 shopItemId: value.id
@@ -199,7 +304,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
             data.push(orderLine);
         });
-
 
         $http({
             url: '/public/api/shopinit',
@@ -211,15 +315,27 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
         }).then(function (success) {
             $scope.purchaseId = success.data;
-            $scope.process.step += 1;
+            ShopService.currentStep += 1;
+            var alreadyKnown = false;
+            AuthenticationService.isAuthenticated(alreadyKnown);
+
+            console.log("AuthenticationService: " + AuthenticationService.isAuthenticated(alreadyKnown).data);
+            if (AuthenticationService.isAuthenticated(alreadyKnown) == true) {
+                console.log("User is authenticated. Go to step 3 immediately");
+                ShopService.currentStep += 1;
+            }
+            else {
+                console.log("User is not yet authenticated. Display login")
+            }
         });
     }
 
     $scope.submitPersonalData = function () {
         console.log($scope.purchaseId + " " + $scope.client.name)
 
-        var data = { email: $scope.client.email,
-                     id: $scope.purchaseId
+        var data = {
+            email: $scope.client.email,
+            id: $scope.purchaseId
         };
 
         $http({
@@ -231,10 +347,11 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
             }
 
         }).then(function (success) {
-            $scope.process.step += 1;
+            ShopService.currentStep += 1;
         });
 
     }
+
 
 });
 
@@ -253,6 +370,12 @@ demoApp.config(function ($routeProvider) {
         })
         .when("/shop", {
             templateUrl: "shop.html",
+        })
+        .when("/shop-login", {
+            templateUrl: "shop-login.html",
+        })
+        .when("/shop-transactions", {
+            templateUrl: "shop-transactions.html",
         })
         .when("/intra", {
             templateUrl: "intra.html",

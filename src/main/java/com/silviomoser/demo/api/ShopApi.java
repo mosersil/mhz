@@ -1,5 +1,7 @@
 package com.silviomoser.demo.api;
 
+import com.paymill.context.PaymillContext;
+import com.paymill.models.Transaction;
 import com.silviomoser.demo.data.AbstractEntity;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.ShopItem;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,6 +42,9 @@ public class ShopApi {
 
     @Autowired
     PersonRepository personRepository;
+
+    @Autowired
+    PaymillContext paymillContext;
 
 
     @CrossOrigin(origins = "*")
@@ -84,10 +91,12 @@ public class ShopApi {
     }
 
     @RequestMapping(value = "/public/api/createpayment", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
-    public int createPayPalPayment(HttpServletRequest request, CreatePaymentSubmission createPaymentSubmission) {
+    public void createPayPalPayment(HttpServletRequest request, HttpServletResponse response, CreatePaymentSubmission createPaymentSubmission) throws IOException {
+
+        Transaction transaction = paymillContext.getTransactionService().createWithToken(createPaymentSubmission.getToken(), createPaymentSubmission.getAmount(), createPaymentSubmission.getCurrency(), createPaymentSubmission.getDescription());
 
         System.out.println("prepare payment " + createPaymentSubmission);
-        return 200;
+        response.sendRedirect("/#!/shop-transactions");
     }
 
     public static class CreatePaymentSubmission {

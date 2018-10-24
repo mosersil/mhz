@@ -33,8 +33,9 @@
 
     <div ng-controller="shop_controller">
 
+        <!-- Step 1: Display items and allow user to choose items -->
 
-        <div class="row" ng-show="process.step==1">
+        <div class="row" ng-show="currentStep==1">
             <div class="col-sm-8">
                 <div class="card" ng-repeat="shopitem in shopitems">
                     <div class="card-body">
@@ -49,7 +50,7 @@
                     <div class="card-body">
                         <h7 class="card-title">{{c.count}} x {{c.name}}</h7>
                         <p class="card-text">{{c.price*c.count | currency}}</p>
-                        <input class="btn btn-link" ng-click="removeItemCart(c)" value="Entfernen" />
+                        <input class="btn btn-link" ng-click="removeItemCart(c)" value="Entfernen"/>
                     </div>
                 </div>
                 Total : {{total | currency}}
@@ -57,52 +58,95 @@
             </div>
         </div>
 
-        <div class="row" ng-show="process.step==2">
-            <div class="col-sm-8 form-group">
-                <label for="inputEmail">Email Adresse</label>
-                <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email" required="true" ng-model="client.email">
-                <small id="emailHelp" class="form-text text-muted">Für die Bearbeitung Ihrer Bestellung benötigen wir Ihre Email Adresse.</small>
-            </div>
-            <div class="col-sm-4">
-                <div class="card" ng-repeat="c in cart">
-                    <div class="card-body">
-                        <h7 class="card-title">{{c.count}} x {{c.name}}</h7>
-                        <p class="card-text">{{c.price*c.count | currency}}</p>
-                    </div>
+
+        <!--
+        Step 2: Once the user has chosen everything, identify the user.
+         Scenario 1: User is already authenticated. In that case, we can continue with step 3
+         Scenario 2: User has already an account. Allow to enter credentials
+         Scenario 3: User is here for the first time. Allow registration
+         -->
+        <div class="row" ng-show="currentStep==2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Für bereits registrierte Benutzer</div>
+                <div class="panel-body">
+                    <form name="form" ng-submit="submitLogin()" role="form">
+                        <div class="form-group"
+                             ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" id="username" class="form-control" ng-model="username"
+                                   required/>
+                            <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" class="form-control"
+                                   ng-model="password" required/>
+                            <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Login</button>
+                            <!--img ng-if="vm.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /-->
+                            <!--a href="#!/register" class="btn btn-link">Register</a-->
+                        </div>
+                    </form>
                 </div>
-                Total : {{total | currency}}
-                <button type="submit" class="btn btn-primary" ng-click="submitPersonalData()">Ab die Post!</button>
+            </div>
+        </div>
+        <div class="row" ng-show="currentStep==2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Sie sind noch nicht bei uns registriert?</div>
+                <div class="panel-body">
+                    <form class="form-group" id="registerform">
+                        <label for="firstname">Vorname:</label>
+                        <input type="text" class="form-control" id="firstname">
+                        <label for="lastname">Nachname:</label>
+                        <input type="text" class="form-control" id="lastname">
+                        <label for="email">E-Mail:</label>
+                        <input type="text" class="form-control" id="email">
+                        <label for="newpassword">Passwort:</label>
+                        <input type="password" autocomplete="passwort" class="form-control" id="newpassword">
+                        <label for="confirmpassword">Passwort:</label>
+                        <input type="password" autocomplete="passwort" class="form-control" id="confirmpassword">
+                        <button type="submit" ng-disabled="registerform.$invalid" class="btn btn-primary">Registrieren
+                        </button>
+                    </form>
+
+                </div>
             </div>
         </div>
 
-        <div class="row" ng-show="process.step==3">
-                <form class="payment-form col-lg-5 collapse" id="payment-form" action="/public/api/createpayment" method="POST">
-                    <input type="hidden" name="amount" value="1000">
-                    <input type="hidden" name="currency" value="EUR">
-                    <input type="hidden" name="description" value="Easy Payments Guide!!!">
+        <div class="row" ng-show="currentStep==3">
+            <div class="col-sm-12 form-group">
+
+                <p>Bitte begleichen Sie den Gesamtbetrag von CHF {{total | currency}} mit Ihrer Kreditkarte</p>
+
+
+                <form class="payment-form col-lg-5 collapse" id="payment-form" action="/public/api/createpayment"
+                      method="POST">
+                    <input type="hidden" name="amount" value="{{total * 100}}">
+                    <input type="hidden" name="currency" value="CHF">
+                    <input type="hidden" name="description" value="{{purchaseId}}">
 
                     <div id="credit-card-fields">
                         <!-- Embedded credit card frame will load here -->
                     </div>
 
-                    <button class='form-control btn btn-success submit-button' type='submit'>Get your "Easy Payments Guide" now for 42â‚¬</button>
+                    <button class='form-control btn btn-success submit-button' type='submit'>Jetzt bezahlen</button>
                 </form>
-
-            <div class="col-sm-4">
-                <div class="card" ng-repeat="c in cart">
-                    <div class="card-body">
-                        <h7 class="card-title">{{c.count}} x {{c.name}}</h7>
-                        <p class="card-text">{{c.price*c.count | currency}}</p>
-                    </div>
-                </div>
-                Total : {{total | currency}}
-                <button type="submit" class="btn btn-primary" ng-click="submitPersonalData()">Ab die Post!</button>
+            </div>
+            <div class="col-sm-12 form-group">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="c in cart">
+                        {{c.count}} x {{c.name}}: {{c.price*c.count | currency}}
+                    </li>
+                </ul>
+                <p class="text-right">Total : {{total | currency}}</p>
             </div>
         </div>
+
+
     </div>
-
-
-</div>
 
 
 </body>
