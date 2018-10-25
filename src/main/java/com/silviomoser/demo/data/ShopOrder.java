@@ -37,6 +37,15 @@ public class ShopOrder extends AbstractEntity{
     @Column(name = "STATUS")
     private ShopOrderStatusType status = ShopOrderStatusType.INITIATED;
 
+    @Column(name = "PAYMENT_ID")
+    private String paymentId;
+
+    @Column(name = "PAYMENT_RESPONSE")
+    private int paymentResponse;
+
+    @Column(name = "PAYMENT_STATUS")
+    private String paymentStatus;
+
 
     public Person getPerson() {
         return person;
@@ -68,5 +77,29 @@ public class ShopOrder extends AbstractEntity{
 
     public void setStatus(ShopOrderStatusType status) {
         this.status = status;
+    }
+
+    public int getPaymentResponse() {
+        return paymentResponse;
+    }
+
+    public void setPaymentResponse(int paymentResponse) {
+        this.paymentResponse = paymentResponse;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

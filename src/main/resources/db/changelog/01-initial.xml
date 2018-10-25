@@ -205,6 +205,15 @@
             <column name="STATUS" type="int">
                 <constraints nullable="false"/>
             </column>
+            <column name="PAYMENT_ID" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PAYMENT_RESPONSE" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PAYMENT_STATUS" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
 
         <createTable tableName="SHOPORDER_SHOPITEM">

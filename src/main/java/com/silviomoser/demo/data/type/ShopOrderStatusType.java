@@ -5,6 +5,6 @@ package com.silviomoser.demo.data.type;
  */
 public enum ShopOrderStatusType {
     INITIATED,
-    PAYED,
-    FINISHED
+    READY_FOR_PAYMENT,
+    PAYED
 }

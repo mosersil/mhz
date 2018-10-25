@@ -11,7 +11,22 @@ demoApp.factory('ShopService', function () {
 });
 
 
-demoApp.service('AuthenticationService', function ($http) {
+demoApp.factory('AuthenticationService', function ($http) {
+
+    return {
+        isAuthenticated: function () {
+            return $http.get('/auth/user').then(
+                function (success) {
+                    return true;
+                },
+                function (error) {
+                    return false;
+                });
+        }
+    }
+
+
+    /*
     this.isAuthenticated = function () {
         var authenticated = false
 
@@ -31,6 +46,7 @@ demoApp.service('AuthenticationService', function ($http) {
                 return authenticated;
             });
     }
+    */
 });
 
 
@@ -145,9 +161,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
     $scope.currentStep = null;
 
 
-    AuthenticationService.isAuthenticated();
-
-
     // Check the currentStep value in EVERY DIGEST to see if it's changed.
     // And, if so, update the local view-model.
     $scope.$watch(
@@ -159,22 +172,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         }
     );
 
-
-    //Check whether the current user is already authenticated
-    /*
-    var isAuthenticated = function () {
-        $http.get('/auth/user').then(
-            function (response) {
-                return true;
-            },
-            function (error) {
-                if (error.status == 401) {
-                    return false;
-                }
-            }
-        );
-    }
-    */
 
     $http.get("/public/api/shopitems")
         .then(function (response) {
@@ -223,24 +220,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         }, payFrameCallback);
         $("#payment-form").submit(submit);
     });
-
-
-    $scope.submitLogin = function () {
-        var data = {
-            username: $scope.username,
-            password: $scope.password
-        };
-        $http.post('/login', data).then(function (success) {
-            if (success.data.errorCode == 0) {
-                console.log("Login succcessful");
-                ShopService.currentStep += 1;
-            } else {
-                $scope.errorMessage = success.data.message;
-                console.log("Login failed " + success.data.message);
-            }
-        });
-    };
-
 
     $scope.nextStep = function () {
         ShopService.currentStep += 1;
@@ -316,19 +295,49 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         }).then(function (success) {
             $scope.purchaseId = success.data;
             ShopService.currentStep += 1;
-            var alreadyKnown = false;
-            AuthenticationService.isAuthenticated(alreadyKnown);
 
-            console.log("AuthenticationService: " + AuthenticationService.isAuthenticated(alreadyKnown).data);
-            if (AuthenticationService.isAuthenticated(alreadyKnown) == true) {
-                console.log("User is authenticated. Go to step 3 immediately");
-                ShopService.currentStep += 1;
-            }
-            else {
-                console.log("User is not yet authenticated. Display login")
-            }
+            AuthenticationService.isAuthenticated().then(function (value) {
+                if (value === true) {
+                    console.log("User is authenticated. Go to step 3 immediately");
+                    ShopService.currentStep += 1;
+                }
+                else {
+                    console.log("User is not yet authenticated. Display login")
+                }
+            })
         });
     }
+
+
+    $scope.submitLogin = function () {
+        var data = {
+            username: $scope.username,
+            password: $scope.password
+        };
+        $http.post('/login', data).then(function (success) {
+            if (success.data.errorCode == 0) {
+
+                var data = {
+                    id: $scope.purchaseId
+                };
+
+                $http({
+                    url: '/internal/shop/authorizeOrder',
+                    method: 'POST',
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+
+                }).then(function (success) {
+                    ShopService.currentStep += 1;
+                });
+            } else {
+                $scope.errorMessage = success.data.message;
+                console.log("Login failed " + success.data.message);
+            }
+        });
+    };
 
     $scope.submitPersonalData = function () {
         console.log($scope.purchaseId + " " + $scope.client.name)

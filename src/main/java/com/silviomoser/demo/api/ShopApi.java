@@ -6,9 +6,11 @@ import com.silviomoser.demo.data.AbstractEntity;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.ShopItem;
 import com.silviomoser.demo.data.ShopOrder;
+import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.repository.PersonRepository;
 import com.silviomoser.demo.repository.ShopItemRepository;
 import com.silviomoser.demo.repository.ShopOrderRepository;
+import com.silviomoser.demo.security.utils.SecurityUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -71,20 +73,25 @@ public class ShopApi {
             items.add(shopItemRepository.getOne(it.getShopItemId()));
         });
         shopOrder.setItems(items);
+        if (SecurityUtils.getMy()!=null) {
+            shopOrder.setPerson(SecurityUtils.getMy());
+        }
         ShopOrder item = shopOrderRepository.save(shopOrder);
         return item.getId();
 
     }
 
-    @RequestMapping(value = "/public/api/shopclient", method = RequestMethod.POST)
+    @RequestMapping(value = "/internal/shop/authorizeOrder", method = RequestMethod.POST)
     public long shopClient(@RequestBody ClientDataSubmission clientDataSubmission) {
 
-        Optional<Person> client = personRepository.findByEmail(clientDataSubmission.getEmail());
         Optional<ShopOrder> order = shopOrderRepository.findById(clientDataSubmission.getId());
 
-        if (order.isPresent() && client.isPresent()) {
+        Person me = SecurityUtils.getMy();
+
+        if (order.isPresent() && me!=null) {
             ShopOrder shopOrder = order.get();
-            shopOrder.setPerson(client.get());
+            shopOrder.setPerson(me);
+            shopOrder.setStatus(ShopOrderStatusType.READY_FOR_PAYMENT);
             return shopOrderRepository.save(shopOrder).getId();
         }
         return 0;
@@ -95,7 +102,20 @@ public class ShopApi {
 
         Transaction transaction = paymillContext.getTransactionService().createWithToken(createPaymentSubmission.getToken(), createPaymentSubmission.getAmount(), createPaymentSubmission.getCurrency(), createPaymentSubmission.getDescription());
 
-        System.out.println("prepare payment " + createPaymentSubmission);
+
+        transaction.getResponseCode();
+
+        ShopOrder shopOrder = shopOrderRepository.getOne(Long.parseLong(createPaymentSubmission.getDescription()));
+
+        shopOrder.setPaymentResponse(transaction.getResponseCode());
+        shopOrder.setPaymentStatus(transaction.getStatus().getValue());
+        shopOrder.setPaymentId(transaction.getId());
+
+        if (transaction.getResponseCode()==20000) {
+            shopOrder.setStatus(ShopOrderStatusType.PAYED);
+        }
+
+        shopOrderRepository.save(shopOrder);
         response.sendRedirect("/#!/shop-transactions");
     }
 
@@ -190,7 +210,6 @@ public class ShopApi {
         public ClientDataSubmission() {}
 
         private long id;
-        private String email;
 
         public long getId() {
             return id;
@@ -200,12 +219,5 @@ public class ShopApi {
             this.id = id;
         }
 
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
     }
 }
