@@ -8,6 +8,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -47,6 +49,13 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
                 new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), error);
         return new ResponseEntity<Object>(
                 apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<Object> handleApiException(ApiException ex, WebRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), ex.getMessage());
+        return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }
 

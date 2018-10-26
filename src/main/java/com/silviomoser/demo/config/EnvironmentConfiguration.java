@@ -1,5 +1,6 @@
 package com.silviomoser.demo.config;
 
+import com.paymill.context.PaymillContext;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import org.springframework.web.context.annotation.SessionScope;
  */
 
 @Configuration
-@PropertySource("file:///${appconf.path:opt}/app.properties")
+@PropertySource("${appconf.path:classpath:default.properties}")
 public class EnvironmentConfiguration {
 
 
@@ -27,6 +28,11 @@ public class EnvironmentConfiguration {
         contactConfiguration.setContactEmailTo(environment.getProperty("contact.to"));
         contactConfiguration.setGetContactEmailSubject(environment.getProperty("contact.subject"));
         return contactConfiguration;
+    }
+
+    @Bean
+    public PaymillContext paymillContext() {
+        return new PaymillContext( "" );
     }
 
     @Bean

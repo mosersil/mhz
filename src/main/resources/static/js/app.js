@@ -24,29 +24,6 @@ demoApp.factory('AuthenticationService', function ($http) {
                 });
         }
     }
-
-
-    /*
-    this.isAuthenticated = function () {
-        var authenticated = false
-
-        $http.get('/auth/user').then(
-            function (success) {
-                authenticated = true;
-                return authenticated;
-            },
-            function (error) {
-                if (error.status == 401) {
-                    authenticated = false;
-                }
-                if (error.status == 403) {
-                    authenticated = false;
-                }
-                authenticated = false;
-                return authenticated;
-            });
-    }
-    */
 });
 
 
@@ -298,13 +275,25 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
             AuthenticationService.isAuthenticated().then(function (value) {
                 if (value === true) {
-                    console.log("User is authenticated. Go to step 3 immediately");
-                    ShopService.currentStep += 1;
+                    console.log("User is authenticated. Go to payment immediately");
+                    ShopService.currentStep += 3;
                 }
                 else {
                     console.log("User is not yet authenticated. Display login")
                 }
             })
+        });
+    }
+
+    $scope.checkUserIsPresent = function () {
+        $http({
+            url: '/public/api/checkUserExists',
+            method: "GET",
+            params: {username: $scope.username}
+        }).then(function (response) {
+            ShopService.currentStep += 2;
+        }, function (error) {
+            ShopService.currentStep += 1;
         });
     }
 
@@ -328,6 +317,10 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
         }).then(function (success) {
             ShopService.currentStep += 1;
+        }, function(error) {
+            $scope.register_message_class = "alert alert-warning"
+            $scope.register_message_text = error.data.message;
+            $scope.register_message_display = true;
         });
     }
 
@@ -360,28 +353,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
             }
         });
     };
-
-    $scope.submitPersonalData = function () {
-        console.log($scope.purchaseId + " " + $scope.client.name)
-
-        var data = {
-            email: $scope.client.email,
-            id: $scope.purchaseId
-        };
-
-        $http({
-            url: '/public/api/shopclient',
-            method: 'POST',
-            data: data,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-
-        }).then(function (success) {
-            ShopService.currentStep += 1;
-        });
-
-    }
 
 
 });

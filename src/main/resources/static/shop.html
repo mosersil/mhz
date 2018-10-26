@@ -65,49 +65,32 @@
          Scenario 2: User has already an account. Allow to enter credentials
          Scenario 3: User is here for the first time. Allow registration
          -->
+
         <div class="row" ng-show="currentStep==2">
             <div class="panel panel-default">
-                <div class="panel-heading">Für bereits registrierte Benutzer</div>
+                <div class="panel-heading">Wie lautet Ihr Benutzername oder Ihre E-Mail Adresse?</div>
                 <div class="panel-body">
-                    <form name="form" ng-submit="submitLogin()" role="form">
-                        <div class="form-group"
-                             ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
-                            <label for="username">Username</label>
-                            <input type="text" name="username" id="username" class="form-control" ng-model="username"
-                                   required/>
-                            <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
-                        </div>
-                        <div class="form-group"
-                             ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" id="password" class="form-control"
-                                   ng-model="password" required/>
-                            <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Login</button>
-                            <!--img ng-if="vm.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /-->
-                            <!--a href="#!/register" class="btn btn-link">Register</a-->
-                        </div>
-                    </form>
+                    <input type="username" class="form-control" ng-model="username"
+                           ng-required="true">
                 </div>
+                <button type="submit" class="btn btn-primary" ng-click="checkUserIsPresent()">weiter</button>
             </div>
         </div>
-        <div class="row" ng-show="currentStep==2">
+
+
+        <div class="row" ng-show="currentStep==3">
             <div class="panel panel-default">
-                <div class="panel-heading">Sie sind noch nicht bei uns registriert?</div>
+                <div class="panel-heading">Sie sind noch nicht bei uns registriert? Bitte machen Sie die folgenden Angaben:</div>
                 <div class="panel-body">
+                    <div ng-show="register_message_display" class="{{register_message_class}}" role="alert">
+                        {{register_message_text}}
+                    </div>
                     <form class="form-group" id="registerform" ng-submit="registerPerson()">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" ng-model="register_gender" value="male">
-                                Herr
-                            </label>
-                            <label>
-                                <input type="radio" ng-model="register_gender" value="female">
-                                Frau
-                            </label>
-                        </div>
+
+                        <select name="gender" ng-model="register_gender" ng-required="true">
+                            <option value="male">Herr</option>
+                            <option value="female">Frau</option>
+                        </select>
                         <label for="firstname">Vorname:</label>
                         <input type="text" class="form-control" id="firstname" ng-model="register_firstname"
                                ng-required="true">
@@ -123,7 +106,8 @@
                         <label for="confirmpassword">Passwort:</label>
                         <input type="password" autocomplete="passwort" class="form-control" id="confirmpassword"
                                ng-model="register_confirm_password">
-                        <button type="submit" ng-disabled="registerform.$invalid" class="btn btn-primary">Registrieren
+                        <button type="submit" ng-disabled="registerform.$invalid" class="btn btn-primary">
+                            Registrieren
                         </button>
                     </form>
 
@@ -131,7 +115,38 @@
             </div>
         </div>
 
-        <div class="row" ng-show="currentStep==3">
+        <div class="row" ng-show="currentStep==4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Bitte authentisieren Sie sich mit Ihrem Passwort</div>
+                <div class="panel-body">
+                    <form name="form" ng-submit="submitLogin()" role="form">
+                        <div class="form-group"
+                             ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" id="username" class="form-control"
+                                   ng-model="username"
+                                   required/>
+                            <span ng-show="form.username.$dirty && form.username.$error.required"
+                                  class="help-block">Username is required</span>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" class="form-control"
+                                   ng-model="password" required/>
+                            <span ng-show="form.password.$dirty && form.password.$error.required"
+                                  class="help-block">Password is required</span>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" ng-show="currentStep==5">
             <div class="col-sm-12 form-group">
 
                 <p>Bitte begleichen Sie den Gesamtbetrag von CHF {{total | currency}} mit Ihrer Kreditkarte</p>
