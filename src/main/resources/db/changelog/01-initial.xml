@@ -122,7 +122,7 @@
                 <constraints nullable="true" />
             </column>
             <column name="EMAIL" type="varchar(50)">
-                <constraints nullable="true" />
+                <constraints nullable="true" unique="true"/>
             </column>
         </createTable>
 

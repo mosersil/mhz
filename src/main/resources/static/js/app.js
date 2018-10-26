@@ -308,6 +308,28 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         });
     }
 
+    $scope.registerPerson = function () {
+        var data = {
+            gender: $scope.register_gender,
+            firstName: $scope.register_firstname,
+            lastName: $scope.register_lastname,
+            email: $scope.register_email,
+            password: $scope.register_password,
+            confirm: $scope.register_password_confirm
+        }
+
+        $http({
+            url: '/public/api/registerPerson',
+            method: 'POST',
+            data: data,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).then(function (success) {
+            ShopService.currentStep += 1;
+        });
+    }
 
     $scope.submitLogin = function () {
         var data = {

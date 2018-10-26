@@ -90,8 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider
-                = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(encoder());
         return authProvider;
@@ -113,7 +112,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/vaadinServlet/UIDL/**").permitAll()
-                .antMatchers("/shop/**").permitAll()
                 .antMatchers("/vaadinServlet/HEARTBEAT/**").permitAll()
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/internal/api/**").hasRole("USER")
@@ -132,7 +130,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/")
                 .antMatchers("/vaadinServlet/UIDL/**")
-                .antMatchers("/shop")
                 .antMatchers("/assets/**")
                 .antMatchers("/VAADIN/**")
                 .antMatchers("/public/api/**")

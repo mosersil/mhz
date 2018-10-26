@@ -47,7 +47,7 @@ public class Person extends AbstractEntity {
     private String landline;
     @Column(name = "MOBILE", nullable = false, length = 20)
     private String mobile;
-    @Column(name = "Email", length = 50)
+    @Column(name = "Email", length = 50, unique = true)
     private String email;
 
     @OneToMany(fetch = FetchType.EAGER,

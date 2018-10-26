@@ -2,10 +2,11 @@ package com.silviomoser.demo.api;
 
 import com.paymill.context.PaymillContext;
 import com.paymill.models.Transaction;
-import com.silviomoser.demo.data.AbstractEntity;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.ShopItem;
 import com.silviomoser.demo.data.ShopOrder;
+import com.silviomoser.demo.data.builder.PersonBuilder;
+import com.silviomoser.demo.data.type.RoleType;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.repository.PersonRepository;
 import com.silviomoser.demo.repository.ShopItemRepository;
@@ -14,17 +15,14 @@ import com.silviomoser.demo.security.utils.SecurityUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +32,7 @@ import java.util.Optional;
  * Created by silvio on 14.10.18.
  */
 @RestController
+@Slf4j
 public class ShopApi {
 
     @Autowired
@@ -47,6 +46,9 @@ public class ShopApi {
 
     @Autowired
     PaymillContext paymillContext;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @CrossOrigin(origins = "*")
@@ -80,6 +82,9 @@ public class ShopApi {
         return item.getId();
 
     }
+
+
+
 
     @RequestMapping(value = "/internal/shop/authorizeOrder", method = RequestMethod.POST)
     public long shopClient(@RequestBody ClientDataSubmission clientDataSubmission) {
@@ -118,6 +123,8 @@ public class ShopApi {
         shopOrderRepository.save(shopOrder);
         response.sendRedirect("/#!/shop-transactions");
     }
+
+
 
     public static class CreatePaymentSubmission {
         public CreatePaymentSubmission() {}
