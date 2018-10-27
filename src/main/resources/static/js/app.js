@@ -302,9 +302,12 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
             gender: $scope.register_gender,
             firstName: $scope.register_firstname,
             lastName: $scope.register_lastname,
+            address1: $scope.register_address1,
+            zip: $scope.register_zip,
+            city: $scope.register_city,
             email: $scope.register_email,
             password: $scope.register_password,
-            confirm: $scope.register_password_confirm
+            password_confirmation: $scope.register_password_confirm
         }
 
         $http({

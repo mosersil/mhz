@@ -10,7 +10,7 @@ public class PersonRegistrationDataSubmission {
     private String firstName;
     private String lastName;
     private String email;
-    private String address;
+    private String address1;
     private String address2;
     private String zip;
     private String city;

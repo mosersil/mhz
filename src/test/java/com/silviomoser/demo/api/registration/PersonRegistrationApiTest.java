@@ -115,7 +115,7 @@ public class PersonRegistrationApiTest extends AbstractTestNGSpringContextTests 
         personRegistrationDataSubmission.setFirstName(firstName);
         personRegistrationDataSubmission.setLastName(lastName);
         personRegistrationDataSubmission.setEmail(email);
-        personRegistrationDataSubmission.setAddress(address1);
+        personRegistrationDataSubmission.setAddress1(address1);
         personRegistrationDataSubmission.setAddress2(address2);
         personRegistrationDataSubmission.setZip(zip);
         personRegistrationDataSubmission.setCity(city);

@@ -58,7 +58,7 @@ public class PersonRegistrationApi {
                     .gender(registrationDataSubmission.getGender())
                     .firstName(registrationDataSubmission.getFirstName())
                     .lastName(registrationDataSubmission.getLastName())
-                    .address1(registrationDataSubmission.getAddress())
+                    .address1(registrationDataSubmission.getAddress1())
                     .address2(registrationDataSubmission.getAddress2())
                     .zip(registrationDataSubmission.getZip())
                     .city(registrationDataSubmission.getCity())

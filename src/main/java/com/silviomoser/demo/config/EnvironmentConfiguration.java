@@ -32,7 +32,7 @@ public class EnvironmentConfiguration {
 
     @Bean
     public PaymillContext paymillContext() {
-        return new PaymillContext( "" );
+        return new PaymillContext( environment.getProperty("paymill.api.privatekey") );
     }
 
     @Bean

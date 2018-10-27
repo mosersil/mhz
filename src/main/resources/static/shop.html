@@ -68,7 +68,7 @@
 
         <div class="row" ng-show="currentStep==2">
             <div class="panel panel-default">
-                <div class="panel-heading">Wie lautet Ihr Benutzername oder Ihre E-Mail Adresse?</div>
+                <div class="panel-heading">Wie lautet Ihre Ihre E-Mail Adresse?</div>
                 <div class="panel-body">
                     <input type="username" class="form-control" ng-model="username"
                            ng-required="true">
@@ -87,25 +87,45 @@
                     </div>
                     <form class="form-group" id="registerform" ng-submit="registerPerson()">
 
-                        <select name="gender" ng-model="register_gender" ng-required="true">
+                        <div class="form-group">
+                            <label for="gender">Anrede</label>
+                        <select name="gender" id="gender" ng-model="register_gender" ng-required="true">
                             <option value="male">Herr</option>
                             <option value="female">Frau</option>
                         </select>
+                        </div>
                         <label for="firstname">Vorname:</label>
                         <input type="text" class="form-control" id="firstname" ng-model="register_firstname"
                                ng-required="true">
+
                         <label for="lastname">Nachname:</label>
                         <input type="text" class="form-control" id="lastname" ng-model="register_lastname"
                                ng-required="true">
+
+                        <label for="address1">Adresse:</label>
+                        <input type="text" class="form-control" id="address1" ng-model="register_address1"
+                               ng-required="true">
+
+                        <label for="zip">PLZ:</label>
+                        <input type="text" class="form-control" id="zip" ng-model="register_zip"
+                               ng-required="true">
+
+                        <label for="city">Ort:</label>
+                        <input type="text" class="form-control" id="city" ng-model="register_city"
+                               ng-required="true">
+
                         <label for="email">E-Mail:</label>
                         <input type="email" class="form-control" id="email" ng-model="register_email"
                                ng-required="true">
+
                         <label for="newpassword">Passwort:</label>
                         <input type="password" autocomplete="passwort" class="form-control" id="newpassword"
                                ng-model="register_password" ng-required="true">
+
                         <label for="confirmpassword">Passwort:</label>
                         <input type="password" autocomplete="passwort" class="form-control" id="confirmpassword"
-                               ng-model="register_confirm_password">
+                               ng-model="register_password_confirm">
+
                         <button type="submit" ng-disabled="registerform.$invalid" class="btn btn-primary">
                             Registrieren
                         </button>

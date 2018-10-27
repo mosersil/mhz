@@ -42,13 +42,7 @@ public class ShopApi {
     ShopOrderRepository shopOrderRepository;
 
     @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
     PaymillContext paymillContext;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
 
     @CrossOrigin(origins = "*")
