@@ -41,4 +41,20 @@ public class StringUtilsTest {
     public void testIsNotBlank(String input, boolean expectedResult) {
         assertThat(StringUtils.isNotBlank(input)).isNotEqualTo(expectedResult);
     }
+
+
+    @DataProvider(name = "isValidEmailAddressDp")
+    public Object[][] isValidEmailAddressDp() {
+        return new Object[][]{
+                {"test", false},
+                {" ", false},
+                {null, false},
+                {"test@test", false},
+                {"test@test.com", true}
+        };
+    }
+    @Test(dataProvider = "isValidEmailAddressDp")
+    public void testIsValidEmailAddress(String input, boolean expected) {
+        assertThat(StringUtils.isValidEmailAddress(input)).isEqualTo(expected);
+    }
 }

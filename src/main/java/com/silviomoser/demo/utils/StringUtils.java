@@ -1,5 +1,7 @@
 package com.silviomoser.demo.utils;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import java.util.Arrays;
 
 public class StringUtils {
@@ -29,5 +31,10 @@ public class StringUtils {
         }
         return null;
 
+    }
+
+
+    public static boolean isValidEmailAddress(String input) {
+        return  (isNotBlank(input) && EmailValidator.getInstance().isValid(input));
     }
 }
