@@ -1,7 +1,7 @@
 package com.silviomoser.demo.repository;
 
 import com.silviomoser.demo.data.Person;
-import com.silviomoser.demo.data.ShopOrder;
+import com.silviomoser.demo.data.ShopTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by silvio on 19.10.18.
  */
-public interface ShopOrderRepository extends JpaRepository<ShopOrder, Long> {
+public interface ShopTransactionRepository extends JpaRepository<ShopTransaction, Long> {
 
-    List<ShopOrder> findByPerson(Person person);
+    List<ShopTransaction> findByPerson(Person person);
 }

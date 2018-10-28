@@ -1,16 +1,14 @@
 package com.silviomoser.demo.data;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
-import lombok.Data;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,22 +17,31 @@ import java.util.Set;
  * Created by silvio on 14.10.18.
  */
 @Entity
-@Table(name = "SHOPORDER")
-public class ShopOrder extends AbstractEntity implements Comparable<ShopOrder> {
+@Table(name = "SHOP_TRANSACTION")
+public class ShopTransaction extends AbstractEntity implements Comparable<ShopTransaction> {
 
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
     private Person person;
 
-    @JoinTable(name = "SHOPORDER_SHOPITEM", joinColumns = {
-            @JoinColumn(name = "SHOPORDER_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "SHOPITEM_ID", referencedColumnName = "ID")})
+    /*
+    @JsonView(Views.Public.class)
+    @JoinTable(name = "SHOP_TRANSACTION_ITEM", joinColumns = {
+            @JoinColumn(name = "SHOP_TRANSACTION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "SHOP_ITEM_ID", referencedColumnName = "ID")})
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ShopItem> items;
+    */
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "SHOP_ITEM_PURCHASE_ID")
+    private Set<ShopItemPurchase> shopItemPurchases;
+
+    @JsonView(Views.Public.class)
     @Column(name = "DATE")
     private LocalDateTime date = LocalDateTime.now();
 
+    @JsonView(Views.Public.class)
     @Column(name = "STATUS")
     private ShopOrderStatusType status = ShopOrderStatusType.INITIATED;
 
@@ -56,12 +63,12 @@ public class ShopOrder extends AbstractEntity implements Comparable<ShopOrder> {
         this.person = person;
     }
 
-    public Set<ShopItem> getItems() {
-        return items;
+    public Set<ShopItemPurchase> getShopItemPurchases() {
+        return shopItemPurchases;
     }
 
-    public void setItems(Set<ShopItem> items) {
-        this.items = items;
+    public void setShopItemPurchases(Set<ShopItemPurchase> shopItemPurchases) {
+        this.shopItemPurchases = shopItemPurchases;
     }
 
     public LocalDateTime getDate() {
@@ -105,7 +112,7 @@ public class ShopOrder extends AbstractEntity implements Comparable<ShopOrder> {
     }
 
     @Override
-    public int compareTo(ShopOrder o) {
+    public int compareTo(ShopTransaction o) {
         return this.getDate().compareTo(o.getDate());
     }
 

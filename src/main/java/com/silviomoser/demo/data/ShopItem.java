@@ -1,5 +1,6 @@
 package com.silviomoser.demo.data;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.ShopItemType;
 
 import javax.persistence.Column;
@@ -10,9 +11,10 @@ import javax.persistence.Table;
  * Created by silvio on 14.10.18.
  */
 @Entity
-@Table(name = "SHOPITEM")
+@Table(name = "SHOP_ITEM")
 public class ShopItem extends AbstractEntity {
 
+    @JsonView(Views.Public.class)
     @Column(name = "NAME", nullable = false, length = 30)
     private String name;
     @Column(name = "DESCRIPTION", nullable = false, length = 200)

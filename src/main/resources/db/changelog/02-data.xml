@@ -16,7 +16,9 @@
         <loadData tableName="ROLE" file="../static/role.csv" relativeToChangelogFile="true" quotchar="'" />
         <loadData tableName="USER_ROLE" file="../static/user_role.csv" relativeToChangelogFile="true" quotchar="'" />
         <loadData tableName="ARTICLE" file="../static/article.csv" relativeToChangelogFile="true" quotchar="'" />
-        <loadData tableName="SHOPITEM" file="../static/shopitem.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="SHOP_ITEM" file="../static/shop_item.csv" relativeToChangelogFile="true" quotchar="'" />
+        <!--loadData tableName="SHOP_TRANSACTION" file="../static/shop_transaction.csv" relativeToChangelogFile="true" quotchar="'" /-->
+        <!--loadData tableName="SHOP_TRANSACTION_ITEM" file="../static/shop_transaction_item.csv" relativeToChangelogFile="true" quotchar="'" /-->
         <!--<loadData tableName="PERSON_ADDRESS" file="../static/person_address.csv" relativeToChangelogFile="true" quotchar="'" /-->
 
 <!--

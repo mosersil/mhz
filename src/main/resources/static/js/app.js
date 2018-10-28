@@ -131,6 +131,18 @@ demoApp.controller("intra_controller", function ($scope, $http, $location, $filt
 });
 
 
+demoApp.controller("transactions_controller", function ($scope, $http) {
+
+    $http.get("/internal/shop/transactions")
+        .then(function (response) {
+            console.log(response);
+            $scope.mypurchases = response.data;
+        }, function (reason) {
+            console.log("Error occured: " + reason);
+        });
+
+});
+
 demoApp.controller("shop_controller", function ($scope, $http, $httpParamSerializerJQLike, ShopService, AuthenticationService) {
 
     $scope.cart = ShopService.cart;
@@ -320,7 +332,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
         }).then(function (success) {
             ShopService.currentStep += 1;
-        }, function(error) {
+        }, function (error) {
             $scope.register_message_class = "alert alert-warning"
             $scope.register_message_text = error.data.message;
             $scope.register_message_display = true;

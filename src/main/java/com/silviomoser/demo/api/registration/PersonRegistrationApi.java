@@ -1,7 +1,6 @@
 package com.silviomoser.demo.api.registration;
 
 import com.silviomoser.demo.api.core.ApiException;
-import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.data.builder.PersonBuilder;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,6 @@ import javax.validation.ConstraintViolationException;
 import java.util.Locale;
 import java.util.Optional;
 
-import static com.silviomoser.demo.utils.StringUtils.isBlank;
 import static com.silviomoser.demo.utils.StringUtils.isValidEmailAddress;
 
 @RestController

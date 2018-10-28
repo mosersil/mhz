@@ -174,7 +174,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="SHOPITEM">
+        <createTable tableName="SHOP_ITEM">
             <column name="ID" autoIncrement="true" type="long">
                 <constraints nullable="false" unique="true" primaryKey="true" />
             </column>
@@ -192,7 +192,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="SHOPORDER">
+        <createTable tableName="SHOP_TRANSACTION">
             <column name="ID" autoIncrement="true" type="long">
                 <constraints nullable="false" unique="true" primaryKey="true" />
             </column>
@@ -216,15 +216,38 @@
             </column>
         </createTable>
 
-        <createTable tableName="SHOPORDER_SHOPITEM">
-            <column name="SHOPORDER_ID" type="long">
+
+        <createTable tableName="SHOP_ITEM_PURCHASE">
+            <column name="ID" autoIncrement="true" type="long">
+                <constraints nullable="false" unique="true" primaryKey="true" />
+            </column>
+            <column name="SHOP_ITEM_ID" type="long">
                 <constraints nullable="false" />
             </column>
-            <column name="SHOPITEM_ID" type="long">
+            <column name="AMOUNT" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="SHOP_TRANSACTION_CART">
+            <column name="SHOP_TRANSACTION_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+            <column name="SHOP_ITEM_PURCHASE_ID" type="long">
                 <constraints nullable="false" />
             </column>
         </createTable>
 
+        <!--
+        <createTable tableName="SHOP_TRANSACTION_ITEM">
+            <column name="SHOP_TRANSACTION_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+            <column name="SHOP_ITEM_ID" type="long">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+-->
 
 
 
