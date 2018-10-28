@@ -1,6 +1,7 @@
 package com.silviomoser.demo.data;
 
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
+import lombok.Data;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,7 +20,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "SHOPORDER")
-public class ShopOrder extends AbstractEntity{
+public class ShopOrder extends AbstractEntity implements Comparable<ShopOrder> {
 
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
@@ -102,4 +103,10 @@ public class ShopOrder extends AbstractEntity{
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
+
+    @Override
+    public int compareTo(ShopOrder o) {
+        return this.getDate().compareTo(o.getDate());
+    }
+
 }

@@ -45,7 +45,20 @@ public class ShopApi {
     PaymillContext paymillContext;
 
 
-    @CrossOrigin(origins = "*")
+
+
+    @ApiOperation(value = "List my purchases")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = ShopItem.class),
+            @ApiResponse(code = 400, message = "Bad request")
+    })
+    @RequestMapping(value = "/public/api/shoptransactions", method = RequestMethod.GET)
+    public List<ShopOrder> listOrders() {
+        return shopOrderRepository.findByPerson(SecurityUtils.getMy());
+    }
+
+
+
     @ApiOperation(value = "List available shop items")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = ShopItem.class),
