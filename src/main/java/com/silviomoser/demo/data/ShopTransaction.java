@@ -33,8 +33,8 @@ public class ShopTransaction extends AbstractEntity implements Comparable<ShopTr
     private Set<ShopItem> items;
     */
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "SHOP_ITEM_PURCHASE_ID")
+    @JsonView(Views.Public.class)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "transaction")
     private Set<ShopItemPurchase> shopItemPurchases;
 
     @JsonView(Views.Public.class)

@@ -30,31 +30,40 @@
 <div class="container" ng-controller="shop_controller">
     <h1>Shop</h1>
 
-
     <div ng-controller="shop_controller">
 
         <!-- Step 1: Display items and allow user to choose items -->
 
         <div class="row" ng-show="currentStep==1">
             <div class="col-sm-8">
-                <div class="card" ng-repeat="shopitem in shopitems">
+                <div class="card mb-2" ng-repeat="shopitem in shopitems">
+                    <div class="card-header">
+                        {{shopitem.name}} (CHF {{shopitem.price}})
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{shopitem.name}}: CHF {{shopitem.price}}</h5>
                         <p class="card-text">{{shopitem.description}}</p>
-                        <input class="btn btn-primary" ng-click="addItemToCart(shopitem)" value="Kaufen"/>
+                        <input class="btn btn-primary" ng-click="addItemToCart(shopitem)" value="In den Warenkorb"/>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="card" ng-repeat="c in cart">
+                <div class="card">
+                    <div class="card-header">Ihr Warenkorb</div>
                     <div class="card-body">
-                        <h7 class="card-title">{{c.count}} x {{c.name}}</h7>
-                        <p class="card-text">{{c.price*c.count | currency}}</p>
-                        <input class="btn btn-link" ng-click="removeItemCart(c)" value="Entfernen"/>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="c in cart">
+                                {{c.count}} x {{c.name}} <i class="fa fa-minus-square" ng-click="removeItemCart(c)"></i>
+                            </li>
+                        </ul>
+                        Total : {{total | currency}}
+                        <div>
+                            <button type="submit" class="btn btn-primary" ng-click="submitOrder()" ng-hide="total==0">
+                                weiter
+                            </button>
+                        </div>
                     </div>
                 </div>
-                Total : {{total | currency}}
-                <button type="submit" class="btn btn-primary" ng-click="submitOrder()">weiter</button>
+
             </div>
         </div>
 
@@ -80,7 +89,9 @@
 
         <div class="row" ng-show="currentStep==3">
             <div class="panel panel-default">
-                <div class="panel-heading">Sie sind noch nicht bei uns registriert? Bitte machen Sie die folgenden Angaben:</div>
+                <div class="panel-heading">Sie sind noch nicht bei uns registriert? Bitte machen Sie die folgenden
+                    Angaben:
+                </div>
                 <div class="panel-body">
                     <div ng-show="register_message_display" class="{{register_message_class}}" role="alert">
                         {{register_message_text}}
@@ -89,10 +100,10 @@
 
                         <div class="form-group">
                             <label for="gender">Anrede</label>
-                        <select name="gender" id="gender" ng-model="register_gender" ng-required="true">
-                            <option value="male">Herr</option>
-                            <option value="female">Frau</option>
-                        </select>
+                            <select name="gender" id="gender" ng-model="register_gender" ng-required="true">
+                                <option value="male">Herr</option>
+                                <option value="female">Frau</option>
+                            </select>
                         </div>
                         <label for="firstname">Vorname:</label>
                         <input type="text" class="form-control" id="firstname" ng-model="register_firstname"

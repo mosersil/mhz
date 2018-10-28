@@ -31,8 +31,12 @@
         <tbody>
         <tr ng-repeat="purchase in mypurchases">
             <td>{{purchase.date}}</td>
-            <td>{{purchase.items}}</td>
-            <td>Download</td>
+            <td>
+                <div ng-repeat="shopItemPurchase in purchase.shopItemPurchases">
+                    {{shopItemPurchase.amount}} x {{shopItemPurchase.item.name}}
+                </div>
+            </td>
+            <td><a href="/internal/shop/receipt?id={{purchase.id}}" target="_blank">Download</a></td>
         </tr>
         </tbody>
     </table>

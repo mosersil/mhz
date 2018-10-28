@@ -35,26 +35,25 @@
         </createTable>
 
 
-
         <createTable tableName="USER">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
 
             <column name="USERNAME" type="varchar">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
 
             <column name="PASSWORD" type="varchar">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
 
             <column name="CREATED_DATE" type="date">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
 
             <column name="LAST_MODIFIED_DATE" type="date">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
 
             <column name="PERSON_ID" type="long">
@@ -65,10 +64,10 @@
 
         <createTable tableName="ROLE">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="ROLE_TYPE" type="varchar(10)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <!--
             <column name="USER_ID" type="long">
@@ -79,47 +78,47 @@
 
         <createTable tableName="USER_ROLE">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="USER_ID" type="long">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="ROLE_ID" type="long">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
 
         <createTable tableName="PERSON">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="FIRST_NAME" type="varchar(30)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="LAST_NAME" type="varchar(30)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="GENDER" type="int">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="ADDRESS1" type="varchar(50)">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="ADDRESS2" type="varchar(50)">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="ZIP" type="varchar(10)">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="CITY" type="varchar(30)">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="LANDLINE" type="varchar(20)">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="MOBILE" type="varchar(20)">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="EMAIL" type="varchar(50)">
                 <constraints nullable="true" unique="true"/>
@@ -128,64 +127,64 @@
 
         <createTable tableName="ORGANIZATION">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="NAME" type="varchar(30)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="MEMBERSHIP">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="PERSON_ID" type="long">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="ORGANIZATION_ID" type="long">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="JOIN_DATE" type="datetime">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="LEAVE_DATE" type="datetime">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="FUNCTION" type="varchar(30)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="ARTICLE">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="TITLE" type="varchar(60)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="TEXT" type="varchar(5000)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="START_DATE" type="datetime">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="END_DATE" type="datetime">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createTable tableName="SHOP_ITEM">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="NAME" type="varchar(60)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="DESCRIPTION" type="varchar(600)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="PRICE" type="float">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="TYPE" type="int">
                 <constraints nullable="false"/>
@@ -194,10 +193,10 @@
 
         <createTable tableName="SHOP_TRANSACTION">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="PERSON_ID" type="long">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="DATE" type="datetime">
                 <constraints nullable="false"/>
@@ -219,25 +218,28 @@
 
         <createTable tableName="SHOP_ITEM_PURCHASE">
             <column name="ID" autoIncrement="true" type="long">
-                <constraints nullable="false" unique="true" primaryKey="true" />
+                <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="SHOP_ITEM_ID" type="long">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
+            </column>
+            <column name="SHOP_TRANSACTION_ID" type="long">
+                <constraints nullable="false"/>
             </column>
             <column name="AMOUNT" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
+<!--
         <createTable tableName="SHOP_TRANSACTION_CART">
             <column name="SHOP_TRANSACTION_ID" type="long">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="SHOP_ITEM_PURCHASE_ID" type="long">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
-
+-->
         <!--
         <createTable tableName="SHOP_TRANSACTION_ITEM">
             <column name="SHOP_TRANSACTION_ID" type="long">
@@ -250,10 +252,9 @@
 -->
 
 
-
-
         <createView viewName="VIEW_ADDRESSLIST">
-            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, CONCAT(P.ADDRESS1, CHAR(13), P.ADDRESS2) AS ADDRESS, P.ZIP, P.CITY, O.NAME AS ORGANIZATION
+            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, CONCAT(P.ADDRESS1, CHAR(13), P.ADDRESS2) AS ADDRESS,
+            P.ZIP, P.CITY, O.NAME AS ORGANIZATION
             FROM PERSON AS P
             INNER JOIN MEMBERSHIP AS M ON P.ID=M.PERSON_ID
             INNER JOIN ORGANIZATION AS O ON O.ID=M.ORGANIZATION_ID

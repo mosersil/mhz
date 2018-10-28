@@ -47,7 +47,7 @@ public class PersonRegistrationApi {
             @ApiResponse(code = 400, message = "Bad request")
     })
 
-    @RequestMapping(value = "/public/api/registerPerson", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/public/registration/registerPerson", method = RequestMethod.POST)
     public ResponseEntity<Long> registerPerson(Locale locale, @RequestBody PersonRegistrationDataSubmission registrationDataSubmission) {
 
         try {
@@ -93,7 +93,7 @@ public class PersonRegistrationApi {
     }
 
 
-    @RequestMapping(value = "/public/api/checkUserExists", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/public/registration/checkUserExists", method = RequestMethod.GET)
     public ResponseEntity<Boolean> checkUserExists(@RequestParam String username) {
         Optional<User> existingUser = userRepository.findByUsername(username);
         if (existingUser.isPresent()) {

@@ -115,6 +115,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/vaadinServlet/HEARTBEAT/**").permitAll()
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/internal/api/**").hasRole("USER")
+                .antMatchers("/api/protected/**").hasRole("USER")
                 .and()
                 .addFilterBefore(authenticationFilter(), CustomFilter.class);
 

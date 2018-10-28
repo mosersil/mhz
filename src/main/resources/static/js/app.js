@@ -162,7 +162,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
     );
 
 
-    $http.get("/public/api/shopitems")
+    $http.get("/api/public/shop/offering")
         .then(function (response) {
             $scope.shopitems = response.data;
         });
@@ -274,7 +274,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         });
 
         $http({
-            url: '/public/api/shopinit',
+            url: '/api/public/shop/submitorder',
             method: 'POST',
             data: data,
             headers: {
@@ -288,7 +288,22 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
             AuthenticationService.isAuthenticated().then(function (value) {
                 if (value === true) {
                     console.log("User is authenticated. Go to payment immediately");
-                    ShopService.currentStep += 3;
+
+                    var data = {
+                        id: $scope.purchaseId
+                    };
+
+                    $http({
+                        url: '/api/protected/shop/prepare_transaction',
+                        method: 'POST',
+                        data: data,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+
+                    }).then(function (success) {
+                        ShopService.currentStep += 3;
+                    });
                 }
                 else {
                     console.log("User is not yet authenticated. Display login")
@@ -299,7 +314,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
     $scope.checkUserIsPresent = function () {
         $http({
-            url: '/public/api/checkUserExists',
+            url: '/api/public/registration/checkUserExists',
             method: "GET",
             params: {username: $scope.username}
         }).then(function (response) {
@@ -323,7 +338,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
         }
 
         $http({
-            url: '/public/api/registerPerson',
+            url: '/api/public/registration/registerPerson',
             method: 'POST',
             data: data,
             headers: {
@@ -352,7 +367,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
                 };
 
                 $http({
-                    url: '/internal/shop/authorizeOrder',
+                    url: '/api/protected/shop/prepare_transaction',
                     method: 'POST',
                     data: data,
                     headers: {
