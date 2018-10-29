@@ -133,7 +133,7 @@ demoApp.controller("intra_controller", function ($scope, $http, $location, $filt
 
 demoApp.controller("transactions_controller", function ($scope, $http) {
 
-    $http.get("/internal/shop/transactions")
+    $http.get("/api/protected/shop/transactions")
         .then(function (response) {
             console.log(response);
             $scope.mypurchases = response.data;

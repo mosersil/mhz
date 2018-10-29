@@ -124,4 +124,18 @@ public class PersonRegistrationApiTest extends AbstractTestNGSpringContextTests 
         return personRegistrationDataSubmission;
     }
 
+
+    @DataProvider(name = "checkUserExistsDp")
+    public Object[][] checkUserExistsDp() {
+            return new Object[][] {
+                    {"max_muster@localhost.com", true},
+                    {"not_existing@localhost.com", false},
+            };
+    }
+
+    @DatabaseSetup("/api/registration.xml")
+    @Test(dataProvider = "checkUserExistsDp")
+    public void testCheckUserExists(String username, boolean expected) {
+        assertThat(personRegistrationApi.checkUserExists(username)).isEqualTo(expected);
+    }
 }
