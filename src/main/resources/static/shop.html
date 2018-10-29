@@ -183,7 +183,7 @@
                 <p>Bitte begleichen Sie den Gesamtbetrag von CHF {{total | currency}} mit Ihrer Kreditkarte</p>
 
 
-                <form class="payment-form col-lg-5 collapse" id="payment-form" action="/public/api/createpayment"
+                <form class="payment-form col-lg-5 collapse" id="payment-form" action="/api/protected/shop/createpayment"
                       method="POST">
                     <input type="hidden" name="amount" value="{{total * 100}}">
                     <input type="hidden" name="currency" value="CHF">

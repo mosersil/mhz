@@ -151,7 +151,7 @@ public class ShopApi {
                 .body(new InputStreamResource(bis));
     }
 
-    @RequestMapping(value = "/api/public/createpayment", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
+    @RequestMapping(value = "/api/protected/shop/createpayment", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
     public void createPayPalPayment(HttpServletRequest request, HttpServletResponse response, CreatePaymentSubmission createPaymentSubmission) throws IOException {
 
         Transaction transaction = paymillContext.getTransactionService().createWithToken(createPaymentSubmission.getToken(), createPaymentSubmission.getAmount(), createPaymentSubmission.getCurrency(), createPaymentSubmission.getDescription());
