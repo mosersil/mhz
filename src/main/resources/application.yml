@@ -1,0 +1,99 @@
+server:
+  port: 8085
+
+
+
+---
+spring:
+  profiles: local
+
+  datasource:
+    url: jdbc:h2:mem:liquibase
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+
+  liquibase:
+    change-log: classpath:db/liquibase-changelog.xml
+    check-change-log-location: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        trace: false
+
+  mail:
+    host: ${sensitive.email.host:localhost}
+    port: 587
+    protocol: smtp
+    username: ${sensitive.email.username:none}
+    password: ${sensitive.email.password:none}
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: all
+          starttls:
+            enable: true
+
+
+
+---
+spring:
+  profiles: prod
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mhz
+    username: mhz@localhost
+    password: mhz
+    driver-class-name: com.mysql.jdbc.Driver
+
+  liquibase:
+    change-log: classpath:db/liquibase-changelog.xml
+    check-change-log-location: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  mail:
+    host: ${sensitive.email.host:localhost}
+    port: 587
+    protocol: smtp
+    username: ${sensitive.email.username:none}
+    password: ${sensitive.email.password:none}
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: all
+          starttls:
+            enable: true
+
+  #server.ssl.trust-store=classpath:keystore.jks
+  #server.ssl.trust-store-password=changeit
+  # The format used for the keystore. It could be set to JKS in case it is a JKS file
+  #server.ssl.key-store-type=PKCS12
+  # The path to the keystore containing the certificate
+  #server.ssl.key-store=classpath:localhost.p12
+  # The password used to generate the certificate
+  #server.ssl.key-store-password=changeit
+  # The alias mapped to the certificate
+  #server.ssl.key-alias=localhost
+
+
+
+
+

@@ -11,10 +11,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 
 @Entity
+@Table(name = "ROLE")
 @EntityListeners(value = AuditingEntityListener.class)
 public class Role extends AbstractEntity {
 

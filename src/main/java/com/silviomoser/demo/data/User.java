@@ -14,36 +14,41 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
 
 @Entity
+@Table(name = "USER")
 @EntityListeners(value = AuditingEntityListener.class)
-public class User extends AbstractEntity{
+public class User extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String username, String password) {
-        this.username=username;
-        this.password=password;
+        this.username = username;
+        this.password = password;
     }
 
     @JsonView(Views.Public.class)
+    @Column(name = "USERNAME")
     private String username;
 
+    @Column(name = "PASSWORD")
     private String password;
 
     @CreatedDate
-    @Type(type="java.sql.Timestamp")
-    @Column(updatable = false)
+    @Type(type = "java.sql.Timestamp")
+    @Column(name = "CREATED_DATE", updatable = false)
     private Date createdDate;
 
     @CreatedDate
-    @Type(type="java.sql.Timestamp")
-    @Column(updatable = false)
+    @Type(type = "java.sql.Timestamp")
+    @Column(name = "LAST_MODIFIED_DATE", updatable = false)
     private Date lastModifiedDate;
 
     @JsonView(Views.Public.class)
