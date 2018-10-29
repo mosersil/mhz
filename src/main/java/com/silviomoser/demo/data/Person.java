@@ -7,11 +7,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -23,30 +23,46 @@ public class Person extends AbstractEntity {
 
 
     @JsonView(Views.Public.class)
+    @NotNull
     @Column(name = "FIRST_NAME", nullable = false, length = 30)
     private String firstName;
+
     @JsonView(Views.Public.class)
+    @NotNull
     @Column(name = "LAST_NAME", nullable = false, length = 30)
     private String lastName;
+
     @JsonView(Views.Public.class)
-    @Column(name = "GENDER")
+    @NotNull
+    @Column(name = "GENDER", nullable = false)
     private Gender gender;
+
     @JsonView(Views.Public.class)
+    @NotNull
     @Column(name = "ADDRESS1", nullable = false, length = 50)
     private String address1;
+
     @JsonView(Views.Public.class)
     @Column(name = "ADDRESS2", length = 50)
     private String address2;
+
     @JsonView(Views.Public.class)
     @Column(name = "ZIP", nullable = false, length = 10)
     private String zip;
+
     @JsonView(Views.Public.class)
     @Column(name = "CITY", nullable = false, length = 30)
     private String city;
-    @Column(name = "LANDLINE", nullable = false, length = 20)
+
+    @Column(name = "LANDLINE", length = 20)
     private String landline;
-    @Column(name = "MOBILE", nullable = false, length = 20)
+
+    @Column(name = "MOBILE", length = 20)
     private String mobile;
+
+    @Email
+    @Column(name = "Email", length = 50, unique = true)
+    private String email;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "person"
@@ -143,5 +159,13 @@ public class Person extends AbstractEntity {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
