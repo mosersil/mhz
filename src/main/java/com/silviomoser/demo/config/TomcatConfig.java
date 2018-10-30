@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class TomcatConfig {
 
-    @Value("${port.https-redirect}")
+    @Value("${port.https-redirect:443}")
     private String portHttps;
 
     @Bean
