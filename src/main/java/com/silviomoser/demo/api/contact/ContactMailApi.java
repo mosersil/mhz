@@ -1,12 +1,9 @@
-package com.silviomoser.demo.api;
+package com.silviomoser.demo.api.contact;
 
 import com.silviomoser.demo.services.EmailService;
-import com.silviomoser.demo.data.EmailModel;
-import com.silviomoser.demo.data.EmailStatus;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import com.silviomoser.demo.utils.TtlMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,12 +17,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by silvio on 20.08.18.
  */
+@Slf4j
 @RestController
 public class ContactMailApi {
-
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContactMailApi.class);
 
     @Autowired
     private EmailService emailService;
@@ -33,7 +27,7 @@ public class ContactMailApi {
     @Autowired
             private I18Helper i18Helper;
 
-    TtlMap<String, String> hitCache = new TtlMap<>(TimeUnit.SECONDS, 10);
+    final TtlMap<String, String> hitCache = new TtlMap<>(TimeUnit.SECONDS, 10);
 
 
     @RequestMapping(value = "/api/contact", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
@@ -45,9 +39,11 @@ public class ContactMailApi {
             hitCache.put(request.getRemoteAddr(), request.getRemoteAddr());
             emailStatus =  emailService.sendSimpleMail(emailModel);
         } else {
+            log.warn("Too many hits detected by {}", request.getRemoteAddr());
             emailStatus.setSuccess(false);
             emailStatus.setErrorDetails(i18Helper.getMessage("contact_toomanyrequests"));
         }
+        log.info("Contact form has been submitted by {}: {}", emailModel.getEmail(), emailModel.getMessage());
         return emailStatus;
     }
 }

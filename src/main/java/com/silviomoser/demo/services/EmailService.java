@@ -1,9 +1,8 @@
 package com.silviomoser.demo.services;
 
+import com.silviomoser.demo.api.contact.EmailModel;
+import com.silviomoser.demo.api.contact.EmailStatus;
 import com.silviomoser.demo.config.ContactConfiguration;
-import com.silviomoser.demo.data.EmailModel;
-
-import com.silviomoser.demo.data.EmailStatus;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;

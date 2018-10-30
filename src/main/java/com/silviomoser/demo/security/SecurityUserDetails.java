@@ -17,7 +17,7 @@ public class SecurityUserDetails extends User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     public SecurityUserDetails(User user) {
-        if(user==null) return;
+        if (user == null) return;
         this.setId(user.getId());
         this.setUsername(user.getUsername());
         this.setPassword(user.getPassword());
@@ -30,7 +30,7 @@ public class SecurityUserDetails extends User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        for(Role role : super.getRoles()) {
+        for (Role role : super.getRoles()) {
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(SPRING_ROLE_PREFIX + role.getType().name());
             authorities.add(authority);
         }

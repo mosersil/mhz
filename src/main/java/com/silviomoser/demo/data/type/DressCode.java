@@ -1,7 +1,6 @@
 package com.silviomoser.demo.data.type;
 
 import com.silviomoser.demo.ui.i18.I18Helper;
-import com.silviomoser.demo.utils.HasLabel;
 
 /**
  * Created by silvio on 22.05.18.

@@ -1,7 +1,6 @@
-package com.silviomoser.demo.api;
+package com.silviomoser.demo.api.article;
 
 import com.silviomoser.demo.data.Article;
-import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.repository.ArticleRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by silvio on 23.07.18.
@@ -27,7 +25,7 @@ public class ArticleApi {
     @CrossOrigin(origins = "*")
     @ApiOperation(value = "List current head article")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Success", response = CalendarEvent.class),
+            @ApiResponse(code = 200, message = "Success", response = Article.class),
             @ApiResponse(code = 400, message = "Bad request")
     })
     @RequestMapping(value = "/public/api/article", method = RequestMethod.GET)

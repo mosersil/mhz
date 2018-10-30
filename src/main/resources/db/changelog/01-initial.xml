@@ -6,9 +6,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="01" author="silvio">
-        <createTable tableName="CALENDAR_EVENT"
-                     remarks="Calendar events">
-            <column name="ID" autoIncrement="true" type="long">
+        <createTable tableName="CALENDAR_EVENT">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="ADVERTISE" type="boolean">
@@ -26,25 +25,25 @@
             <column name="PUBLIC_EVENT" type="boolean">
                 <constraints nullable="true"/>
             </column>
-            <column name="REMARKS" type="varchar">
+            <column name="REMARKS" type="varchar(60)">
                 <constraints nullable="true"/>
             </column>
-            <column name="TITLE" type="varchar">
+            <column name="TITLE" type="varchar(30)">
                 <constraints nullable="true"/>
             </column>
         </createTable>
 
 
         <createTable tableName="USER">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
 
-            <column name="USERNAME" type="varchar">
+            <column name="USERNAME" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="PASSWORD" type="varchar">
+            <column name="PASSWORD" type="varchar(70)">
                 <constraints nullable="false"/>
             </column>
 
@@ -56,41 +55,36 @@
                 <constraints nullable="true"/>
             </column>
 
-            <column name="PERSON_ID" type="long">
+            <column name="PERSON_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
 
         <createTable tableName="ROLE">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="ROLE_TYPE" type="varchar(10)">
                 <constraints nullable="false"/>
             </column>
-            <!--
-            <column name="USER_ID" type="long">
-                <constraints nullable="false" />
-            </column>
-            -->
         </createTable>
 
         <createTable tableName="USER_ROLE">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="USER_ID" type="long">
+            <column name="USER_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="ROLE_ID" type="long">
+            <column name="ROLE_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
 
         <createTable tableName="PERSON">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="FIRST_NAME" type="varchar(30)">
@@ -126,7 +120,7 @@
         </createTable>
 
         <createTable tableName="ORGANIZATION">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="NAME" type="varchar(30)">
@@ -135,13 +129,13 @@
         </createTable>
 
         <createTable tableName="MEMBERSHIP">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="PERSON_ID" type="long">
+            <column name="PERSON_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="ORGANIZATION_ID" type="long">
+            <column name="ORGANIZATION_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="JOIN_DATE" type="datetime">
@@ -156,7 +150,7 @@
         </createTable>
 
         <createTable tableName="ARTICLE">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="TITLE" type="varchar(60)">
@@ -174,7 +168,7 @@
         </createTable>
 
         <createTable tableName="SHOP_ITEM">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
             <column name="NAME" type="varchar(60)">
@@ -192,10 +186,10 @@
         </createTable>
 
         <createTable tableName="SHOP_TRANSACTION">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="PERSON_ID" type="long">
+            <column name="PERSON_ID" type="bigint">
                 <constraints nullable="true"/>
             </column>
             <column name="DATE" type="datetime">
@@ -217,39 +211,19 @@
 
 
         <createTable tableName="SHOP_ITEM_PURCHASE">
-            <column name="ID" autoIncrement="true" type="long">
+            <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="SHOP_ITEM_ID" type="long">
+            <column name="SHOP_ITEM_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="SHOP_TRANSACTION_ID" type="long">
+            <column name="SHOP_TRANSACTION_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="AMOUNT" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-<!--
-        <createTable tableName="SHOP_TRANSACTION_CART">
-            <column name="SHOP_TRANSACTION_ID" type="long">
-                <constraints nullable="false"/>
-            </column>
-            <column name="SHOP_ITEM_PURCHASE_ID" type="long">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
--->
-        <!--
-        <createTable tableName="SHOP_TRANSACTION_ITEM">
-            <column name="SHOP_TRANSACTION_ID" type="long">
-                <constraints nullable="false" />
-            </column>
-            <column name="SHOP_ITEM_ID" type="long">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
--->
 
 
         <createView viewName="VIEW_ADDRESSLIST">

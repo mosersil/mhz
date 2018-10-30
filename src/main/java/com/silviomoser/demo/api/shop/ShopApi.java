@@ -5,11 +5,7 @@ import com.itextpdf.text.DocumentException;
 import com.paymill.context.PaymillContext;
 import com.paymill.models.Transaction;
 import com.silviomoser.demo.api.core.ApiException;
-import com.silviomoser.demo.data.Person;
-import com.silviomoser.demo.data.ShopItem;
-import com.silviomoser.demo.data.ShopItemPurchase;
-import com.silviomoser.demo.data.ShopTransaction;
-import com.silviomoser.demo.data.Views;
+import com.silviomoser.demo.data.*;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.repository.ShopItemRepository;
 import com.silviomoser.demo.repository.ShopTransactionRepository;
@@ -24,11 +20,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +56,7 @@ public class ShopApi {
     @JsonView(Views.Public.class)
     @RequestMapping(value = "/api/protected/shop/transactions", method = RequestMethod.GET)
     public List<ShopTransaction> listTransactions() {
-        return shopTransactionRepository.findByPerson(SecurityUtils.getMy());
+        return shopTransactionRepository.findByPerson(SecurityUtils.getMe());
     }
 
 
@@ -96,8 +88,8 @@ public class ShopApi {
             items.add(shopItemPurchase);
         });
         shopTransaction.setShopItemPurchases(items);
-        if (SecurityUtils.getMy() != null) {
-            shopTransaction.setPerson(SecurityUtils.getMy());
+        if (SecurityUtils.getMe() != null) {
+            shopTransaction.setPerson(SecurityUtils.getMe());
         }
         final ShopTransaction item = shopTransactionRepository.save(shopTransaction);
         return item.getId();
@@ -114,7 +106,7 @@ public class ShopApi {
             throw new ApiException("could not find an order with specified ID");
         }
 
-        final Person me = SecurityUtils.getMy();
+        final Person me = SecurityUtils.getMe();
 
         if (me == null) {
             throw new ApiException("unauthorized call. This should never happen...");
@@ -131,7 +123,7 @@ public class ShopApi {
     @RequestMapping(value = "/api/protected/shop/receipt", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "id", required = true) long id) throws DocumentException {
         ShopTransaction shopTransaction = shopTransactionRepository.findById(id).get();
-        if (shopTransaction.getPerson().equals(SecurityUtils.getMy())) {
+        if (shopTransaction.getPerson().equals(SecurityUtils.getMe())) {
             ByteArrayInputStream bis = PdfBuilder.generateReceipt(shopTransaction);
             return pdfResponse(bis, "receipt");
         }

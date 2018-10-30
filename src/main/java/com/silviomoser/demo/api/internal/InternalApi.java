@@ -1,4 +1,4 @@
-package com.silviomoser.demo.api;
+package com.silviomoser.demo.api.internal;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.itextpdf.text.DocumentException;
@@ -40,7 +40,7 @@ public class InternalApi {
     @JsonView(Views.Public.class)
     @RequestMapping("/internal/api/user")
     public Person my() {
-        return SecurityUtils.getMy();
+        return SecurityUtils.getMe();
     }
 
 

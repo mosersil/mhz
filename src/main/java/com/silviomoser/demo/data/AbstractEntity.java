@@ -2,12 +2,7 @@ package com.silviomoser.demo.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
+import javax.persistence.*;
 
 /**
  * Created by silvio on 26.07.18.
@@ -39,7 +34,7 @@ public abstract class AbstractEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

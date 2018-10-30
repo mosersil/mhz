@@ -1,0 +1,98 @@
+server:
+  port: 8443
+
+
+---
+spring:
+  profiles: local
+
+  datasource:
+    url: jdbc:h2:mem:liquibase
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+
+  liquibase:
+    change-log: classpath:db/liquibase-changelog.xml
+    check-change-log-location: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        trace: false
+
+  mail:
+    host: ${sensitive.email.host:localhost}
+    port: 587
+    protocol: smtp
+    username: ${sensitive.email.username:none}
+    password: ${sensitive.email.password:none}
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: all
+          starttls:
+            enable: true
+server:
+  ssl:
+    #trust-store-type: PKCS12
+    #trust-store: classpath:localhost.p12
+    #trust-store-password: changeit
+    key-store-type: PKCS12
+    key-store: classpath:localhost.p12
+    key-store-password: changeit
+    key-alias: localhost
+    enabled: true
+
+---
+spring:
+  profiles: prod
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mhz
+    username: mhz@localhost
+    password: mhz
+    driver-class-name: com.mysql.jdbc.Driver
+
+  liquibase:
+    change-log: classpath:db/liquibase-changelog.xml
+    check-change-log-location: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  mail:
+    host: ${sensitive.email.host:localhost}
+    port: 587
+    protocol: smtp
+    username: ${sensitive.email.username:none}
+    password: ${sensitive.email.password:none}
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: all
+          starttls:
+            enable: true
+
+server:
+  ssl:
+    key-store-type: PKCS12
+    key-store: /opt/certificate.p12
+    key-store-password: changeit
+    key-alias: 1
+    enabled: true

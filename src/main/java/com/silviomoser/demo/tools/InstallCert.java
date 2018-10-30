@@ -1,4 +1,4 @@
-/*
+package com.silviomoser.demo.tools;/*
  * Copyright 2006 Sun Microsystems, Inc.  All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,9 @@
  * Originally from:
  * http://blogs.sun.com/andreas/resource/InstallCert.java
  * Use:
- * java InstallCert hostname
+ * java com.silviomoser.demo.tools.InstallCert hostname
  * Example:
- *% java InstallCert ecc.fedora.redhat.com
+ *% java com.silviomoser.demo.tools.InstallCert ecc.fedora.redhat.com
  */
 
 import javax.net.ssl.*;
@@ -61,7 +61,7 @@ public class InstallCert {
             String p = (args.length == 1) ? "changeit" : args[1];
             passphrase = p.toCharArray();
         } else {
-            System.out.println("Usage: java InstallCert <host>[:port] [passphrase]");
+            System.out.println("Usage: java com.silviomoser.demo.tools.InstallCert <host>[:port] [passphrase]");
             return;
         }
 
