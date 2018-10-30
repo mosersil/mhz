@@ -1,6 +1,5 @@
 server:
-  port: 8085
-
+  port: 8443
 
 
 ---
@@ -44,8 +43,16 @@ spring:
             trust: all
           starttls:
             enable: true
-
-
+server:
+  ssl:
+    #trust-store-type: PKCS12
+    #trust-store: classpath:localhost.p12
+    #trust-store-password: changeit
+    key-store-type: PKCS12
+    key-store: classpath:localhost.p12
+    key-store-password: changeit
+    key-alias: localhost
+    enabled: true
 
 ---
 spring:
@@ -82,18 +89,10 @@ spring:
           starttls:
             enable: true
 
-  #server.ssl.trust-store=classpath:keystore.jks
-  #server.ssl.trust-store-password=changeit
-  # The format used for the keystore. It could be set to JKS in case it is a JKS file
-  #server.ssl.key-store-type=PKCS12
-  # The path to the keystore containing the certificate
-  #server.ssl.key-store=classpath:localhost.p12
-  # The password used to generate the certificate
-  #server.ssl.key-store-password=changeit
-  # The alias mapped to the certificate
-  #server.ssl.key-alias=localhost
-
-
-
-
-
+server:
+  ssl:
+    key-store-type: PKCS12
+    key-store: /opt/certificate.p12
+    key-store-password: changeit
+    key-alias: 1
+    enabled: true

@@ -1,10 +1,10 @@
 package com.silviomoser.demo.data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
  */
 
 @Entity
+@Getter
+@Setter
+@ToString
 @Table(name = "MEMBERSHIP")
 public class Membership extends AbstractEntity {
 
@@ -32,43 +35,4 @@ public class Membership extends AbstractEntity {
     @Column(name = "FUNCTION")
     private String function;
 
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-    }
-
-    public LocalDateTime getJoinDate() {
-        return joinDate;
-    }
-
-    public void setJoinDate(LocalDateTime joinDate) {
-        this.joinDate = joinDate;
-    }
-
-    public LocalDateTime getLeaveDate() {
-        return leaveDate;
-    }
-
-    public void setLeaveDate(LocalDateTime leaveDate) {
-        this.leaveDate = leaveDate;
-    }
-
-    public String getFunction() {
-        return function;
-    }
-
-    public void setFunction(String function) {
-        this.function = function;
-    }
 }

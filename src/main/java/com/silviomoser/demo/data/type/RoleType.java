@@ -2,7 +2,6 @@ package com.silviomoser.demo.data.type;
 
 
 import com.silviomoser.demo.ui.i18.I18Helper;
-import com.silviomoser.demo.utils.HasLabel;
 
 public enum RoleType implements HasLabel{
 

@@ -1,6 +1,5 @@
-package com.silviomoser.demo.security.password;
+package com.silviomoser.demo.security.utils;
 
-import com.google.common.base.Joiner;
 import org.passay.*;
 
 import java.util.Arrays;
@@ -9,6 +8,13 @@ import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
 
 public class PasswordUtils {
 
+    /**
+     * Ensure that chosen password matches with the confirmation and the password fulfills the complexity requirements
+     *
+     * @param password
+     * @param password_confirmation
+     * @return true if everything is OK
+     */
     public static boolean isValidPassword(String password, String password_confirmation) {
         return (isNotBlank(password) &&
                 isNotBlank(password_confirmation)
@@ -16,6 +22,12 @@ public class PasswordUtils {
                 && isValidPassword(password));
     }
 
+    /**
+     * Ensures the chosen password is compliant with the password policy
+     *
+     * @param password
+     * @return
+     */
     public static boolean isValidPassword(String password) {
         PasswordValidator validator = new PasswordValidator(Arrays.asList(
                 new LengthRule(8, 16),

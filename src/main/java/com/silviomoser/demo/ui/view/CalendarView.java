@@ -1,25 +1,11 @@
 package com.silviomoser.demo.ui.view;
 
 import com.silviomoser.demo.data.CalendarEvent;
-import com.silviomoser.demo.repository.CalendarEventRepository;
-import com.silviomoser.demo.ui.NavigationBar;
-import com.silviomoser.demo.ui.editor.CalendarEditor;
-import com.vaadin.icons.VaadinIcons;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.LocalDateTimeRenderer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -54,8 +40,10 @@ public class CalendarView extends AbstractCrudView<CalendarEvent> {
 
     @Override
     public CalendarEvent createNew() {
-        return new CalendarEvent("Neuer Anlass", LocalDateTime.now());
+        return CalendarEvent.builder()
+                .title("Neuer Anlass")
+                .date(LocalDateTime.now())
+                .build();
     }
-
 }
 

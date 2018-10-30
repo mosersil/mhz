@@ -2,8 +2,10 @@ package com.silviomoser.demo.api.registration;
 
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class PersonRegistrationDataSubmission {
 
     private String gender;

@@ -1,17 +1,13 @@
-package com.silviomoser.demo.api;
+package com.silviomoser.demo.api.calendar;
 
+import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.repository.CalendarEventRepository;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,11 +41,10 @@ public class CalendarApi {
             try {
                 startFromDate = LocalDate.parse(startFrom).atStartOfDay();
             } catch (DateTimeParseException dtpe) {
-                throw new CalendarApiException(dtpe.getMessage(), dtpe);
+                throw new ApiException(dtpe.getMessage(), dtpe);
             }
 
         }
-
 
         List<CalendarEvent> all = repository.findCalendarEventsFromStartDate(startFromDate);
         all.sort(CalendarEvent::compareTo);
