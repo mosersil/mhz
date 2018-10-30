@@ -1,12 +1,10 @@
 server:
   port: 8443
 
+
 ---
 spring:
   profiles: local
-
-  port:
-    https-redirect: 8443
 
   datasource:
     url: jdbc:h2:mem:liquibase
@@ -56,12 +54,12 @@ server:
     key-alias: localhost
     enabled: true
 
+port:
+    https-redirect: 8443
+
 ---
 spring:
   profiles: prod
-
-  port:
-    https-redirect: 443
 
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/mhz
