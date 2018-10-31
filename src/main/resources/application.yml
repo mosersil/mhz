@@ -40,7 +40,7 @@ spring:
       mail:
         smtp:
           ssl:
-            trust: all
+            trust: '*'
           starttls:
             enable: true
 server:
@@ -88,7 +88,7 @@ spring:
       mail:
         smtp:
           ssl:
-            trust: all
+            trust: '*'
           starttls:
             enable: true
 

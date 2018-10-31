@@ -55,7 +55,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message);
 
             try {
-                helper.setFrom(emailModel.getEmail());
+                helper.setFrom(contactConfiguration.getContactEmailFrom());
                 helper.setTo(contactConfiguration.getContactEmailTo());
                 helper.setSubject(contactConfiguration.getGetContactEmailSubject());
                 helper.setText(emailModel.getName()+" ("+emailModel.getEmail()+")\n\n"+emailModel.getMessage());
