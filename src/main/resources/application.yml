@@ -1,5 +1,5 @@
 server:
-  port: 8443
+  port: 8085
 
 
 ---
@@ -43,19 +43,7 @@ spring:
             trust: all
           starttls:
             enable: true
-server:
-  ssl:
-    #trust-store-type: PKCS12
-    #trust-store: classpath:localhost.p12
-    #trust-store-password: changeit
-    key-store-type: PKCS12
-    key-store: classpath:localhost.p12
-    key-store-password: changeit
-    key-alias: localhost
-    enabled: true
 
-port:
-    https-redirect: 8443
 
 ---
 spring:
@@ -91,11 +79,3 @@ spring:
             trust: all
           starttls:
             enable: true
-
-server:
-  ssl:
-    key-store-type: PKCS12
-    key-store: /opt/certificate.p12
-    key-store-password: changeit
-    key-alias: 1
-    enabled: true
