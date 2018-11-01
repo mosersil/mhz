@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Created by silvio on 26.10.18.
  */
 
-@Test(enabled = false)
+@Test
 @SpringBootTest
 @Transactional
 @ContextConfiguration(locations = {"classpath:spring-test-config.xml"})
