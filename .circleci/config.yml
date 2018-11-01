@@ -27,5 +27,5 @@ jobs: # a collection of steps
         path: /home/circleci/mhzweb/target/surefire-reports
 
     - store_artifacts: # store the uberjar as an artifact
-        path: /home/circleci/mhzweb/target/*.jar
+        path: /home/circleci/mhzweb/target
     # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
