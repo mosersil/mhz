@@ -56,7 +56,7 @@ public class InternalApi {
 
     @RequestMapping(value="/internal/api/addresslist", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "organization", required = true) String  organization) throws DocumentException {
-        ByteArrayInputStream bis = PdfBuilder.generatePdfListReport(addressListRepository.findByOrganization(organization), AddressListEntry.class);
+        final ByteArrayInputStream bis = PdfBuilder.generatePdfListReport(addressListRepository.findByOrganization(organization), AddressListEntry.class);
         return pdfResponse(bis, organization);
     }
 

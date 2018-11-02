@@ -1,5 +1,6 @@
 package com.silviomoser.demo.data;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 @Entity(name = "PERSON_VERIFICATION")
 public class PersonVerification extends AbstractEntity {
 

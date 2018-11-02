@@ -2,10 +2,12 @@ package com.silviomoser.demo.api.registration;
 
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.Person;
+import com.silviomoser.demo.data.PersonVerification;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.data.builder.PersonBuilder;
 import com.silviomoser.demo.data.type.RoleType;
 import com.silviomoser.demo.repository.PersonRepository;
+import com.silviomoser.demo.repository.PersonVerificationRepository;
 import com.silviomoser.demo.repository.UserRepository;
 import com.silviomoser.demo.security.utils.PasswordUtils;
 import com.silviomoser.demo.ui.i18.I18Helper;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -33,6 +36,9 @@ public class PersonRegistrationApi {
 
     @Autowired
     PersonRepository personRepository;
+
+    @Autowired
+    PersonVerificationRepository personVerificationRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -58,6 +64,7 @@ public class PersonRegistrationApi {
                     .email(registrationDataSubmission.getEmail())
                     .password(registrationDataSubmission.getPassword())
                     .roles(RoleType.USER.name())
+                    .verificationToken(PasswordUtils.generateToken(60))
                     .bulid();
 
             //self-registration requires a valid email address
@@ -77,7 +84,7 @@ public class PersonRegistrationApi {
                 throw new ApiException(i18Helper.getMessage("registration_exception_personalreadyexists"));
             } else {
                 final Person savedPerson = personRepository.save(person);
-                return new ResponseEntity<Long>(savedPerson.getId(), HttpStatus.OK);
+                return new ResponseEntity<>(savedPerson.getId(), HttpStatus.OK);
             }
         } catch (ConstraintViolationException cve) {
             log.warn("Violated constraint {}", cve.getMessage(), cve);
@@ -93,10 +100,22 @@ public class PersonRegistrationApi {
     public ResponseEntity<Boolean> checkUserExists(@RequestParam String username) {
         Optional<User> existingUser = userRepository.findByUsername(username);
         if (existingUser.isPresent()) {
-            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         } else {
-            return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
     }
 
+
+    @RequestMapping(value = "/api/public/registration/verifyEmail", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> verifyEmail(@RequestParam String token) {
+        Optional<PersonVerification> existingPersonVerification = personVerificationRepository.findByToken(token);
+        if (existingPersonVerification.isPresent()) {
+            existingPersonVerification.get().setConfirmedDate(LocalDateTime.now());
+            personVerificationRepository.save(existingPersonVerification.get());
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } else {
+            throw new ApiException("Invalid token submitted", HttpStatus.NOT_FOUND);
+        }
+    }
 }
