@@ -31,7 +31,7 @@ public class ShopItem extends AbstractEntity {
     private String description;
 
     @Column(name="PRICE")
-    private float price;
+    private long price;
 
     @NotNull
     @Column(name = "TYPE")

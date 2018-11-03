@@ -179,6 +179,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 // Create an instance of the card Element.
     var card = elements.create('card', {style: style});
 
+
 // Add an instance of the card Element into the `card-element` <div>.
     card.mount('#card-element');
 
@@ -213,11 +214,16 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
     function stripeTokenHandler(token) {
         // Insert the token ID into the form so it gets submitted to the server
         var form = document.getElementById('payment-form');
-        var hiddenInput = document.createElement('input');
-        hiddenInput.setAttribute('type', 'hidden');
-        hiddenInput.setAttribute('name', 'token');
-        hiddenInput.setAttribute('value', token.id);
-        form.appendChild(hiddenInput);
+        var hiddenInput_token = document.createElement('input');
+        hiddenInput_token.setAttribute('type', 'hidden');
+        hiddenInput_token.setAttribute('name', 'token');
+        hiddenInput_token.setAttribute('value', token.id);
+        form.appendChild(hiddenInput_token);
+        var hiddenInput_transaction = document.createElement('input');
+        hiddenInput_transaction.setAttribute('type', 'hidden');
+        hiddenInput_transaction.setAttribute('name', 'transactionId');
+        hiddenInput_transaction.setAttribute('value', $scope.transactionId);
+        form.appendChild(hiddenInput_transaction);
 
         // Submit the form
         form.submit();
@@ -339,6 +345,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
                         }
 
                     }).then(function (success) {
+                        $scope.transactionId = success.data;
                         ShopService.currentStep += 3;
                     });
                 }
@@ -412,6 +419,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
                     }
 
                 }).then(function (success) {
+                    $scope.transactionId = success.data;
                     ShopService.currentStep += 1;
                 });
             } else {
