@@ -2,8 +2,8 @@ package com.silviomoser.demo.api.shop;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.itextpdf.text.DocumentException;
-import com.paymill.context.PaymillContext;
 import com.silviomoser.demo.api.core.ApiException;
+import com.silviomoser.demo.config.PaymentConfiguration;
 import com.silviomoser.demo.data.*;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.repository.ShopItemPurchaseRepository;
@@ -49,7 +49,7 @@ public class ShopApi {
     ShopTransactionRepository shopTransactionRepository;
 
     @Autowired
-    PaymillContext paymillContext;
+    PaymentConfiguration paymentConfiguration;
 
 
     @ApiOperation(value = "List my purchases")
@@ -150,7 +150,7 @@ public class ShopApi {
     @RequestMapping(value = "/api/protected/shop/createpayment", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
     public void createPayPalPayment(HttpServletRequest request, HttpServletResponse response, CreatePaymentDataSubmission createPaymentDataSubmission) throws IOException {
 
-        Stripe.apiKey = "";
+        Stripe.apiKey = paymentConfiguration.getPrivateKey();
 
 
         final long transactionId = createPaymentDataSubmission.getTransactionId();
@@ -163,6 +163,7 @@ public class ShopApi {
 
             params.put("amount", ShopHelper.calculateTotal(shopTransaction));
             params.put("currency", "chf");
+            params.put("name", createPaymentDataSubmission.getCardholder_name());
             params.put("description", String.format("transaction %s for client %s", shopTransaction.getId(), FormatUtils.toFirstLastName(shopTransaction.getPerson())));
             params.put("source", createPaymentDataSubmission.getToken());
             try {
