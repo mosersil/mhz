@@ -1,19 +1,19 @@
 package com.silviomoser.demo.ui.editor;
 
-import com.silviomoser.demo.data.Person;
+import com.silviomoser.demo.data.Role;
 import com.silviomoser.demo.data.StaticFile;
 import com.silviomoser.demo.data.type.FileType;
-import com.silviomoser.demo.repository.PersonRepository;
-import com.silviomoser.demo.utils.FormatUtils;
+import com.silviomoser.demo.repository.RoleRepository;
+import com.silviomoser.demo.security.utils.SecurityUtils;
+import com.silviomoser.demo.services.FileHandle;
+import com.silviomoser.demo.services.FileService;
 import com.vaadin.data.Binder;
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
@@ -22,10 +22,13 @@ import java.io.OutputStream;
 public class StaticFileEditor extends AbstractEditor<StaticFile> {
     final TextField title = new TextField(i18Helper.getMessage("file_title"));
     final TextArea description = new TextArea(i18Helper.getMessage("file_description"));
-    final ComboBox<Person> owner = new ComboBox<>(i18Helper.getMessage("file_owner"));
-    final RadioButtonGroup<FileType> fileTypeRadioButtonGroup = new RadioButtonGroup<>(i18Helper.getMessage("file_type"), DataProvider.ofItems(FileType.values()));
+    final ComboBox<Role> role = new ComboBox<>(i18Helper.getMessage("file_authorization"));
+
     @Autowired
-    PersonRepository personRepository;
+    RoleRepository roleRepository;
+
+    @Autowired
+    FileService fileService;
 
     @Override
     public Layout initLayout() {
@@ -43,29 +46,21 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
         setWidth(700);
         description.setSizeFull();
 
-        owner.setItems(personRepository.findAll());
-        owner.setItemCaptionGenerator((ItemCaptionGenerator<Person>) person -> FormatUtils.toFirstLastName(person));
+        role.setItems(roleRepository.findAll());
+        role.setItemCaptionGenerator((ItemCaptionGenerator<Role>) role -> role.getType().getLabel());
 
-        layout.addComponents(title, description, fileTypeRadioButtonGroup, owner, upload);
+        layout.addComponents(title, description, role, upload);
         return layout;
     }
 
-    ;
 
     @Override
     public Binder initBinder() {
         Binder<StaticFile> binder = new Binder<>(StaticFile.class);
-        binder.forField(fileTypeRadioButtonGroup)
-                .asRequired(i18Helper.getMessage("file_typerequired"))
-                .bind(StaticFile::getFileType, StaticFile::setFileType);
-
-        binder.forField(owner)
-                .asRequired(i18Helper.getMessage("file_ownerrequired"))
-                .bind(StaticFile::getPerson, StaticFile::setPerson);
+        binder.forField(role)
+                .bind(StaticFile::getRole, StaticFile::setRole);
 
         binder.bindInstanceFields(this);
-
-
         return binder;
     }
 
@@ -74,18 +69,25 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
     class FileReceiver implements Upload.Receiver, Upload.SucceededListener {
         private static final long serialVersionUID = -1276759102490466761L;
 
-        public File file;
-
+        FileHandle fileHandle;
         public OutputStream receiveUpload(String filename,
                                           String mimeType) {
+
+            fileHandle = fileService.create(mimeType);
+
             // Create upload stream
-            FileOutputStream fos = null; // Stream to write to
+            FileOutputStream fos; // Stream to write to
             try {
                 // Open the file for writing.
-                file = new File("/tmp/" + filename);
-                fos = new FileOutputStream(file);
+                fos = new FileOutputStream(fileHandle.getFile());
             } catch (final java.io.FileNotFoundException e) {
                 new Notification("Could not open file<br/>",
+                        e.getMessage(),
+                        Notification.Type.ERROR_MESSAGE)
+                        .show(Page.getCurrent());
+                return null;
+            } catch (final IllegalArgumentException e) {
+                new Notification(e.getMessage(),
                         e.getMessage(),
                         Notification.Type.ERROR_MESSAGE)
                         .show(Page.getCurrent());
@@ -95,12 +97,9 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
         }
 
         public void uploadSucceeded(Upload.SucceededEvent event) {
-
-            // Show the uploaded file in the image viewer
-            //image.setVisible(true);
-            //image.setSource(new FileResource(file));
-            System.out.println("dat funktioniert: " + event.getMIMEType());
-            fileTypeRadioButtonGroup.setValue(FileType.byMimeType(event.getMIMEType().toUpperCase()));
+            actualEntity.setFileType(FileType.byMimeType(event.getMIMEType().toUpperCase()));
+            actualEntity.setLocation(fileHandle.getName());
+            actualEntity.setPerson(SecurityUtils.getMe());
         }
     }
 }

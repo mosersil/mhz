@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.context.annotation.RequestScope;
-import org.springframework.web.context.annotation.SessionScope;
 
 /**
  * Created by silvio on 26.08.18.
@@ -33,6 +32,13 @@ public class EnvironmentConfiguration {
     @Bean
     public PaymillContext paymillContext() {
         return new PaymillContext( environment.getProperty("paymill.api.privatekey") );
+    }
+
+    @Bean
+    public FileServiceConfiguration fileServiceConfiguration() {
+        final FileServiceConfiguration fileServiceConfiguration = new FileServiceConfiguration();
+        fileServiceConfiguration.setDirectory(environment.getProperty("fileservice.directory", "/tmp"));
+        return fileServiceConfiguration;
     }
 
     @Bean

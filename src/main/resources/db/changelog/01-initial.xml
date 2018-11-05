@@ -232,8 +232,14 @@
             <column name="TITLE" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="DESCRIPTION" type="varchar(400)">
+            <column name="LOCATION" type="varchar(100)">
                 <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="varchar(600)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="KEYWORDS" type="varchar(200)">
+                <constraints nullable="true"/>
             </column>
             <column name="TYPE" type="int">
                 <constraints nullable="false"/>
@@ -243,6 +249,9 @@
             </column>
             <column name="PERSON_ID" type="bigint">
                 <constraints nullable="false"/>
+            </column>
+            <column name="EVENT_ID" type="bigint">
+                <constraints nullable="true"/>
             </column>
         </createTable>
 

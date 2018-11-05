@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
 
 @Entity(name = "STATIC_FILE")
 @Getter
@@ -19,9 +20,11 @@ import javax.persistence.ManyToOne;
 public class StaticFile extends AbstractEntity {
 
     @Column(name = "TITLE")
+    @Size(max = 50)
     private String title;
 
     @Column(name = "DESCRIPTION")
+    @Size(max = 600)
     private String description;
 
     @Column(name = "TYPE")
@@ -34,4 +37,16 @@ public class StaticFile extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
     private Person person;
+
+    @Column(name = "LOCATION")
+    @Size(max = 100)
+    private String location;
+
+    @Column(name = "KEYWORDS")
+    @Size(max = 200)
+    private String keywords;
+
+    @ManyToOne
+    @JoinColumn(name = "EVENT_ID")
+    private CalendarEvent event;
 }

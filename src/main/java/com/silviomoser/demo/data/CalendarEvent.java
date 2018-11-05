@@ -4,11 +4,10 @@ import com.silviomoser.demo.data.type.DressCode;
 import com.silviomoser.demo.utils.PdfReport;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -47,6 +46,11 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     @Column(name="DRESS_CODE")
     @PdfReport(header = "Tenue")
     private DressCode dressCode;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "event"
+    )
+    private Set<StaticFile> files;
 
     @Override
     public int compareTo(CalendarEvent o) {
