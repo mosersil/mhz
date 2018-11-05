@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,10 +19,12 @@ public class BackgroundApi {
 
     @RequestMapping(value = "/public/api/background", produces = MediaType.IMAGE_JPEG_VALUE, method = RequestMethod.GET)
     public @ResponseBody
-    byte[] getImageWithMediaType() throws IOException {
+    byte[] getImageWithMediaType(@RequestParam(name = "index", required = false) Integer index) throws IOException {
 
-        int random = (int)((Math.random()) * 3 + 1);
-        final InputStream in = getClass().getResourceAsStream("/static/background/"+random+".jpg");
+        if (index==null) {
+            index= (int)((Math.random()) * 3 + 1);
+        }
+        final InputStream in = getClass().getResourceAsStream("/static/background/"+index+".jpg");
         return IOUtils.toByteArray(in);
     }
 

@@ -28,6 +28,9 @@
             <column name="REMARKS" type="varchar(60)">
                 <constraints nullable="true"/>
             </column>
+            <column name="LOCATION" type="varchar(60)">
+                <constraints nullable="true"/>
+            </column>
             <column name="TITLE" type="varchar(30)">
                 <constraints nullable="true"/>
             </column>

@@ -1,0 +1,11 @@
+a {
+    color: #396596;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+
+.mhz_logo {
+    height: 100px;
+    vertical-align: bottom;
+}

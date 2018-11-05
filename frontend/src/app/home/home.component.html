@@ -1,0 +1,67 @@
+<div class="container-fluid" style="background-image: url('http://localhost:8085/public/api/background'); background-repeat: no-repeat">
+  <div class="jumbotron" style="background: none">
+    <div class="container bg-transparent text-white mb-5">
+      <h1>Musikverein Harmonie Zürich-Oberstrass</h1>
+      <p>
+        In this tutorial you learn how to use Angular CLI v6 with Bootstrap and FontAwesome!
+      </p>
+    </div>
+  </div>
+
+  <div class="container bg-white rounded shadow p-4" style="margin-top: 600px">
+    <div id="cont_aboutus" class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat. Duis aute
+            irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+            est laborum.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Lust zum mitspielen?</h5>
+            <p class="card-text">Du spielst ein Instrument und möchtest bei uns mitmachen? Hier findest du mehr
+              informationen</p>
+            <a href="#" class="btn btn-primary">Mehr erfahren</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Dynamisch generierte news</h5>
+            <p class="card-text">Hier kommt jeweils ein aktueller Inhalt hin</p>
+            <a href="#" class="btn btn-primary">Mehr erfahren</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Agenda</h5>
+            <p class="card-text">Unsere nächsten Termine:</p>
+            <ul class="list-group" *ngIf="events">
+              <li class="list-group-item border-0" *ngFor="let event of events">
+                {{event.date | date : "mediumDate"}} : {{event.title}}
+              </li>
+            </ul>
+            <a href="#" class="btn btn-primary">Unser Kalender</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

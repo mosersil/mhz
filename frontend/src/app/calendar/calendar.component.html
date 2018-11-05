@@ -1,0 +1,20 @@
+<div class="container">
+  <p>Sie möchten uns live hören? Hier haben Sie die Gelegenheit dazu:</p>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">Datum</th>
+      <th scope="col">Anlass</th>
+      <th scope="col">Ort</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr *ngFor="let event of events">
+      <td>{{event.date | date : "mediumDate"}}</td>
+      <td>{{event.title}}</td>
+      <td>{{event.location}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
