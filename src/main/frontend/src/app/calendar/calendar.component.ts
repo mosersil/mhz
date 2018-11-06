@@ -20,10 +20,8 @@ export class CalendarComponent implements OnInit {
     this._calendarService.getEvents(null).subscribe(
       data => {
         this.events = data
-        console.log(data)
       },
       err => console.error(err),
-      () => console.log('done loading events: ' + this.events)
     );
   }
 

@@ -1,10 +1,13 @@
 package com.silviomoser.demo.api.contact;
 
+import com.silviomoser.demo.api.shop.OrderSubmission;
 import com.silviomoser.demo.services.EmailService;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import com.silviomoser.demo.utils.TtlMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +32,9 @@ public class ContactMailApi {
 
     final TtlMap<String, String> hitCache = new TtlMap<>(TimeUnit.SECONDS, 10);
 
-
-    @RequestMapping(value = "/api/contact", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
-    public EmailStatus sendEmail(HttpServletRequest request, @Valid EmailModel emailModel) {
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/api/contact", method = RequestMethod.POST)
+    public EmailStatus sendEmail(HttpServletRequest request, @Valid @RequestBody EmailModel emailModel) {
 
         EmailStatus emailStatus = new EmailStatus();
 
@@ -46,4 +49,5 @@ public class ContactMailApi {
         log.info("Contact form has been submitted by {}: {}", emailModel.getEmail(), emailModel.getMessage());
         return emailStatus;
     }
+
 }
