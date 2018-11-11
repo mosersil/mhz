@@ -63,4 +63,7 @@ public class User extends AbstractEntity {
     private Person person;
 
 
+    private String resetToken;
+
+
 }
