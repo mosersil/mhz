@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {ContactForm} from "../contact-form";
+import {Component, OnInit} from '@angular/core';
 import {ContactService} from "../contact.service";
-import {RequestOptions} from "@angular/http";
 
 @Component({
   selector: 'app-contact',
@@ -19,7 +17,6 @@ export class ContactComponent implements OnInit {
   onSubmit() {
     this._contactService.sendContactForm(this.model).subscribe(data => {this.feedback = data},
       err => console.error(err))
-    console.log("test");
   }
 
   ngOnInit() {

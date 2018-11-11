@@ -24,7 +24,7 @@ public class BackgroundApi {
         if (index==null) {
             index= (int)((Math.random()) * 3 + 1);
         }
-        final InputStream in = getClass().getResourceAsStream("/static/background/"+index+".jpg");
+        final InputStream in = getClass().getResourceAsStream("/background/"+index+".jpg");
         return IOUtils.toByteArray(in);
     }
 

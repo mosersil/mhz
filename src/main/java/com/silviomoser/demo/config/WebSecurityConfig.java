@@ -5,6 +5,7 @@ import com.silviomoser.demo.security.AuthenticationResult;
 import com.silviomoser.demo.security.CustomFilter;
 import com.silviomoser.demo.security.SecurityUserDetailsService;
 import com.vaadin.spring.annotation.EnableVaadin;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,11 +28,14 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by silvio on 10.05.18.
@@ -41,6 +45,7 @@ import java.io.IOException;
 @EnableVaadin
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 @EnableJpaAuditing
+@Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
@@ -77,13 +82,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private void loginSuccessHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
+        log.info("Login Success: " + httpServletRequest);
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResult result = new AuthenticationResult();
         try {
             result.setErrorCode(0);
             httpServletResponse.getWriter().write(mapper.writeValueAsString(result));
         } catch (IOException e) {
-           e.printStackTrace();
+           log.error("caught error during login: " + e.getMessage(), e);
         }
 
     }
@@ -111,6 +117,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 
         http
+                .cors().and()
                 .authorizeRequests()
                 .antMatchers("/vaadinServlet/UIDL/**").permitAll()
                 .antMatchers("/vaadinServlet/HEARTBEAT/**").permitAll()
@@ -153,6 +160,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
         return new SessionFixationProtectionStrategy();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }

@@ -1,12 +1,11 @@
 <div class="container">
   <nav class="navbar navbar-expand-md navbar-light">
-    <a routerLink="home" routerLinkActive="active" class="navbar-left"><img class="mhz_logo"
-                                                                            src="{{backendUrl}}/logo.jpg"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <a routerLink="home" routerLinkActive="active" class="navbar-left"><img class="mhz_logo" src="/assets/logo/logo.jpg"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-5">
         <li class="nav-item">
           <a class="nav-link" routerLink="about_us" routerLinkActive="active">Über uns</a>
@@ -26,10 +25,38 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="contact" routerLinkActive="active">Kontakt</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="internal" routerLinkActive="active"><i class="fa d-inline fa-lg fa-user-circle-o"></i>&nbsp;Intern</a>
-        </li>
       </ul>
-    </div>
+      <ul class="nav navbar-nav navbar-right">
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="intra" routerLinkActive="active"><span class="fa fa-user fa-lg" aria-hidden="true"></span></a>
+        </li>
+
+        <!--
+        <li class="nav-item dropdown" *ngIf="isAuthenticated; else showLoginOnly">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+            <span class="fa fa-user fa-lg" aria-hidden="true"></span>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li class="dropdown-item">
+              <a class="nav-link" routerLink="intra" routerLinkActive="active">Mein Bereich</a>
+            </li>
+            <li class="dropdown-item">
+              <a class="nav-link" routerLink="logout" routerLinkActive="active">Logout</a>
+            </li>
+          </ul>
+        </li>
+
+        <ng-template #showLoginOnly>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="intra" routerLinkActive="active"><span class="fa fa-user fa-lg" aria-hidden="true"></span></a>
+          </li>
+        </ng-template>
+-->
+
+      </ul>
+    </ul>
+
   </nav>
 </div>

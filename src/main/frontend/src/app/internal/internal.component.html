@@ -1,3 +1,66 @@
-<p>
-  internal works!
-</p>
+<div class="container bg-white rounded shadow p-4">
+
+  <div class="alert alert-info">
+    <strong>Herzlich willkommen</strong> {{person.firstName}} {{person.lastName}}
+  </div>
+
+
+
+  <h2>Adresslisten</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Titel</th>
+      <th scope="col">Bemerkungen</th>
+      <th scope="col">Downloads</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Aktivmitglieder</td>
+      <td>Adressliste aller Mitglieder, die aktiv im Verein mitspielen</td>
+      <td>
+        <a href="{{backendUrl}}/internal/api/addresslist?organization=Aktivmitglied" target="_blank"><span class="fa fa-file-pdf-o" aria-hidden="true"></span></a>&nbsp;
+        <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Vorstand</td>
+      <td>Adressliste vom MHZ Vorstand</td>
+      <td>
+        <a href="{{backendUrl}}/internal/api/addresslist?organization=Vorstand" target="_blank"><span class="fa fa-file-pdf-o" aria-hidden="true"></span></a>&nbsp;
+        <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <h2>Hörbeispiele</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Titel</th>
+      <th scope="col">Bemerkungen</th>
+      <th scope="col">Downloads</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Test MP3 Datei</td>
+      <td>Nur ein Test ob MP3 Dateien funktionieren. Dies benötigt einen HTML-5 fähigen Browser</td>
+      <td>
+        <audio controls>
+          <source src="https://ia902508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3" type="audio/mpeg">
+        </audio>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>

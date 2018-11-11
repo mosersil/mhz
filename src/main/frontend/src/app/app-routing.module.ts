@@ -9,6 +9,8 @@ import {CalendarComponent} from "./calendar/calendar.component";
 import {SocialComponent} from "./social/social.component";
 import {ShopComponent} from "./shop/shop.component";
 import {InternalComponent} from "./internal/internal.component";
+import {AuthGuardService as AuthGuard} from "./auth-guard-service.service";
+import {LoginComponent} from "./login/login.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,7 +21,8 @@ const routes: Routes = [
   { path: 'social', component: SocialComponent },
   { path: 'shop', component: ShopComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'internal', component: InternalComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'intra', component: InternalComponent, canActivate: [AuthGuard] }
 
 
 ];

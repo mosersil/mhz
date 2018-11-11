@@ -51,12 +51,15 @@
           <div class="card-body">
             <h5 class="card-title">Agenda</h5>
             <p class="card-text">Unsere nächsten Termine:</p>
-            <ul class="list-group" *ngIf="events">
-              <li class="list-group-item border-0" *ngFor="let event of events">
-                {{event.date | date : "mediumDate"}} : {{event.title}}
+            <ul class="list-group" *ngFor=" let event of events">
+              <li class="list-group-item border-0" *ngIf="!event.isFullDay">
+                {{event.date | date : "dd.MM.yyyy"}} : {{event.title}} ({{event.date | date : "hh:mm"}})
+              </li>
+              <li class="list-group-item border-0" *ngIf="event.isFullDay">
+                {{event.date | date : "dd.MM.yyyy"}} : {{event.title}}
               </li>
             </ul>
-            <a href="calendar" class="btn btn-primary">Unser Kalender</a>
+            <a class="nav-link" routerLink="calendar" routerLinkActive="active">Alle unsere Auftritte</a>
           </div>
         </div>
       </div>
