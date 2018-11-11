@@ -81,6 +81,21 @@
             </column>
         </createTable>
 
+        <createTable tableName="PARTICIPATION">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="EVENT_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PERSON_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REMARKS" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
 
         <createTable tableName="PERSON">
             <column name="ID" autoIncrement="true" type="bigint">
