@@ -1,18 +1,8 @@
 package com.silviomoser.demo.ui;
 
-import com.silviomoser.demo.data.Membership;
 import com.silviomoser.demo.security.utils.SecurityUtils;
-import com.silviomoser.demo.ui.editor.ArticleEditor;
-import com.silviomoser.demo.ui.view.ArticleView;
-import com.silviomoser.demo.ui.view.CalendarView;
-import com.silviomoser.demo.ui.view.MembershipView;
-import com.silviomoser.demo.ui.view.PersonView;
-import com.vaadin.ui.AbstractLayout;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
+import com.silviomoser.demo.ui.view.*;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -29,6 +19,7 @@ public class NavigationBar {
         navigationBar.addComponent(createNavigationButton(layout, "Kalender", CalendarView.VIEW_NAME));
         navigationBar.addComponent(createNavigationButton(layout, "Personen", PersonView.VIEW_NAME));
         navigationBar.addComponent(createNavigationButton(layout, "Gruppen", MembershipView.VIEW_NAME));
+        navigationBar.addComponent(createNavigationButton(layout, "Downloads", StaticFileView.VIEW_NAME));
 
         HorizontalLayout navigationBarLayout = new HorizontalLayout();
         navigationBarLayout.addComponent(navigationBar);
