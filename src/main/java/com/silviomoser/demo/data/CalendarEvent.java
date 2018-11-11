@@ -52,6 +52,9 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     )
     private Set<StaticFile> files;
 
+    @OneToMany(mappedBy = "event")
+    private Set<Participation> participants;
+
     @Override
     public int compareTo(CalendarEvent o) {
             return this.getDate().compareTo(o.getDate());
