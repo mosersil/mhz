@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.Gender;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name = "PERSON")
 public class Person extends AbstractEntity {
 

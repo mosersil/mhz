@@ -6,6 +6,7 @@ import com.silviomoser.demo.repository.CalendarEventRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +14,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by silvio on 10.05.18.
  */
 @RestController
+@Slf4j
 public class CalendarApi {
 
     @Autowired
@@ -32,7 +35,8 @@ public class CalendarApi {
     })
     @RequestMapping(value = "/public/api/calendar", method = RequestMethod.GET)
     public List<CalendarEvent> list(@RequestParam(name = "max", required = false) Integer max,
-                                    @RequestParam(name = "startFrom", required = false) String startFrom) {
+                                    @RequestParam(name = "startFrom", required = false) String startFrom,
+                                    @RequestParam(name = "publicOnly", required = false, defaultValue = "false") boolean publicOnly) {
 
         LocalDateTime startFromDate;
         if (startFrom == null || startFrom.isEmpty()) {
@@ -46,13 +50,18 @@ public class CalendarApi {
 
         }
 
-        List<CalendarEvent> all = repository.findCalendarEventsFromStartDate(startFromDate);
-        all.sort(CalendarEvent::compareTo);
+        List<CalendarEvent> foundItems = repository.findCalendarEventsFromStartDate(startFromDate);
+        foundItems.sort(CalendarEvent::compareTo);
 
-        if (max != null && all.size() >= max) {
-            return all.subList(0, max);
+        if (publicOnly) {
+            foundItems = foundItems.stream().filter(p -> p.isPublicEvent()).collect(Collectors.toList());
         }
-        return all;
+
+        if (max != null && foundItems.size() >= max) {
+            foundItems = foundItems.subList(0, max);
+        }
+        log.debug("Returning {} items", foundItems.size());
+        return foundItems;
 
     }
 

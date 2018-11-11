@@ -74,4 +74,7 @@ public class User extends AbstractEntity {
                 ", person=" + FormatUtils.toFirstLastName(person) +
                 '}';
     }
+    private String resetToken;
+
+
 }
