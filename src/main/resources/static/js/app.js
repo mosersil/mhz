@@ -150,6 +150,91 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
     $scope.currentStep = null;
 
 
+    //BEGIN stripe
+    // Create a Stripe client.
+    var stripe = Stripe('pk_test_D19x4omdZwLxxIlJZuivB41j');
+
+// Create an instance of Elements.
+    var elements = stripe.elements();
+
+
+// Custom styling can be passed to options when creating an Element.
+// (Note that this demo uses a wider set of styles than the guide below.)
+    var style = {
+        base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#aab7c4'
+            }
+        },
+        invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a'
+        }
+    };
+
+// Create an instance of the card Element.
+    var card = elements.create('card', {style: style});
+
+
+// Add an instance of the card Element into the `card-element` <div>.
+    card.mount('#card-element');
+
+// Handle real-time validation errors from the card Element.
+    card.addEventListener('change', function (event) {
+        var displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+// Handle form submission.
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        stripe.createToken(card).then(function (result) {
+            if (result.error) {
+                // Inform the user if there was an error.
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+            } else {
+                // Send the token to your server.
+                stripeTokenHandler(result.token);
+            }
+        });
+    });
+
+
+    function stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput_token = document.createElement('input');
+        hiddenInput_token.setAttribute('type', 'hidden');
+        hiddenInput_token.setAttribute('name', 'token');
+        hiddenInput_token.setAttribute('value', token.id);
+        form.appendChild(hiddenInput_token);
+        var hiddenInput_transaction = document.createElement('input');
+        hiddenInput_transaction.setAttribute('type', 'hidden');
+        hiddenInput_transaction.setAttribute('name', 'transactionId');
+        hiddenInput_transaction.setAttribute('value', $scope.transactionId);
+        form.appendChild(hiddenInput_transaction);
+
+        // Submit the form
+        form.submit();
+    }
+
+    //END stripe
+
+
+
+
     // Check the currentStep value in EVERY DIGEST to see if it's changed.
     // And, if so, update the local view-model.
     $scope.$watch(
@@ -167,48 +252,6 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
             $scope.shopitems = response.data;
         });
 
-
-    // Callback for the PayFrame
-    var payFrameCallback = function (error) {
-        if (error) {
-            // Frame could not be loaded, check error object for reason.
-            console.log(error.apierror, error.message);
-        } else {
-            // Frame was loaded successfully and is ready to be used.
-            console.log("PayFrame successfully loaded");
-            $("#payment-form").show(300);
-        }
-    }
-
-    var submit = function (event) {
-        paymill.createTokenViaFrame({
-            amount_int: $scope.total * 100,
-            currency: 'CHF'
-        }, function (error, result) {
-            // Handle error or process result.
-            if (error) {
-                // Token could not be created, check error object for reason.
-                console.log(error.apierror, error.message);
-            } else {
-                // Token was created successfully and can be sent to backend.
-                console.log("token has been created")
-                var form = $("#payment-form");
-                var token = result.token;
-                form.append("<input type='hidden' name='token' value='" + token + "'/>");
-                form.get(0).submit();
-            }
-        });
-
-        return false;
-    }
-
-
-    angular.element(document).ready(function () {
-        paymill.embedFrame('credit-card-fields', {
-            lang: 'de'
-        }, payFrameCallback);
-        $("#payment-form").submit(submit);
-    });
 
     $scope.nextStep = function () {
         ShopService.currentStep += 1;
@@ -263,6 +306,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
 
 
     $scope.submitOrder = function () {
+
         var data = [];
         angular.forEach(ShopService.cart, function (value, key) {
             var orderLine = {
@@ -302,6 +346,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
                         }
 
                     }).then(function (success) {
+                        $scope.transactionId = success.data;
                         ShopService.currentStep += 3;
                     });
                 }
@@ -375,6 +420,7 @@ demoApp.controller("shop_controller", function ($scope, $http, $httpParamSeriali
                     }
 
                 }).then(function (success) {
+                    $scope.transactionId = success.data;
                     ShopService.currentStep += 1;
                 });
             } else {

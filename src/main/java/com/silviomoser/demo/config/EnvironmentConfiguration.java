@@ -1,6 +1,5 @@
 package com.silviomoser.demo.config;
 
-import com.paymill.context.PaymillContext;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +29,8 @@ public class EnvironmentConfiguration {
     }
 
     @Bean
-    public PaymillContext paymillContext() {
-        return new PaymillContext( environment.getProperty("paymill.api.privatekey") );
+    public PaymentConfiguration paymentConfiguration() {
+        return new PaymentConfiguration(environment.getProperty("payment.api.privatekey"));
     }
 
     @Bean

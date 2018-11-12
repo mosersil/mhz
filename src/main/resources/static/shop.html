@@ -12,6 +12,33 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
+    <style>
+        .StripeElement {
+            background-color: white;
+            height: 40px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            box-shadow: 0 1px 3px 0 #e6ebf1;
+            -webkit-transition: box-shadow 150ms ease;
+            transition: box-shadow 150ms ease;
+        }
+
+        .StripeElement--focus {
+            box-shadow: 0 1px 3px 0 #cfd7df;
+        }
+
+        .StripeElement--invalid {
+            border-color: #fa755a;
+        }
+
+        .StripeElement--webkit-autofill {
+            background-color: #fefde5 !important;
+        }
+
+    </style>
+
 
 </head>
 
@@ -38,7 +65,7 @@
             <div class="col-sm-8">
                 <div class="card mb-2" ng-repeat="shopitem in shopitems">
                     <div class="card-header">
-                        {{shopitem.name}} (CHF {{shopitem.price}})
+                        {{shopitem.name}} ({{shopitem.price/100 | currency:"CHF"}})
                     </div>
                     <div class="card-body">
                         <p class="card-text">{{shopitem.description}}</p>
@@ -55,7 +82,7 @@
                                 {{c.count}} x {{c.name}} <i class="fa fa-minus-square" ng-click="removeItemCart(c)"></i>
                             </li>
                         </ul>
-                        Total : {{total | currency}}
+                        Total : {{total/100 | currency}}
                         <div>
                             <button type="submit" class="btn btn-primary" ng-click="submitOrder()" ng-hide="total==0">
                                 weiter
@@ -180,29 +207,55 @@
         <div class="row" ng-show="currentStep==5">
             <div class="col-sm-12 form-group">
 
-                <p>Bitte begleichen Sie den Gesamtbetrag von CHF {{total | currency}} mit Ihrer Kreditkarte</p>
+                <p>Bitte begleichen Sie den Gesamtbetrag von CHF {{total/100 | currency}} mit Ihrer Kreditkarte</p>
 
-
-                <form class="payment-form col-lg-5 collapse" id="payment-form" action="/api/protected/shop/createpayment"
-                      method="POST">
-                    <input type="hidden" name="amount" value="{{total * 100}}">
-                    <input type="hidden" name="currency" value="CHF">
-                    <input type="hidden" name="description" value="{{purchaseId}}">
-
-                    <div id="credit-card-fields">
-                        <!-- Embedded credit card frame will load here -->
+                <form action="/api/protected/shop/createpayment" method="post" id="payment-form">
+                    <div class="form-row">
+                        <label for="card-holder">
+                            Karteninhaber
+                        </label>
+                    </div>
+                    <div class="form-row">
+                        <input id="card-holder" type="text" ng-model="cardholder_name"/>
+                    </div>
+                    <div class="form-row">
+                        <label for="card-element">
+                            Karten Nummer
+                        </label>
+                    </div>
+                    <div class="form-row">
+                        <div id="card-element">
+                            <!-- A Stripe Element will be inserted here. -->
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <!-- Used to display form errors. -->
+                        <div id="card-errors" role="alert"></div>
                     </div>
 
-                    <button class='form-control btn btn-success submit-button' type='submit'>Jetzt bezahlen</button>
+                    <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Bezahlen</button>
                 </form>
+                <!--form class="payment-form col-lg-5 collapse" action="/api/protected/shop/createpayment" method="POST">
+                    <script
+                            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                            data-key="pk_test_D19x4omdZwLxxIlJZuivB41j"
+                            data-amount="999"
+                            data-name="Demo Site"
+                            data-description="Example charge"
+                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                            data-locale="auto"
+                            data-currency="chf">
+                    </script>
+                    <button class='form-control btn btn-success submit-button' type='submit'>Jetzt bezahlen</button>
+                </form-->
             </div>
             <div class="col-sm-12 form-group">
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="c in cart">
-                        {{c.count}} x {{c.name}}: {{c.price*c.count | currency}}
+                        {{c.count}} x {{c.name}}: {{c.price/100*c.count | currency}}
                     </li>
                 </ul>
-                <p class="text-right">Total : {{total | currency}}</p>
+                <p class="text-right">Total : {{total/100 | currency}}</p>
             </div>
         </div>
 

@@ -2,15 +2,19 @@ package com.silviomoser.demo.api.shop;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.itextpdf.text.DocumentException;
-import com.paymill.context.PaymillContext;
-import com.paymill.models.Transaction;
 import com.silviomoser.demo.api.core.ApiException;
+import com.silviomoser.demo.config.PaymentConfiguration;
 import com.silviomoser.demo.data.*;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
+import com.silviomoser.demo.repository.ShopItemPurchaseRepository;
 import com.silviomoser.demo.repository.ShopItemRepository;
 import com.silviomoser.demo.repository.ShopTransactionRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
+import com.silviomoser.demo.utils.FormatUtils;
 import com.silviomoser.demo.utils.PdfBuilder;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -26,10 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by silvio on 14.10.18.
@@ -42,10 +43,13 @@ public class ShopApi {
     ShopItemRepository shopItemRepository;
 
     @Autowired
+    ShopItemPurchaseRepository shopItemPurchaseRepository;
+
+    @Autowired
     ShopTransactionRepository shopTransactionRepository;
 
     @Autowired
-    PaymillContext paymillContext;
+    PaymentConfiguration paymentConfiguration;
 
 
     @ApiOperation(value = "List my purchases")
@@ -144,77 +148,37 @@ public class ShopApi {
     }
 
     @RequestMapping(value = "/api/protected/shop/createpayment", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
-    public void createPayPalPayment(HttpServletRequest request, HttpServletResponse response, CreatePaymentSubmission createPaymentSubmission) throws IOException {
+    public void createPayPalPayment(HttpServletRequest request, HttpServletResponse response, CreatePaymentDataSubmission createPaymentDataSubmission) throws IOException {
 
-        Transaction transaction = paymillContext.getTransactionService().createWithToken(createPaymentSubmission.getToken(), createPaymentSubmission.getAmount(), createPaymentSubmission.getCurrency(), createPaymentSubmission.getDescription());
-
-
-        transaction.getResponseCode();
-
-        ShopTransaction shopTransaction = shopTransactionRepository.getOne(Long.parseLong(createPaymentSubmission.getDescription()));
-
-        shopTransaction.setPaymentResponse(transaction.getResponseCode());
-        shopTransaction.setPaymentStatus(transaction.getStatus().getValue());
-        shopTransaction.setPaymentId(transaction.getId());
-
-        if (transaction.getResponseCode() == 20000) {
-            shopTransaction.setStatus(ShopOrderStatusType.PAYED);
-        }
-
-        shopTransactionRepository.save(shopTransaction);
-        response.sendRedirect("/#!/shop-transactions");
-    }
+        Stripe.apiKey = paymentConfiguration.getPrivateKey();
 
 
-    public static class CreatePaymentSubmission {
-        public CreatePaymentSubmission() {
-        }
+        final long transactionId = createPaymentDataSubmission.getTransactionId();
 
-        private int amount;
-        private String currency;
-        private String description;
-        private String token;
+        final Optional<ShopTransaction> optionalShopTransaction = shopTransactionRepository.findById(transactionId);
 
-        public int getAmount() {
-            return amount;
-        }
+        if (optionalShopTransaction.isPresent()) {
+            final ShopTransaction shopTransaction = optionalShopTransaction.get();
+            final Map<String, Object> params = new HashMap<>();
 
-        public void setAmount(int amount) {
-            this.amount = amount;
-        }
-
-        public String getCurrency() {
-            return currency;
-        }
-
-        public void setCurrency(String currency) {
-            this.currency = currency;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        @Override
-        public String toString() {
-            return "CreatePaymentSubmission{" +
-                    "amount=" + amount +
-                    ", currency='" + currency + '\'' +
-                    ", description='" + description + '\'' +
-                    ", token='" + token + '\'' +
-                    '}';
+            params.put("amount", ShopHelper.calculateTotal(shopTransaction));
+            params.put("currency", "chf");
+            params.put("name", createPaymentDataSubmission.getCardholder_name());
+            params.put("description", String.format("transaction %s for client %s", shopTransaction.getId(), FormatUtils.toFirstLastName(shopTransaction.getPerson())));
+            params.put("source", createPaymentDataSubmission.getToken());
+            try {
+                Charge charge = Charge.create(params);
+                shopTransaction.setPaymentResponse(charge.getLastResponse().code());
+                shopTransaction.setPaymentStatus(charge.getStatus());
+                shopTransaction.setPaymentId(charge.getId());
+                shopTransaction.setStatus(ShopOrderStatusType.PAYED);
+                shopTransactionRepository.save(shopTransaction);
+                response.sendRedirect("/#!/shop-transactions");
+            } catch (StripeException se) {
+                throw new ApiException(se.getMessage());
+            }
+        } else {
+            throw new ApiException("No valid transaction found");
         }
     }
 
