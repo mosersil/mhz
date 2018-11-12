@@ -59,7 +59,11 @@ public class User extends AbstractEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERSON_ID")
+    @ToString.Exclude
     private Person person;
+
+
+    private String resetToken;
 
 
 }

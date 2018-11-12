@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="01" author="silvio">
         <createTable tableName="CALENDAR_EVENT">
@@ -79,6 +78,21 @@
             </column>
             <column name="ROLE_ID" type="bigint">
                 <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="PARTICIPATION">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="EVENT_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PERSON_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REMARKS" type="varchar(50)">
+                <constraints nullable="true"/>
             </column>
         </createTable>
 
@@ -222,6 +236,37 @@
             </column>
             <column name="AMOUNT" type="int">
                 <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+        <createTable tableName="STATIC_FILE">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="TITLE" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCATION" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="varchar(600)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="KEYWORDS" type="varchar(200)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="TYPE" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROLE_ID" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PERSON_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EVENT_ID" type="bigint">
+                <constraints nullable="true"/>
             </column>
         </createTable>
 

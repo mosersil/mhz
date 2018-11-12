@@ -34,6 +34,13 @@ public class EnvironmentConfiguration {
     }
 
     @Bean
+    public FileServiceConfiguration fileServiceConfiguration() {
+        final FileServiceConfiguration fileServiceConfiguration = new FileServiceConfiguration();
+        fileServiceConfiguration.setDirectory(environment.getProperty("fileservice.directory", "/tmp"));
+        return fileServiceConfiguration;
+    }
+
+    @Bean
     @RequestScope
     public I18Helper i18Helper() {
         return new I18Helper();
