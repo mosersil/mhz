@@ -13,7 +13,6 @@ import {forEach} from "@angular/router/src/utils/collection";
 export class ShopComponent implements OnInit {
 
   shopItems;
-  total: number = 0;
 
   constructor(private _shopService: ShopService, private http: HttpClient) { }
 
@@ -30,42 +29,21 @@ export class ShopComponent implements OnInit {
 
 
   addItemToCart(product: ShopItem) {
-    if (this._shopService.cart.length === 0) {
-      product.count = 1;
-      this._shopService.cart.push(product);
-    } else {
-      var repeat = false;
-      for (var i = 0; i < this._shopService.cart.length; i++) {
-        if (this._shopService.cart[i].id === product.id) {
-          repeat = true;
-          this._shopService.cart[i].count += 1;
-        }
-      }
-      if (!repeat) {
-        product.count = 1;
-        this._shopService.cart.push(product);
-      }
-    }
-    this._shopService.total += product.price;
-    this.total=this._shopService.total;
+    this._shopService.addItemToCart(product);
   }
 
   removeItemFromCart(product: ShopItem) {
-    if (product.count > 1) {
-      product.count -= 1;
-    }
-    else if (product.count === 1) {
-      var index = this._shopService.cart.indexOf(product);
-      this._shopService.cart.splice(index, 1);
-    }
-
-    this._shopService.total -= product.price;
-    this.total=this._shopService.total;
+    this._shopService.removeItemFromCart(product);
   }
 
 
   submitOrder() {
     this._shopService.generateOrder()
+  }
+
+
+  get total(): number {
+    return this._shopService.total;
   }
 
 }

@@ -1,5 +1,10 @@
 <div class="container bg-white rounded shadow p-4">
   <p>Die angeforderte Seite erfordert eine Authentisierung.</p>
+
+  <div class="alert alert-danger" *ngIf="error!=null">
+    {{error}}
+  </div>
+
   <div class="col-md-6 offset-md-3">
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
       <div class="form-group">

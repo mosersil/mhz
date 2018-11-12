@@ -14,6 +14,7 @@ import {LoginComponent} from "./login/login.component";
 import {ForgotComponent} from "./forgot/forgot.component";
 import {RegisterComponent} from "./register/register.component";
 import {PaymentComponent} from "./payment/payment.component";
+import {TransactionsComponent} from "./transactions/transactions.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'payment', component: PaymentComponent },
   { path: 'intra', component: InternalComponent, canActivate: [AuthGuard] },
+  { path: 'transactions', component: TransactionsComponent },
   { path: '**', component: HomeComponent },
 
 

@@ -10,7 +10,6 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit {
 
   model: any = {};
-
   feedback: any
 
   constructor(private _authenticationService: AuthenticationService, public router: Router) {

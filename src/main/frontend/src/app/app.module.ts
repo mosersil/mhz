@@ -24,6 +24,7 @@ import {RegisterComponent} from './register/register.component';
 import {ForgotComponent} from './forgot/forgot.component';
 import { PaymentComponent } from './payment/payment.component';
 import { NgxStripeModule } from 'ngx-stripe';
+import { TransactionsComponent } from './transactions/transactions.component';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import { NgxStripeModule } from 'ngx-stripe';
     RegisterComponent,
     ForgotComponent,
     PaymentComponent,
+    TransactionsComponent,
   ],
 
   providers: [CalendarService, ShopService, AuthenticationService, AuthGuardService],
