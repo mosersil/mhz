@@ -74,7 +74,9 @@ public class User extends AbstractEntity {
                 ", person=" + FormatUtils.toFirstLastName(person) +
                 '}';
     }
+    @Column(name = "RESETTOKEN")
     private String resetToken;
+
 
 
 }

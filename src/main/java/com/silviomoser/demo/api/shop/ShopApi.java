@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -117,6 +118,15 @@ public class ShopApi {
         shopTransaction.setPerson(me);
         shopTransaction.setStatus(ShopOrderStatusType.READY_FOR_PAYMENT);
         return shopTransactionRepository.save(shopTransaction).getId();
+    }
+
+    @RequestMapping(value = "/api/protected/shop/transaction", method = RequestMethod.GET)
+    public ShopTransaction getTransaction(@RequestParam(name = "id", required = true) long id) {
+        Optional<ShopTransaction> optionalShopTransaction = shopTransactionRepository.findById(id);
+        if (!optionalShopTransaction.isPresent()) {
+            throw new ApiException("no transaction found", HttpStatus.NOT_FOUND);
+        }
+        return optionalShopTransaction.get();
     }
 
 

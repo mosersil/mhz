@@ -60,6 +60,10 @@
             <column name="PERSON_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="RESETTOKEN" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
 
 

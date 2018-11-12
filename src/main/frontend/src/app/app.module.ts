@@ -14,11 +14,16 @@ import {SocialComponent} from './social/social.component';
 import {CalendarComponent} from './calendar/calendar.component';
 import {ShopComponent} from './shop/shop.component';
 import {NewsComponent} from './news/news.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthenticationService} from "./authentication.service";
 import {AuthGuardService} from "./auth-guard-service.service";
-import { LoginComponent } from './login/login.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import {LoginComponent} from './login/login.component';
+import {AngularFontAwesomeModule} from 'angular-font-awesome';
+import {ShopService} from "./shop.service";
+import {RegisterComponent} from './register/register.component';
+import {ForgotComponent} from './forgot/forgot.component';
+import { PaymentComponent } from './payment/payment.component';
+import { NgxStripeModule } from 'ngx-stripe';
 
 
 @NgModule({
@@ -28,7 +33,9 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    AngularFontAwesomeModule
+    ReactiveFormsModule,
+    AngularFontAwesomeModule,
+    NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
   ],
   declarations: [
     AppComponent,
@@ -40,10 +47,13 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     CalendarComponent,
     ShopComponent,
     NewsComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent,
+    ForgotComponent,
+    PaymentComponent,
   ],
 
-  providers: [CalendarService, AuthenticationService, AuthGuardService],
+  providers: [CalendarService, ShopService, AuthenticationService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

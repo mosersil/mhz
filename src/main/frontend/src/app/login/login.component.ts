@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   async onSubmit() {
     console.log("on submit called");
     await this._authenticationService.login(this.model);
-    this.router.navigateByUrl("/intra");
+    this.router.navigateByUrl(this._authenticationService.forward);
   }
 
   ngOnInit() {

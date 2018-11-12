@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   }
 
   getEvents() {
-    this._calendarService.getEvents(5).subscribe(
+    this._calendarService.getPublicEvents(5).subscribe(
       data => {
         this.events = data
         console.log(data)

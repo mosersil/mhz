@@ -11,6 +11,9 @@ import {ShopComponent} from "./shop/shop.component";
 import {InternalComponent} from "./internal/internal.component";
 import {AuthGuardService as AuthGuard} from "./auth-guard-service.service";
 import {LoginComponent} from "./login/login.component";
+import {ForgotComponent} from "./forgot/forgot.component";
+import {RegisterComponent} from "./register/register.component";
+import {PaymentComponent} from "./payment/payment.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,7 +25,11 @@ const routes: Routes = [
   { path: 'shop', component: ShopComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'intra', component: InternalComponent, canActivate: [AuthGuard] }
+  { path: 'forgot', component: ForgotComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'payment', component: PaymentComponent },
+  { path: 'intra', component: InternalComponent, canActivate: [AuthGuard] },
+  { path: '**', component: HomeComponent },
 
 
 ];

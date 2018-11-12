@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {CalendarService} from "../calendar.service";
+import {el} from "@angular/platform-browser/testing/src/browser_util";
 
 @Component({
   selector: 'app-calendar',
@@ -9,6 +10,7 @@ import {CalendarService} from "../calendar.service";
 export class CalendarComponent implements OnInit {
 
   events;
+  showOnlyPublic: boolean = true;
 
   constructor(private _calendarService: CalendarService) {  }
 
@@ -17,12 +19,18 @@ export class CalendarComponent implements OnInit {
   }
 
   getEvents() {
-    this._calendarService.getEvents(null).subscribe(
-      data => {
-        this.events = data
-      },
-      err => console.error(err),
-    );
+      this._calendarService.getEvents(null, this.showOnlyPublic).subscribe(
+        data => {
+          this.events = data
+        },
+        err => console.error(err),
+      );
   }
+
+  public toggleShowOnlyPublic() {
+    this.showOnlyPublic=!this.showOnlyPublic;
+    this.getEvents();
+  }
+
 
 }

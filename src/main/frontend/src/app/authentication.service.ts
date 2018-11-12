@@ -12,6 +12,7 @@ import {reject} from "q";
 export class AuthenticationService {
 
 
+  forward: string
 
   constructor(private http: HttpClient) {
   }
