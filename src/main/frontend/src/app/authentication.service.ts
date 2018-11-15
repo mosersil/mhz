@@ -4,7 +4,7 @@ import {environment} from "../environments/environment";
 import {Person} from "./person";
 import {LoginForm} from "./login-form";
 import {Observable, Subject} from "rxjs";
-import {reject} from "q";
+import {LoginResponse} from "./login-response";
 
 @Injectable({
   providedIn: 'root'
@@ -14,44 +14,39 @@ export class AuthenticationService {
 
   forward: string
 
+  me: Person;
+  authenticated: boolean
+  me_change: Subject<Person> = new Subject<Person>();
+  authenticated_change: Subject<boolean> = new Subject<boolean>()
+
   constructor(private http: HttpClient) {
+    this.me_change.subscribe(value => {
+      this.me = value;
+    });
+    this.authenticated_change.subscribe(value => {
+      this.authenticated = value;
+    })
+    this.getMe();
   }
 
 
   // Uses http.get() to load data from a single API endpoint
-  getMe():Observable<Person> {
-    if (localStorage.getItem("me") === null) {
-      console.log("Could not find something in local storage");
-      return this.http.get<Person>(environment.backendUrl + '/auth/user');
-    } else {
-      console.log("found something in local storage, returning it")
-      const person = JSON.parse(localStorage.getItem("me"));
-      return person;
-    }
-  }
-
-  isAuthenticated(): Observable<boolean> {
-    let subject = new Subject<boolean>();
-    this.getMe().subscribe(response => {
-        subject.next(true);
+  async getMe() {
+    this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
+      console.log("success: " + success);
+        this.me_change.next(success);
+        this.authenticated_change.next(true);
       }, error1 => {
-        subject.next(false);
-      }, () => {
-        subject.complete();
+      console.log("error: " + error1.error.message);
+        this.me_change.next(null);
+        this.authenticated_change.next(false);
       }
-    );
-    return subject;
+    )
   }
 
-  async login(login_form: LoginForm) {
-    console.log("login() called")
-    await this.http.post(environment.backendUrl + '/login', login_form).toPromise()
-      .then(data => {
-      console.log("login executed. All is well...");
-    }, error1 => {
-      console.log("login failed...");
-      //do noting else
-    });
+
+  login(login_form: LoginForm): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(environment.backendUrl + '/login', login_form)
   }
 
   logout() {

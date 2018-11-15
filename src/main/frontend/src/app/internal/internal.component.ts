@@ -19,9 +19,11 @@ export class InternalComponent implements OnInit {
   }
 
   ngOnInit() {
+    /*
     this._authenticationService.getMe().subscribe(person => {
       this.person = person
     }, error1 => this.errorMessage=error1)
+    */
   }
 
 }

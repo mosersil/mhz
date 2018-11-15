@@ -30,23 +30,13 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     console.log("header: onInit called. Backend: " + this.backendUrl);
     this.getArticle();
-    this.checkIfAuthenticated();
-    console.log("person: " + this.person$);
+
   }
 
   public logout() {
     this._authenticationService.logout();
   }
 
-
-  checkIfAuthenticated() {
-    this._authenticationService.getMe().subscribe(person => {
-      this.subject.next(true);
-      console.log("authenticated in guard. ");
-    }, error1 => {
-      this.subject.next(false);
-    })
-  }
 
   getArticle() {
     this._newsService.getArticle().subscribe(

@@ -1,31 +1,30 @@
 import {Injectable} from '@angular/core';
-import {CanActivate, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {AuthenticationService} from "./authentication.service";
 import {Observable, Subject} from "rxjs";
+import {state} from "@angular/animations";
+import {el} from "@angular/platform-browser/testing/src/browser_util";
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
 
   constructor(public _authenticationService: AuthenticationService, public router: Router) {
+    this._authenticationService.getMe();
   }
 
-
-  canActivate(): Observable<boolean> {
-
-    let subject = new Subject<boolean>();
-
-    console.log("check whether user is already authenticated");
-    this._authenticationService.forward="intra";
-    this._authenticationService.getMe().subscribe(response => {
-        subject.next(true);
-      }, error1 => {
-        this.router.navigateByUrl("/login");
-        subject.next(false);
-      }, () => {
-        subject.complete();
-      }
-    );
-    return subject;
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    this._authenticationService.getMe();
+    console.log(this._authenticationService.authenticated)
+    if (this._authenticationService.authenticated) {
+      console.log("user is authenticated")
+      return true;
+    } else {
+      console.log("user is not authenticated")
+      this.router.navigate(['login'], {queryParams: {returnUrl: state.url}});
+      return false;
+    }
   }
 
 }

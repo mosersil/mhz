@@ -4,6 +4,7 @@ import {environment} from "../environments/environment";
 import {ContactForm} from "./contact-form";
 import {catchError} from "rxjs/operators";
 import {stringify} from "querystring";
+import {ContactResponse} from "./contact-response";
 
 
 const headerDict = {
@@ -24,9 +25,5 @@ export class ContactService {
 
   constructor(private http: HttpClient) { }
 
-  sendContactForm(contact_form: ContactForm) {
 
-    //alert('SUCCESS!! :-)\n\n' + JSON.stringify(contact_form))
-    return this.http.post(environment.backendUrl+'/api/contact', contact_form);
-  }
 }

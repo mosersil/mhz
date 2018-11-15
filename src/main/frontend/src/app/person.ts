@@ -1,6 +1,6 @@
 export class Person {
 
-  gender: string
+  //gender: string
   firstName: string;
   lastName: string;
   email: string;

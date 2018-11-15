@@ -1,25 +1,39 @@
-import {Component, OnInit} from '@angular/core';
-import {ContactService} from "../contact.service";
+import {Component} from '@angular/core';
+import {ContactResponse} from "../contact-response";
+import {environment} from "../../environments/environment";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.sass']
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent {
 
   model: any = {};
 
-  feedback: any
+  feedback: any;
+  error: any;
 
-  constructor(private _contactService: ContactService) { }
+  constructor(private http: HttpClient) {
+  }
 
   onSubmit() {
-    this._contactService.sendContactForm(this.model).subscribe(data => {this.feedback = data},
-      err => console.error(err))
+    var data = {
+      name: this.model.name,
+      email: this.model.email,
+      message: this.model.message
+    };
+    this.http.post<ContactResponse>(environment.backendUrl + '/api/contact', data).subscribe(data => {
+      if (data.success) {
+        this.feedback = "Vielen Dank für Ihre Mitteilung";
+      } else {
+        this.error = data.errorDetails
+      }
+    }, error1 => {
+      this.error = error1.error.message;
+    })
   }
 
-  ngOnInit() {
-  }
 
 }

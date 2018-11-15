@@ -29,6 +29,7 @@ public class AuthenticationApi {
     EmailService emailService;
 
 
+    @JsonView(Views.Public.class)
     @RequestMapping("/auth/user")
     public Person my() {
         final Person me = SecurityUtils.getMe();
