@@ -1,0 +1,27 @@
+<div class="container bg-white rounded shadow p-4">
+
+  <div class="alert alert-danger" *ngIf="error!=null">
+    {{error}}
+  </div>
+
+  <div class="col-sm-12 form-group">
+
+    <form novalidate (ngSubmit)="buy($event)" [formGroup]="stripeTest">
+      <input type="text" formControlName="name" placeholder="Jane Doe">
+      <div id="card-element" class="field"></div>
+      <button type="submit">
+        BUY
+      </button>
+    </form>
+  </div>
+
+  <div class="col-sm-12 form-group">
+    <ul class="list-group" *ngFor="let c of getCart()">
+      <li class="list-group-item">
+        {{c.count}} x {{c.name}}: {{c.price/100*c.count | currency}}
+      </li>
+    </ul>
+    <p class="text-right">Total : {{total/100 | currency}}</p>
+  </div>
+
+</div>

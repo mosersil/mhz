@@ -45,7 +45,7 @@ public class PersonRegistrationApi {
 
     @RequestMapping(value = "/api/public/registration/registerPerson", method = RequestMethod.POST)
     public ResponseEntity<Long> registerPerson(Locale locale, @RequestBody PersonRegistrationDataSubmission registrationDataSubmission) {
-
+        log.debug("called registerPerson: {}", registrationDataSubmission);
         try {
             final Person person = new PersonBuilder()
                     .gender(registrationDataSubmission.getGender())
@@ -60,6 +60,7 @@ public class PersonRegistrationApi {
                     .roles(RoleType.USER.name())
                     .bulid();
 
+            log.debug("created person object: {}", person);
             //self-registration requires a valid email address
             if (!isValidEmailAddress(person.getEmail())) {
                 log.warn("Invalid email address specified");
@@ -67,6 +68,7 @@ public class PersonRegistrationApi {
             }
 
             if (!PasswordUtils.isValidPassword(registrationDataSubmission.getPassword(), registrationDataSubmission.getPassword_confirmation())) {
+                log.warn("Password not valid");
                 throw new ApiException(i18Helper.getMessage("registration_exception_passwordrules"));
             }
 
@@ -77,6 +79,7 @@ public class PersonRegistrationApi {
                 throw new ApiException(i18Helper.getMessage("registration_exception_personalreadyexists"));
             } else {
                 final Person savedPerson = personRepository.save(person);
+                log.debug("saved new person {}", person);
                 return new ResponseEntity<Long>(savedPerson.getId(), HttpStatus.OK);
             }
         } catch (ConstraintViolationException cve) {

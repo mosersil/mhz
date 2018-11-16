@@ -29,12 +29,18 @@ public class AuthenticationApi {
     EmailService emailService;
 
 
+    @JsonView(Views.Public.class)
     @RequestMapping("/auth/user")
     public Person my() {
         final Person me = SecurityUtils.getMe();
         if (me == null) {
+            //Person p = new Person();
+            //p.setFirstName("Silvio");
+            //p.setLastName("Moser");
+            //return p;
             throw new ApiException("Not authorized", HttpStatus.UNAUTHORIZED);
-        };
+        }
+        log.debug(String.format("my() returns '%s'", me ));
         return me;
     }
 

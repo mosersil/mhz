@@ -23,6 +23,7 @@ public class EnvironmentConfiguration {
     @Bean
     public ContactConfiguration contactConfiguration() {
         final ContactConfiguration contactConfiguration = new ContactConfiguration();
+        contactConfiguration.setContactEmailFrom(environment.getProperty("contact.from"));
         contactConfiguration.setContactEmailTo(environment.getProperty("contact.to"));
         contactConfiguration.setGetContactEmailSubject(environment.getProperty("contact.subject"));
         return contactConfiguration;

@@ -14,7 +14,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString
 @Table(name = "ROLE")
 @EntityListeners(value = AuditingEntityListener.class)
 public class Role extends AbstractEntity {
@@ -27,4 +26,10 @@ public class Role extends AbstractEntity {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users;
 
+    @Override
+    public String toString() {
+        return "Role{" +
+                "type=" + type +
+                '}';
+    }
 }

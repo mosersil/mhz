@@ -43,6 +43,10 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     @Column(name = "REMARKS")
     private String remarks;
 
+    @PdfReport(header = "Ort")
+    @Column(name = "LOCATION")
+    private String location;
+
     @Column(name="DRESS_CODE")
     @PdfReport(header = "Tenue")
     private DressCode dressCode;
