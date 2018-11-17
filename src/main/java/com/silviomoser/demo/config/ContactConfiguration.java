@@ -1,30 +1,20 @@
 package com.silviomoser.demo.config;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 
 /**
  * Created by silvio on 26.08.18.
  */
+@Data
 public class ContactConfiguration {
 
+    @NotBlank
+    private String contactEmailFrom;
     @NotBlank
     private String contactEmailTo;
     @NotBlank
     private String getContactEmailSubject;
 
-    public String getContactEmailTo() {
-        return contactEmailTo;
-    }
-
-    public void setContactEmailTo(String contactEmailTo) {
-        this.contactEmailTo = contactEmailTo;
-    }
-
-    public String getGetContactEmailSubject() {
-        return getContactEmailSubject;
-    }
-
-    public void setGetContactEmailSubject(String getContactEmailSubject) {
-        this.getContactEmailSubject = getContactEmailSubject;
-    }
 }

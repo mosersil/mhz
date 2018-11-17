@@ -1,6 +1,5 @@
 package com.silviomoser.demo.config;
 
-import com.paymill.context.PaymillContext;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,14 +23,15 @@ public class EnvironmentConfiguration {
     @Bean
     public ContactConfiguration contactConfiguration() {
         final ContactConfiguration contactConfiguration = new ContactConfiguration();
+        contactConfiguration.setContactEmailFrom(environment.getProperty("contact.from"));
         contactConfiguration.setContactEmailTo(environment.getProperty("contact.to"));
         contactConfiguration.setGetContactEmailSubject(environment.getProperty("contact.subject"));
         return contactConfiguration;
     }
 
     @Bean
-    public PaymillContext paymillContext() {
-        return new PaymillContext( environment.getProperty("paymill.api.privatekey") );
+    public PaymentConfiguration paymentConfiguration() {
+        return new PaymentConfiguration(environment.getProperty("payment.api.privatekey"));
     }
 
     @Bean

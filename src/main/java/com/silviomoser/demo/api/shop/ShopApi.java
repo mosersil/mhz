@@ -2,15 +2,23 @@ package com.silviomoser.demo.api.shop;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.itextpdf.text.DocumentException;
-import com.paymill.context.PaymillContext;
-import com.paymill.models.Transaction;
 import com.silviomoser.demo.api.core.ApiException;
-import com.silviomoser.demo.data.*;
+import com.silviomoser.demo.config.PaymentConfiguration;
+import com.silviomoser.demo.data.Person;
+import com.silviomoser.demo.data.ShopItem;
+import com.silviomoser.demo.data.ShopItemPurchase;
+import com.silviomoser.demo.data.ShopTransaction;
+import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
+import com.silviomoser.demo.repository.ShopItemPurchaseRepository;
 import com.silviomoser.demo.repository.ShopItemRepository;
 import com.silviomoser.demo.repository.ShopTransactionRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
+import com.silviomoser.demo.utils.FormatUtils;
 import com.silviomoser.demo.utils.PdfBuilder;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -18,17 +26,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -42,10 +55,13 @@ public class ShopApi {
     ShopItemRepository shopItemRepository;
 
     @Autowired
+    ShopItemPurchaseRepository shopItemPurchaseRepository;
+
+    @Autowired
     ShopTransactionRepository shopTransactionRepository;
 
     @Autowired
-    PaymillContext paymillContext;
+    PaymentConfiguration paymentConfiguration;
 
 
     @ApiOperation(value = "List my purchases")
@@ -119,6 +135,15 @@ public class ShopApi {
         return shopTransactionRepository.save(shopTransaction).getId();
     }
 
+    @RequestMapping(value = "/api/protected/shop/transaction", method = RequestMethod.GET)
+    public ShopTransaction getTransaction(@RequestParam(name = "id", required = true) long id) {
+        Optional<ShopTransaction> optionalShopTransaction = shopTransactionRepository.findById(id);
+        if (!optionalShopTransaction.isPresent()) {
+            throw new ApiException("no transaction found", HttpStatus.NOT_FOUND);
+        }
+        return optionalShopTransaction.get();
+    }
+
 
     @RequestMapping(value = "/api/protected/shop/receipt", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "id", required = true) long id) throws DocumentException {
@@ -143,78 +168,40 @@ public class ShopApi {
                 .body(new InputStreamResource(bis));
     }
 
-    @RequestMapping(value = "/api/protected/shop/createpayment", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
-    public void createPayPalPayment(HttpServletRequest request, HttpServletResponse response, CreatePaymentSubmission createPaymentSubmission) throws IOException {
-
-        Transaction transaction = paymillContext.getTransactionService().createWithToken(createPaymentSubmission.getToken(), createPaymentSubmission.getAmount(), createPaymentSubmission.getCurrency(), createPaymentSubmission.getDescription());
-
-
-        transaction.getResponseCode();
-
-        ShopTransaction shopTransaction = shopTransactionRepository.getOne(Long.parseLong(createPaymentSubmission.getDescription()));
-
-        shopTransaction.setPaymentResponse(transaction.getResponseCode());
-        shopTransaction.setPaymentStatus(transaction.getStatus().getValue());
-        shopTransaction.setPaymentId(transaction.getId());
-
-        if (transaction.getResponseCode() == 20000) {
-            shopTransaction.setStatus(ShopOrderStatusType.PAYED);
-        }
-
-        shopTransactionRepository.save(shopTransaction);
-        response.sendRedirect("/#!/shop-transactions");
-    }
+    @RequestMapping(value = "/api/protected/shop/createpayment", method = RequestMethod.POST)
+    public void createPayPalPayment( @RequestBody CreatePaymentDataSubmission createPaymentDataSubmission) {
+        log.info("start creating payment for transaction '{}', cardholder '{}'", createPaymentDataSubmission.getTransactionId(), createPaymentDataSubmission.getCardholder_name());
+        Stripe.apiKey = paymentConfiguration.getPrivateKey();
 
 
-    public static class CreatePaymentSubmission {
-        public CreatePaymentSubmission() {
-        }
+        final long transactionId = createPaymentDataSubmission.getTransactionId();
 
-        private int amount;
-        private String currency;
-        private String description;
-        private String token;
+        final Optional<ShopTransaction> optionalShopTransaction = shopTransactionRepository.findById(transactionId);
 
-        public int getAmount() {
-            return amount;
-        }
+        if (optionalShopTransaction.isPresent()) {
+            final ShopTransaction shopTransaction = optionalShopTransaction.get();
+            final Map<String, Object> params = new HashMap<>();
 
-        public void setAmount(int amount) {
-            this.amount = amount;
-        }
-
-        public String getCurrency() {
-            return currency;
-        }
-
-        public void setCurrency(String currency) {
-            this.currency = currency;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        @Override
-        public String toString() {
-            return "CreatePaymentSubmission{" +
-                    "amount=" + amount +
-                    ", currency='" + currency + '\'' +
-                    ", description='" + description + '\'' +
-                    ", token='" + token + '\'' +
-                    '}';
+            params.put("amount", ShopHelper.calculateTotal(shopTransaction));
+            params.put("currency", "chf");
+            //params.put("name", createPaymentDataSubmission.getCardholder_name());
+            params.put("description", String.format("transaction %s for client %s", shopTransaction.getId(), FormatUtils.toFirstLastName(shopTransaction.getPerson())));
+            params.put("source", createPaymentDataSubmission.getToken());
+            try {
+                Charge charge = Charge.create(params);
+                shopTransaction.setPaymentResponse(charge.getLastResponse().code());
+                shopTransaction.setPaymentStatus(charge.getStatus());
+                shopTransaction.setPaymentId(charge.getId());
+                shopTransaction.setStatus(ShopOrderStatusType.PAYED);
+                shopTransactionRepository.save(shopTransaction);
+                //response.sendRedirect("/#!/shop-transactions");
+            } catch (StripeException se) {
+                log.error("Unexpected Stripe exception: " + se.getMessage(), se);
+                throw new ApiException(se.getMessage());
+            }
+        } else {
+            log.warn("No valid transaction found for id '{}'", createPaymentDataSubmission.getTransactionId());
+            throw new ApiException("No valid transaction found");
         }
     }
 

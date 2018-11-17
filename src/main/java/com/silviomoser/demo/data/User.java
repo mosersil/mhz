@@ -1,12 +1,14 @@
 package com.silviomoser.demo.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.silviomoser.demo.utils.FormatUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.expression.spel.ast.FormatHelper;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,7 +19,6 @@ import java.util.List;
 @Table(name = "USER")
 @Getter
 @Setter
-@ToString
 @EntityListeners(value = AuditingEntityListener.class)
 public class User extends AbstractEntity {
 
@@ -59,11 +60,23 @@ public class User extends AbstractEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERSON_ID")
-    @ToString.Exclude
     private Person person;
 
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", createdDate=" + createdDate +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", roles=" + roles +
+                ", person=" + FormatUtils.toFirstLastName(person) +
+                '}';
+    }
+    @Column(name = "RESETTOKEN")
     private String resetToken;
+
 
 
 }
