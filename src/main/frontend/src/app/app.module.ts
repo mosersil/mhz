@@ -1,4 +1,4 @@
-import {BrowserModule, enableDebugTools} from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
@@ -22,9 +22,9 @@ import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {ShopService} from "./shop.service";
 import {RegisterComponent} from './register/register.component';
 import {ForgotComponent} from './forgot/forgot.component';
-import { PaymentComponent } from './payment/payment.component';
-import { NgxStripeModule } from 'ngx-stripe';
-import { TransactionsComponent } from './transactions/transactions.component';
+import {PaymentComponent} from './payment/payment.component';
+import {NgxStripeModule} from 'ngx-stripe';
+import {TransactionsComponent} from './transactions/transactions.component';
 
 
 @NgModule({

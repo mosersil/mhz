@@ -3,11 +3,7 @@ package com.silviomoser.demo.api.background;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,10 +17,10 @@ public class BackgroundApi {
     public @ResponseBody
     byte[] getImageWithMediaType(@RequestParam(name = "index", required = false) Integer index) throws IOException {
 
-        if (index==null) {
-            index= (int)((Math.random()) * 3 + 1);
+        if (index == null) {
+            index = (int) ((Math.random()) * 3 + 1);
         }
-        final InputStream in = getClass().getResourceAsStream("/background/"+index+".jpg");
+        final InputStream in = getClass().getResourceAsStream("/background/" + index + ".jpg");
         return IOUtils.toByteArray(in);
     }
 

@@ -1,4 +1,4 @@
 export interface Event {
-    date: Date;
-    title: string;
+  date: Date;
+  title: string;
 }

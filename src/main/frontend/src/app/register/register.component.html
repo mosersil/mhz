@@ -11,7 +11,7 @@
 
   <div class="col-md-6 offset-md-3">
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-      <div class="form-group is-invalid" >
+      <div class="form-group is-invalid">
 
         <label class="control-label">Anrede</label>
         <div class="form-control">
@@ -19,7 +19,7 @@
             <input type="radio" required #gender="ngModel" value="male" name="gender" [(ngModel)]="model.gender">Herr
           </label>
           <label class="radio-inline">
-            <input type="radio" required #gender="ngModel" value="female" name="gender" [(ngModel)]="model.gender" >Frau
+            <input type="radio" required #gender="ngModel" value="female" name="gender" [(ngModel)]="model.gender">Frau
           </label>
         </div>
 

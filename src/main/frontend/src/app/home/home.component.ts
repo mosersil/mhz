@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CalendarService} from "../calendar.service";
 
 @Component({
@@ -10,7 +10,8 @@ export class HomeComponent implements OnInit {
 
   events;
 
-  constructor(private _calendarService: CalendarService) { }
+  constructor(private _calendarService: CalendarService) {
+  }
 
   ngOnInit() {
     this.getEvents();

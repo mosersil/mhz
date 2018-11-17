@@ -8,9 +8,9 @@ import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.expression.spel.ast.FormatHelper;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +63,10 @@ public class User extends AbstractEntity {
     private Person person;
 
 
+    @Column(name = "RESETTOKEN")
+    @Size(max = 50)
+    private String resetToken;
+
     @Override
     public String toString() {
         return "User{" +
@@ -74,8 +78,6 @@ public class User extends AbstractEntity {
                 ", person=" + FormatUtils.toFirstLastName(person) +
                 '}';
     }
-    @Column(name = "RESETTOKEN")
-    private String resetToken;
 
 
 

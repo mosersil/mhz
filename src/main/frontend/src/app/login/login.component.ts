@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
       console.log("errorcode=" + data.errorCode + " message=" + data.message);
       if (data.errorCode === 0) {
         this._authenticationService.authenticated_change.next(true);
-        console.log("forward to "+this.returnUrl);
+        console.log("forward to " + this.returnUrl);
         this.router.navigateByUrl(this.returnUrl);
         return
       } else {
