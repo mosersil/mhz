@@ -3,7 +3,6 @@ import {ShopService} from "../shop.service";
 import {HttpClient} from "@angular/common/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Element as StripeElement, Elements, ElementsOptions, StripeService} from "ngx-stripe";
-import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
 
 @Component({
@@ -29,6 +28,9 @@ export class PaymentComponent implements OnInit {
   constructor(private _shopService: ShopService, private http: HttpClient, private fb: FormBuilder, private stripeService: StripeService, private router: Router) {
   }
 
+  get total(): number {
+    return this._shopService.total;
+  }
 
   ngOnInit() {
     //console.log("total= " + this._shopService.total);
@@ -88,13 +90,8 @@ export class PaymentComponent implements OnInit {
       });
   }
 
-
   getCart() {
     return this._shopService.cart;
-  }
-
-  get total(): number {
-    return this._shopService.total;
   }
 
 }

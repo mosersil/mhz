@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
     };
 
     this.http.post(environment.backendUrl + '/api/public/registration/registerPerson', data).subscribe(success => {
-      this.infomessage="Ihr Benutzer account wurde erfolgreich angelegt. Sie können Sich nun einloggen";
+      this.infomessage = "Ihr Benutzer account wurde erfolgreich angelegt. Sie können Sich nun einloggen";
     }, error1 => {
       this.errormessage = error1.error.message;
     })

@@ -89,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             result.setErrorCode(0);
             httpServletResponse.getWriter().write(mapper.writeValueAsString(result));
         } catch (IOException e) {
-           log.error("caught error during login: " + e.getMessage(), e);
+            log.error("caught error during login: " + e.getMessage(), e);
         }
 
     }
