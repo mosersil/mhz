@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {CalendarService} from "../calendar.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-home',
@@ -9,6 +10,7 @@ import {CalendarService} from "../calendar.service";
 export class HomeComponent implements OnInit {
 
   events;
+  backend: string = environment.backendUrl;
 
   constructor(private _calendarService: CalendarService) { }
 

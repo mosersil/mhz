@@ -15,17 +15,12 @@ export class HeaderComponent implements OnInit {
 
   hotarticle = null;
 
-
-  person$: Observable<Person>;
-
-
   backendUrl = environment.backendUrl;
 
   constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService) {
     console.log("backend: " + this.backendUrl);
   }
 
-  subject = new Subject<boolean>();
 
   ngOnInit() {
     console.log("header: onInit called. Backend: " + this.backendUrl);
@@ -35,6 +30,10 @@ export class HeaderComponent implements OnInit {
 
   public logout() {
     this._authenticationService.logout();
+  }
+
+  isAuthenticated() {
+    return this._authenticationService.isAuthenticated();
   }
 
 

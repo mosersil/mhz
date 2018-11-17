@@ -22,7 +22,7 @@
       <td>Aktivmitglieder</td>
       <td>Adressliste aller Mitglieder, die aktiv im Verein mitspielen</td>
       <td>
-        <a href="{{backendUrl}}/internal/api/addresslist?organization=Aktivmitglied" target="_blank"><span class="fa fa-file-pdf-o" aria-hidden="true"></span></a>&nbsp;
+        <span (click)="downloadFile('/internal/api/addresslist?organization=Vorstand')" class="fa fa-file-pdf-o" aria-hidden="true"></span>&nbsp;
         <span class="fa fa-file-excel-o" aria-hidden="true"></span>
       </td>
     </tr>
