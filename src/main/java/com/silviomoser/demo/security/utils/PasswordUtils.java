@@ -1,23 +1,27 @@
 package com.silviomoser.demo.security.utils;
 
 import org.passay.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
 
 public class PasswordUtils {
 
-    public static String generateToken(int length) {
+    public static String generateToken(int length, boolean specialCharacters) {
         PasswordGenerator passwordGenerator = new PasswordGenerator();
+        List<CharacterRule> ruleList = new ArrayList<>();
+        ruleList.add(new CharacterRule(EnglishCharacterData.UpperCase, 1));
+        ruleList.add(new CharacterRule(EnglishCharacterData.LowerCase, 1));
+        ruleList.add(new CharacterRule(EnglishCharacterData.Digit, 1));
+        if (specialCharacters) {
+            ruleList.add(new CharacterRule(EnglishCharacterData.Special, 1));
+        }
         return passwordGenerator.generatePassword(length,
-                new CharacterRule(EnglishCharacterData.UpperCase, 1),
-                // at least one lower-case character
-                new CharacterRule(EnglishCharacterData.LowerCase, 1),
-                // at least one digit character
-                new CharacterRule(EnglishCharacterData.Digit, 1),
-                // at least one symbol (special character)
-                new CharacterRule(EnglishCharacterData.Special, 1)
+                ruleList
         );
 
     }
@@ -66,5 +70,10 @@ public class PasswordUtils {
             return true;
         }
         return false;
+    }
+
+    public static String hashPassword(String input) {
+        final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(input);
     }
 }

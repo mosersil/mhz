@@ -16,7 +16,6 @@ import {PaymentComponent} from "./payment/payment.component";
 import {TransactionsComponent} from "./transactions/transactions.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
   {path: 'home', component: HomeComponent},
   {path: 'news', component: NewsComponent},
   {path: 'calendar', component: CalendarComponent},
@@ -30,6 +29,7 @@ const routes: Routes = [
   {path: 'payment', component: PaymentComponent, canActivate: [AuthGuard]},
   {path: 'intra', component: InternalComponent, canActivate: [AuthGuard]},
   {path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard]},
+  {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', component: HomeComponent},
 
 
