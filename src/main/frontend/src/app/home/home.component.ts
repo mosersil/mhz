@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit {
 
   events;
   backend: string = environment.backendUrl;
+  main_background: string = "url('"+environment.backendUrl+"/public/api/background')";
 
   constructor(private _calendarService: CalendarService) {
   }
