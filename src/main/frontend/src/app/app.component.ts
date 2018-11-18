@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {CalendarService} from "./calendar.service";
 
 
 @Component({
@@ -17,7 +16,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
   }
-
 
 
 }

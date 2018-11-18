@@ -35,6 +35,11 @@ public class EnvironmentConfiguration {
     }
 
     @Bean
+    public PwResetConfiguration pwResetConfiguration() {
+        return new PwResetConfiguration(environment.getProperty("pwreset.email.from"));
+    }
+
+    @Bean
     public FileServiceConfiguration fileServiceConfiguration() {
         final FileServiceConfiguration fileServiceConfiguration = new FileServiceConfiguration();
         fileServiceConfiguration.setDirectory(environment.getProperty("fileservice.directory", "/tmp"));

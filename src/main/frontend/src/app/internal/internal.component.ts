@@ -15,7 +15,7 @@ export class InternalComponent implements OnInit {
 
   backendUrl: string = environment.backendUrl;
   person: Person = new Person();
-  errorMessage=null;
+  errorMessage = null;
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
   }

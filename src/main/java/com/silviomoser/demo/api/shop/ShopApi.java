@@ -4,11 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.itextpdf.text.DocumentException;
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.config.PaymentConfiguration;
-import com.silviomoser.demo.data.Person;
-import com.silviomoser.demo.data.ShopItem;
-import com.silviomoser.demo.data.ShopItemPurchase;
-import com.silviomoser.demo.data.ShopTransaction;
-import com.silviomoser.demo.data.Views;
+import com.silviomoser.demo.data.*;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.repository.ShopItemPurchaseRepository;
 import com.silviomoser.demo.repository.ShopItemRepository;
@@ -29,20 +25,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by silvio on 14.10.18.
@@ -169,7 +155,7 @@ public class ShopApi {
     }
 
     @RequestMapping(value = "/api/protected/shop/createpayment", method = RequestMethod.POST)
-    public void createPayPalPayment( @RequestBody CreatePaymentDataSubmission createPaymentDataSubmission) {
+    public void createPayPalPayment(@RequestBody CreatePaymentDataSubmission createPaymentDataSubmission) {
         log.info("start creating payment for transaction '{}', cardholder '{}'", createPaymentDataSubmission.getTransactionId(), createPaymentDataSubmission.getCardholder_name());
         Stripe.apiKey = paymentConfiguration.getPrivateKey();
 

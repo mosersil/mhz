@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
       if (data.errorCode === 0) {
         localStorage.setItem("jwt", data.jwt);
         this._authenticationService.authenticated_change.next(true);
-        console.log("forward to "+this.returnUrl);
+        console.log("forward to " + this.returnUrl);
         this.router.navigateByUrl(this.returnUrl);
         return
       } else {

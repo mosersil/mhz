@@ -73,6 +73,10 @@ public class Person extends AbstractEntity {
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
+
+    @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private PersonVerification personVerification;
+
     @Override
     public String toString() {
         return "Person{" +

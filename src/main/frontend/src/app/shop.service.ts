@@ -24,7 +24,7 @@ export class ShopService {
               private router: Router) {
 
     this.totalChange.subscribe(value => {
-      this.total=value;
+      this.total = value;
       console.log(this.total)
     })
   }
@@ -81,7 +81,7 @@ export class ShopService {
 
 
     this.http.post(environment.backendUrl + '/api/public/shop/submitorder', data).subscribe(success => {
-      this.purchaseId=success;
+      this.purchaseId = success;
       this.router.navigateByUrl("payment");
       /*
       if (this._authenticationService.authenticated) {
@@ -99,13 +99,12 @@ export class ShopService {
   }
 
 
-
   assignPersonToOrder() {
     var data = {
       id: this.purchaseId
     };
-    this.http.post(environment.backendUrl+"/api/protected/shop/prepare_transaction", data).subscribe(result => {
-      this.transactionId=result;
+    this.http.post(environment.backendUrl + "/api/protected/shop/prepare_transaction", data).subscribe(result => {
+      this.transactionId = result;
     }, error1 => {
       console.log("An error occured: " + error1.error)
       //TODO: error handling
@@ -120,13 +119,12 @@ export class ShopService {
       token: token.id
     };
     console.log("create payment now: " + data);
-    return this.http.post(environment.backendUrl+"/api/protected/shop/createpayment", data);
+    return this.http.post(environment.backendUrl + "/api/protected/shop/createpayment", data);
   }
 
   getTransactionDetails() {
-    return this.http.get(environment.backendUrl+"/api/protected/shop/transaction?id="+this.purchaseId);
+    return this.http.get(environment.backendUrl + "/api/protected/shop/transaction?id=" + this.purchaseId);
   }
-
 
 
 }

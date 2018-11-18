@@ -103,7 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             result.setJwt(jwtToken);
             httpServletResponse.getWriter().write(mapper.writeValueAsString(result));
         } catch (IOException e) {
-           log.error("caught error during login: " + e.getMessage(), e);
+            log.error("caught error during login: " + e.getMessage(), e);
         }
 
     }

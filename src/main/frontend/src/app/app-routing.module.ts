@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {AppComponent} from "./app.component";
+import {RouterModule, Routes} from '@angular/router';
 import {AboutusComponent} from "./aboutus/aboutus.component";
 import {HomeComponent} from "./home/home.component";
 import {ContactComponent} from "./contact/contact.component";

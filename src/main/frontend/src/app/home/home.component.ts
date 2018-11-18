@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CalendarService} from "../calendar.service";
 import {environment} from "../../environments/environment";
 
@@ -12,7 +12,8 @@ export class HomeComponent implements OnInit {
   events;
   backend: string = environment.backendUrl;
 
-  constructor(private _calendarService: CalendarService) { }
+  constructor(private _calendarService: CalendarService) {
+  }
 
   ngOnInit() {
     this.getEvents();
