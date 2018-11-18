@@ -4,6 +4,7 @@ import {NewsService} from "../../news.service";
 import {Person} from "../../person";
 import {AuthenticationService} from "../../authentication.service";
 import {Observable, Subject, Subscription} from "rxjs";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -17,7 +18,7 @@ export class HeaderComponent implements OnInit {
 
   backendUrl = environment.backendUrl;
 
-  constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService) {
+  constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService, private router: Router) {
     console.log("backend: " + this.backendUrl);
   }
 
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit {
 
   public logout() {
     this._authenticationService.logout();
+    this.router.navigate(['home']);
   }
 
   isAuthenticated() {

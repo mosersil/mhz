@@ -26,6 +26,9 @@ public class Article extends AbstractEntity {
     @Column(name = "TITLE")
     private String title;
 
+    @Column(name = "TEASER")
+    private String teaser;
+
     @NotNull
     @Column(name = "TEXT")
     private String text;

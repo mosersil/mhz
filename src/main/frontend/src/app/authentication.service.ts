@@ -52,7 +52,6 @@ export class AuthenticationService {
   public isAuthenticated(): boolean {
     // get the token
     const token = this.getToken();
-    console.log("token: " + token);
     // return a boolean reflecting
     // whether or not the token is expired
     return !this.isTokenExpired(token);
@@ -83,6 +82,6 @@ export class AuthenticationService {
   }
 
   logout() {
-    return this.http.get(environment.backendUrl + '/logout');
-  }
+    localStorage.removeItem("jwt");
+    return this.http.get(environment.backendUrl + '/logout')  }
 }
