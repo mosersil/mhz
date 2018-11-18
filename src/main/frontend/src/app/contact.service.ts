@@ -1,10 +1,5 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../environments/environment";
-import {ContactForm} from "./contact-form";
-import {catchError} from "rxjs/operators";
-import {stringify} from "querystring";
-import {ContactResponse} from "./contact-response";
 
 
 const headerDict = {
@@ -23,7 +18,8 @@ const requestOptions = {
 export class ContactService {
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
 
 }

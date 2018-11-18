@@ -20,11 +20,11 @@ import java.util.logging.Logger;
  */
 @Service("emailService")
 
-public class EmailService {
+public class ContactService {
 
     I18Helper i18Helper = new I18Helper();
 
-    private static final Logger LOGGER = Logger.getLogger( EmailService.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(ContactService.class.getName());
 
     @Autowired
     private ContactConfiguration contactConfiguration;

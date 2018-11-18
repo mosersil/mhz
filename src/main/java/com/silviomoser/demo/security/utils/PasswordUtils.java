@@ -8,6 +8,20 @@ import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
 
 public class PasswordUtils {
 
+    public static String generateToken(int length) {
+        PasswordGenerator passwordGenerator = new PasswordGenerator();
+        return passwordGenerator.generatePassword(length,
+                new CharacterRule(EnglishCharacterData.UpperCase, 1),
+                // at least one lower-case character
+                new CharacterRule(EnglishCharacterData.LowerCase, 1),
+                // at least one digit character
+                new CharacterRule(EnglishCharacterData.Digit, 1),
+                // at least one symbol (special character)
+                new CharacterRule(EnglishCharacterData.Special, 1)
+        );
+
+    }
+
     /**
      * Ensure that chosen password matches with the confirmation and the password fulfills the complexity requirements
      *

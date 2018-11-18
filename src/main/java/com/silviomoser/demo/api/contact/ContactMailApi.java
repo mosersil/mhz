@@ -1,16 +1,11 @@
 package com.silviomoser.demo.api.contact;
 
-import com.silviomoser.demo.api.shop.OrderSubmission;
-import com.silviomoser.demo.services.EmailService;
+import com.silviomoser.demo.services.ContactService;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import com.silviomoser.demo.utils.TtlMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -25,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class ContactMailApi {
 
     @Autowired
-    private EmailService emailService;
+    private ContactService contactService;
 
     @Autowired
             private I18Helper i18Helper;
@@ -40,7 +35,7 @@ public class ContactMailApi {
 
         if (hitCache.get(request.getRemoteAddr())==null) {
             hitCache.put(request.getRemoteAddr(), request.getRemoteAddr());
-            emailStatus =  emailService.sendSimpleMail(emailModel);
+            emailStatus = contactService.sendSimpleMail(emailModel);
         } else {
             log.warn("Too many hits detected by {}", request.getRemoteAddr());
             emailStatus.setSuccess(false);

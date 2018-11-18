@@ -1,9 +1,9 @@
-import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {NewsService} from "../../news.service";
 import {Person} from "../../person";
 import {AuthenticationService} from "../../authentication.service";
-import {Observable, Subject, Subscription} from "rxjs";
+import {Observable, Subject} from "rxjs";
 
 
 @Component({
@@ -20,12 +20,11 @@ export class HeaderComponent implements OnInit {
 
 
   backendUrl = environment.backendUrl;
+  subject = new Subject<boolean>();
 
   constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService) {
     console.log("backend: " + this.backendUrl);
   }
-
-  subject = new Subject<boolean>();
 
   ngOnInit() {
     console.log("header: onInit called. Backend: " + this.backendUrl);

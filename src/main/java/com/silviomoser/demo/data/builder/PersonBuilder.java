@@ -1,6 +1,7 @@
 package com.silviomoser.demo.data.builder;
 
 import com.silviomoser.demo.data.Person;
+import com.silviomoser.demo.data.PersonVerification;
 import com.silviomoser.demo.data.Role;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.data.type.Gender;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,6 +35,7 @@ public class PersonBuilder {
     private String email;
     private String password;
     private String[] roles;
+    private String verificationToken;
 
     public PersonBuilder firstName(String firstName) {
         if (isNotBlank(firstName)) {
@@ -111,6 +114,13 @@ public class PersonBuilder {
         return this;
     }
 
+    public PersonBuilder verificationToken(String verificationToken) {
+        if (isNotBlank(verificationToken)) {
+            this.verificationToken = verificationToken;
+        }
+        return this;
+    }
+
     public PersonBuilder roles(String... roles ) {
         this.roles=roles;
         return this;
@@ -168,6 +178,11 @@ public class PersonBuilder {
 
             user.setPassword(hashedPassword);
             person.setUser(user);
+
+
+            if (isNotBlank(verificationToken)) {
+                PersonVerification personVerification = new PersonVerification(person, verificationToken, LocalDateTime.now(), null);
+            }
         }
         return person;
     }

@@ -7,12 +7,14 @@ import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.repository.UserRepository;
+import com.silviomoser.demo.security.utils.PasswordUtils;
 import com.silviomoser.demo.security.utils.SecurityUtils;
-import com.silviomoser.demo.services.EmailService;
+import com.silviomoser.demo.services.ContactService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +28,7 @@ public class AuthenticationApi {
     UserRepository userRepository;
 
     @Autowired
-    EmailService emailService;
+    ContactService contactService;
 
 
     @JsonView(Views.Public.class)
@@ -40,7 +42,7 @@ public class AuthenticationApi {
             //return p;
             throw new ApiException("Not authorized", HttpStatus.UNAUTHORIZED);
         }
-        log.debug(String.format("my() returns '%s'", me ));
+        log.debug(String.format("my() returns '%s'", me));
         return me;
     }
 
@@ -52,18 +54,23 @@ public class AuthenticationApi {
 
         if (optionalUser.isPresent()) {
             final User user = optionalUser.get();
-            user.setResetToken("randomToken");
+            user.setResetToken(PasswordUtils.generateToken(50));
             userRepository.save(user);
 
             EmailModel emailModel = new EmailModel();
             emailModel.setEmail(user.getPerson().getEmail());
             emailModel.setName("");
             //TODO: That wont work
-            emailService.sendSimpleMail(emailModel);
+            contactService.sendSimpleMail(emailModel);
 
         } else {
             log.warn("User {} does not exist");
             throw new ApiException("Invalid userId", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/auth/redeemtoken", method = RequestMethod.GET)
+    public void verifyEmail(@RequestParam String token) {
+        log.info("Redeem reset token " + token);
     }
 }
