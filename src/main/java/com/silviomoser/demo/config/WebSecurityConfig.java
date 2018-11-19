@@ -1,11 +1,7 @@
 package com.silviomoser.demo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.silviomoser.demo.security.AuthenticationResult;
-import com.silviomoser.demo.security.CustomFilter;
-import com.silviomoser.demo.security.JwtAuthenticationFilter;
-import com.silviomoser.demo.security.JwtTokenProvider;
-import com.silviomoser.demo.security.SecurityUserDetailsService;
+import com.silviomoser.demo.security.*;
 import com.vaadin.spring.annotation.EnableVaadin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
@@ -116,7 +111,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authProvider.setPasswordEncoder(encoder());
         return authProvider;
     }
-
 
 
     @Bean

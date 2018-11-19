@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   async onSubmit() {
     console.log("on submit called");
     await this._authenticationService.login(this.model).subscribe(data => {
-      console.log("errorcode=" + data.errorCode + " message=" + data.message + "jwt="+data.jwt);
+      console.log("errorcode=" + data.errorCode + " message=" + data.message + "jwt=" + data.jwt);
       if (data.errorCode === 0) {
         localStorage.setItem("jwt", data.jwt);
         this._authenticationService.authenticated_change.next(true);

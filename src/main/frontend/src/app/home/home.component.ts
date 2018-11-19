@@ -12,7 +12,7 @@ import {Article} from "../article";
 export class HomeComponent implements OnInit {
 
   events;
-  main_background: string = "url('"+environment.backendUrl+"/public/api/background')";
+  main_background: string = "url('" + environment.backendUrl + "/public/api/background')";
   hotArticle: Article = null;
 
   constructor(private _calendarService: CalendarService, private _newsService: NewsService) {

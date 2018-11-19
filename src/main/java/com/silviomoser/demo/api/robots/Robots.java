@@ -17,7 +17,7 @@ public class Robots {
         try {
             response.getWriter().write("User-agent: *\nDisallow: /\n");
         } catch (IOException e) {
-            log.warn("robots", "robots(): "+e.getMessage());
+            log.warn("robots", "robots(): " + e.getMessage());
         }
     }
 }
