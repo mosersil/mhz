@@ -11,4 +11,5 @@ import lombok.ToString;
 public class AuthenticationResult {
     private int errorCode;
     private String message;
+    private String jwt;
 }

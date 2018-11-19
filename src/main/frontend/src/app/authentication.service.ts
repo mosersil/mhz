@@ -5,6 +5,8 @@ import {Person} from "./person";
 import {LoginForm} from "./login-form";
 import {Observable, Subject} from "rxjs";
 import {LoginResponse} from "./login-response";
+import * as jwt_decode from 'jwt-decode';
+
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +35,6 @@ export class AuthenticationService {
   // Uses http.get() to load data from a single API endpoint
   async getMe() {
     this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
-      console.log("success: " + success);
         this.me_change.next(success);
         this.authenticated_change.next(true);
       }, error1 => {
@@ -44,12 +45,43 @@ export class AuthenticationService {
     )
   }
 
+  public getToken(): string {
+    return localStorage.getItem('jwt');
+  }
+
+  public isAuthenticated(): boolean {
+    // get the token
+    const token = this.getToken();
+    // return a boolean reflecting
+    // whether or not the token is expired
+    return !this.isTokenExpired(token);
+  }
+
+  getTokenExpirationDate(token: string): Date {
+    const decoded = jwt_decode(token);
+
+    if (decoded.exp === undefined) return null;
+
+    const date = new Date(0);
+    date.setUTCSeconds(decoded.exp);
+    return date;
+  }
+
+  isTokenExpired(token?: string): boolean {
+    if(!token) token = this.getToken();
+    if(!token) return true;
+
+    const date = this.getTokenExpirationDate(token);
+    if(date === undefined) return false;
+    return !(date.valueOf() > new Date().valueOf());
+  }
+
 
   login(login_form: LoginForm): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(environment.backendUrl + '/login', login_form)
   }
 
   logout() {
-    return this.http.get(environment.backendUrl + '/logout');
-  }
+    localStorage.removeItem("jwt");
+    return this.http.get(environment.backendUrl + '/logout')  }
 }

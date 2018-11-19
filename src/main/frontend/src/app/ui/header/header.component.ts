@@ -3,7 +3,8 @@ import {environment} from "../../../environments/environment";
 import {NewsService} from "../../news.service";
 import {Person} from "../../person";
 import {AuthenticationService} from "../../authentication.service";
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -15,16 +16,12 @@ export class HeaderComponent implements OnInit {
 
   hotarticle = null;
 
-
-  person$: Observable<Person>;
-
-
   backendUrl = environment.backendUrl;
-  subject = new Subject<boolean>();
 
-  constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService) {
+  constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService, private router: Router) {
     console.log("backend: " + this.backendUrl);
   }
+
 
   ngOnInit() {
     console.log("header: onInit called. Backend: " + this.backendUrl);
@@ -34,6 +31,11 @@ export class HeaderComponent implements OnInit {
 
   public logout() {
     this._authenticationService.logout();
+    this.router.navigate(['home']);
+  }
+
+  isAuthenticated() {
+    return this._authenticationService.isAuthenticated();
   }
 
 

@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {UiModule} from './ui/ui.module';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CalendarService} from "./calendar.service";
 import {AppRoutingModule} from './app-routing.module';
 import {AboutusComponent} from './aboutus/aboutus.component';
@@ -25,6 +25,7 @@ import {ForgotComponent} from './forgot/forgot.component';
 import {PaymentComponent} from './payment/payment.component';
 import {NgxStripeModule} from 'ngx-stripe';
 import {TransactionsComponent} from './transactions/transactions.component';
+import {TokenInterceptor} from "./token-interceptor";
 
 
 @NgModule({
@@ -55,7 +56,17 @@ import {TransactionsComponent} from './transactions/transactions.component';
     TransactionsComponent,
   ],
 
-  providers: [CalendarService, ShopService, AuthenticationService, AuthGuardService],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    CalendarService,
+    ShopService,
+    AuthenticationService,
+    AuthGuardService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
