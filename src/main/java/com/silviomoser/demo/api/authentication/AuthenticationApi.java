@@ -52,19 +52,21 @@ public class AuthenticationApi {
     public void initPwReset(Locale locale, @RequestBody ResetPasswordForm resetPasswordForm) {
         log.debug("enter initPwReset: " + resetPasswordForm);
         try {
-            passwordResetService.startPwReset(resetPasswordForm.getEmail());
+            passwordResetService.startPwReset(resetPasswordForm.getEmail(), resetPasswordForm.getForward());
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
             throw new ApiException(i18Helper.getMessage(i18Helper.getMessage("generic_techerror")), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/auth/redeemToken", method = RequestMethod.GET)
-    public void redeemToken(@RequestParam String token) {
+    @RequestMapping(value = "/auth/redeemToken", method = RequestMethod.POST)
+    public void redeemToken(@RequestBody RedeemTokenForm redeemTokenForm) {
         try {
-            User user = passwordResetService.redeemToken(token);
+            User user = passwordResetService.redeemToken(redeemTokenForm.getToken(), redeemTokenForm.getPassword(), redeemTokenForm.getPassword_confirmation());
+            log.info("User {} has successfully updated password", user.getUsername());
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
+            throw new ApiException(i18Helper.getMessage("pwreset_exception_passwordrules"));
         }
     }
 }

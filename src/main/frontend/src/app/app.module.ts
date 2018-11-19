@@ -26,6 +26,7 @@ import {PaymentComponent} from './payment/payment.component';
 import {NgxStripeModule} from 'ngx-stripe';
 import {TransactionsComponent} from './transactions/transactions.component';
 import {TokenInterceptor} from "./token-interceptor";
+import { ForgotLandingComponent } from './forgot-landing/forgot-landing.component';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import {TokenInterceptor} from "./token-interceptor";
     ForgotComponent,
     PaymentComponent,
     TransactionsComponent,
+    ForgotLandingComponent,
   ],
 
   providers: [

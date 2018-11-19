@@ -28,7 +28,7 @@ public class PasswordResetService {
     @Autowired
     UserRepository userRepository;
 
-    public void startPwReset(String username) throws ServiceException {
+    public void startPwReset(String username, String forward) throws ServiceException {
         final Optional<User> optionalUser = userRepository.findByUsername(username);
 
         if (optionalUser.isPresent()) {
@@ -43,7 +43,7 @@ public class PasswordResetService {
                 helper.setFrom(pwResetConfiguration.getEmailFrom());
                 helper.setTo(user.getPerson().getEmail());
                 helper.setSubject(user.getPerson().getFirstName() + " hat das Passwort vergessen?");
-                helper.setText(renderEmailText(user));
+                helper.setText(renderEmailText(user, forward));
                 javaMailSender.send(message);
 
             } catch (Exception e) {
@@ -57,25 +57,25 @@ public class PasswordResetService {
         }
     }
 
-    public User redeemToken(String token) throws ServiceException {
+    public User redeemToken(String token, String newPassword, String newPasswordConfirmation) throws ServiceException {
         final Optional<User> optionalUser = userRepository.findByResetToken(token);
         if (!optionalUser.isPresent()) {
             log.warn("Invalid resettoken");
             throw new ServiceException("Invalid reset token");
         }
-        return optionalUser.get();
-    }
 
-    public void updatePassword(String newPassword, String passwordConfirmation, String resetToken) throws ServiceException {
-        if (!isValidPassword(newPassword, passwordConfirmation)) {
-            throw new ServiceException("Bad password");
+
+        if (!isValidPassword(newPassword, newPasswordConfirmation)) {
+            throw new ServiceException("Invalid password");
         }
-        final User user = redeemToken(resetToken);
-        user.setPassword(hashPassword(newPassword));
+        User user = optionalUser.get();
+        user.setPassword(newPassword);
+        userRepository.save(user);
+        return user;
     }
 
-    private String renderEmailText(User user) {
-        return String.format("Hallo %s,\n\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", FormatUtils.toFirstLastName(user.getPerson()), "http://localhost:8085/auth/redeemtoken");
+    private String renderEmailText(User user, String forward) {
+        return String.format("Hallo %s,\n\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", FormatUtils.toFirstLastName(user.getPerson()), String.format("%s?token=%s&forward=%s", pwResetConfiguration.getLandingPage(), user.getResetToken(), forward));
     }
 
 

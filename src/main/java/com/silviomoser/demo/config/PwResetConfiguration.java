@@ -8,4 +8,6 @@ import lombok.Data;
 public class PwResetConfiguration {
 
     private String emailFrom;
+    private String landingPage;
+
 }

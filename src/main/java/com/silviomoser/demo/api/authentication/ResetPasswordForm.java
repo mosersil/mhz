@@ -7,5 +7,6 @@ public class ResetPasswordForm {
 
     String email;
     String username;
+    String forward;
 
 }

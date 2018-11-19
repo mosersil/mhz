@@ -22,7 +22,8 @@ export class ForgotComponent implements OnInit {
   onSubmit() {
     var data = {
       email: this.model.email,
-      username: this.model.email
+      username: this.model.email,
+      forward: "intra"
     };
 
     this.http.post(environment.backendUrl + '/auth/initPwReset', data).subscribe(success => {

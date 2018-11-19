@@ -14,6 +14,7 @@ import {ForgotComponent} from "./forgot/forgot.component";
 import {RegisterComponent} from "./register/register.component";
 import {PaymentComponent} from "./payment/payment.component";
 import {TransactionsComponent} from "./transactions/transactions.component";
+import {ForgotLandingComponent} from "./forgot-landing/forgot-landing.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path: 'contact', component: ContactComponent},
   {path: 'login', component: LoginComponent},
   {path: 'forgot', component: ForgotComponent},
+  {path: 'resetpass', component: ForgotLandingComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'payment', component: PaymentComponent, canActivate: [AuthGuard]},
   {path: 'intra', component: InternalComponent, canActivate: [AuthGuard]},
