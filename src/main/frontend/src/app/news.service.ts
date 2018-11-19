@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../environments/environment";
+import {Article} from "./article";
+import {Observable} from "rxjs";
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -17,6 +19,6 @@ export class NewsService {
   // Uses http.get() to load data from a single API endpoint
   getArticle() {
     console.log("Backend: " + environment.backendUrl);
-    return this.http.get(environment.backendUrl + '/public/api/article');
+    return this.http.get<Article>(environment.backendUrl + '/public/api/article');
   }
 }

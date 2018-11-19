@@ -3,6 +3,8 @@ package com.silviomoser.demo.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silviomoser.demo.security.AuthenticationResult;
 import com.silviomoser.demo.security.CustomFilter;
+import com.silviomoser.demo.security.JwtAuthenticationFilter;
+import com.silviomoser.demo.security.JwtTokenProvider;
 import com.silviomoser.demo.security.SecurityUserDetailsService;
 import com.vaadin.spring.annotation.EnableVaadin;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
@@ -52,6 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityUserDetailsService userDetailsService;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -69,6 +75,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return authenticationFilter;
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
+
     private void loginFailureHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResult result = new AuthenticationResult();
@@ -85,8 +97,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("Login Success: " + httpServletRequest);
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResult result = new AuthenticationResult();
+        String jwtToken = jwtTokenProvider.generateToken(authentication);
         try {
             result.setErrorCode(0);
+            result.setJwt(jwtToken);
             httpServletResponse.getWriter().write(mapper.writeValueAsString(result));
         } catch (IOException e) {
             log.error("caught error during login: " + e.getMessage(), e);
@@ -102,6 +116,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authProvider.setPasswordEncoder(encoder());
         return authProvider;
     }
+
+
 
     @Bean
     public PasswordEncoder encoder() {

@@ -1,9 +1,9 @@
-<div class="container-fluid" style="background-image: url('/public/api/background'); background-repeat: no-repeat">
+<div class="container-fluid" [ngStyle]="{'background-image': main_background}" style="background-repeat: no-repeat" >
   <div class="jumbotron" style="background: none">
     <div class="container bg-transparent text-white mb-5">
       <h1>Musikverein Harmonie Zürich-Oberstrass</h1>
       <p>
-        In this tutorial you learn how to use Angular CLI v6 with Bootstrap and FontAwesome!
+        Demo Website für den Musikverein Harmonie Zürich-Oberstrass!
       </p>
     </div>
   </div>
@@ -31,7 +31,7 @@
             <h5 class="card-title">Lust zum mitspielen?</h5>
             <p class="card-text">Du spielst ein Instrument und möchtest bei uns mitmachen? Hier findest du mehr
               informationen</p>
-            <a href="#" class="btn btn-primary">Mehr erfahren</a>
+            <a class="btn btn-primary" routerLink="/about_us">Mehr</a>
           </div>
         </div>
       </div>
@@ -39,9 +39,9 @@
       <div class="col-md-4">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Dynamisch generierte news</h5>
-            <p class="card-text">Hier kommt jeweils ein aktueller Inhalt hin</p>
-            <a href="#" class="btn btn-primary">Mehr erfahren</a>
+            <h5 class="card-title">{{hotArticle.title}}</h5>
+            <p class="card-text">{{hotArticle.teaser}}</p>
+            <a class="btn btn-primary" routerLink="/news">Mehr</a>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
                 {{event.date | date : "dd.MM.yyyy"}} : {{event.title}}
               </li>
             </ul>
-            <a class="button" routerLink="/calendar">Alle unsere Auftritte</a>
+            <a class="btn btn-primary" routerLink="/calendar">Alle unsere Auftritte</a>
           </div>
         </div>
       </div>

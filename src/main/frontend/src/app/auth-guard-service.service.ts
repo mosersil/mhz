@@ -7,19 +7,15 @@ import {Observable} from "rxjs";
 export class AuthGuardService implements CanActivate {
 
   constructor(public _authenticationService: AuthenticationService, public router: Router) {
-    this._authenticationService.getMe();
   }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    this._authenticationService.getMe();
-    console.log(this._authenticationService.authenticated)
-    if (this._authenticationService.authenticated) {
-      console.log("user is authenticated")
+
+    if (this._authenticationService.isAuthenticated()) {
       return true;
     } else {
-      console.log("user is not authenticated")
       this.router.navigate(['login'], {queryParams: {returnUrl: state.url}});
       return false;
     }

@@ -29,4 +29,12 @@ public class SecurityUserDetailsService implements UserDetailsService {
         }
         return new SecurityUserDetails(user.get());
     }
+
+    public UserDetails loadUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new UsernameNotFoundException("Username Not Found Exception : " + id);
+        }
+        return new SecurityUserDetails(user.get());
+    }
 }

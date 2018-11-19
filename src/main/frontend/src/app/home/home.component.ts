@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {CalendarService} from "../calendar.service";
+import {environment} from "../../environments/environment";
+import {NewsService} from "../news.service";
+import {Article} from "../article";
 
 @Component({
   selector: 'app-home',
@@ -9,12 +12,15 @@ import {CalendarService} from "../calendar.service";
 export class HomeComponent implements OnInit {
 
   events;
+  main_background: string = "url('"+environment.backendUrl+"/public/api/background')";
+  hotArticle: Article = null;
 
-  constructor(private _calendarService: CalendarService) {
+  constructor(private _calendarService: CalendarService, private _newsService: NewsService) {
   }
 
   ngOnInit() {
     this.getEvents();
+    this.getArticle()
   }
 
   getEvents() {
@@ -25,6 +31,17 @@ export class HomeComponent implements OnInit {
       },
       err => console.error(err),
       () => console.log('done loading events: ' + this.events)
+    );
+  }
+
+
+  getArticle() {
+    this._newsService.getArticle().subscribe(
+      data => {
+        console.log("article: " + data);
+        this.hotArticle = data;
+      },
+      //err => console.error(err),
     );
   }
 

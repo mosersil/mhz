@@ -6,7 +6,7 @@
 
   <div class="col-sm-12 form-group">
 
-    <form novalidate (ngSubmit)="buy($event)" [formGroup]="stripeTest">
+    <form novalidate (ngSubmit)="buy()" [formGroup]="stripeTest">
       <input type="text" formControlName="name" placeholder="Jane Doe">
       <div id="card-element" class="field"></div>
       <button type="submit">

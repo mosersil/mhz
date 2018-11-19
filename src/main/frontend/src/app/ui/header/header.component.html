@@ -1,7 +1,6 @@
 <div class="container">
   <nav class="navbar navbar-expand-md navbar-light">
-    <a routerLink="home" routerLinkActive="active" class="navbar-left"><img class="mhz_logo"
-                                                                            src="/assets/logo/logo.jpg"></a>
+    <a routerLink="home" routerLinkActive="active" class="navbar-left"><img class="mhz_logo" src="/assets/logo/logo.jpg"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -29,13 +28,8 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
 
-        <li class="nav-item">
-          <a class="nav-link" routerLink="intra" routerLinkActive="active"><span class="fa fa-user fa-lg"
-                                                                                 aria-hidden="true"></span></a>
-        </li>
 
-        <!--
-        <li class="nav-item dropdown" *ngIf="isAuthenticated; else showLoginOnly">
+        <li class="nav-item dropdown" *ngIf="isAuthenticated(); else showLoginOnly">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-user fa-lg" aria-hidden="true"></span>
@@ -45,7 +39,7 @@
               <a class="nav-link" routerLink="intra" routerLinkActive="active">Mein Bereich</a>
             </li>
             <li class="dropdown-item">
-              <a class="nav-link" routerLink="logout" routerLinkActive="active">Logout</a>
+              <a class="nav-link" (click)="logout()">Logout</a>
             </li>
           </ul>
         </li>
@@ -55,7 +49,7 @@
             <a class="nav-link" routerLink="intra" routerLinkActive="active"><span class="fa fa-user fa-lg" aria-hidden="true"></span></a>
           </li>
         </ng-template>
--->
+
 
       </ul>
     </ul>
