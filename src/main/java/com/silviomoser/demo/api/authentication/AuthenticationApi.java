@@ -1,32 +1,32 @@
 package com.silviomoser.demo.api.authentication;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.data.Views;
-import com.silviomoser.demo.repository.UserRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
-import com.silviomoser.demo.services.ContactService;
 import com.silviomoser.demo.services.PasswordResetService;
 import com.silviomoser.demo.services.ServiceException;
 import com.silviomoser.demo.ui.i18.I18Helper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Locale;
 
 @Slf4j
 @RestController
-public class AuthenticationApi {
+public class AuthenticationApi implements ApiController {
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    ContactService contactService;
 
     @Autowired
     PasswordResetService passwordResetService;
@@ -35,8 +35,13 @@ public class AuthenticationApi {
     I18Helper i18Helper;
 
 
+    @ApiOperation(value = "Get details on the currently logged in user")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = Person.class),
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @JsonView(Views.Public.class)
-    @RequestMapping("/auth/user")
+    @RequestMapping(URL_AUTH_USER)
     public Person my() {
         final Person me = SecurityUtils.getMe();
         if (me == null) {
@@ -47,8 +52,12 @@ public class AuthenticationApi {
     }
 
 
-    @JsonView(Views.Public.class)
-    @RequestMapping(value = "/auth/initPwReset", method = RequestMethod.POST)
+    @ApiOperation(value = "Start password reset process")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Technical error")
+    })
+    @RequestMapping(value = URL_AUTH_INITPWRESET, method = RequestMethod.POST)
     public void initPwReset(Locale locale, @RequestBody ResetPasswordForm resetPasswordForm) {
         log.debug("enter initPwReset: " + resetPasswordForm);
         try {
@@ -59,7 +68,12 @@ public class AuthenticationApi {
         }
     }
 
-    @RequestMapping(value = "/auth/redeemToken", method = RequestMethod.POST)
+    @ApiOperation(value = "Redeem a change password token")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Technical error")
+    })
+    @RequestMapping(value = URL_AUTH_REDEEMTOKEN, method = RequestMethod.POST)
     public void redeemToken(@RequestBody RedeemTokenForm redeemTokenForm) {
         try {
             User user = passwordResetService.redeemToken(redeemTokenForm.getToken(), redeemTokenForm.getPassword(), redeemTokenForm.getPassword_confirmation());
