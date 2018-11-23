@@ -272,14 +272,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _transactions_transactions_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./transactions/transactions.component */ "./src/app/transactions/transactions.component.ts");
 /* harmony import */ var _token_interceptor__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./token-interceptor */ "./src/app/token-interceptor.ts");
 /* harmony import */ var _forgot_landing_forgot_landing_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./forgot-landing/forgot-landing.component */ "./src/app/forgot-landing/forgot-landing.component.ts");
-/* harmony import */ var ng_busy__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ng-busy */ "./node_modules/ng-busy/fesm5/ng-busy.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
 
 
 
@@ -321,7 +319,6 @@ var AppModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_15__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_15__["ReactiveFormsModule"],
                 angular_font_awesome__WEBPACK_IMPORTED_MODULE_19__["AngularFontAwesomeModule"],
-                ng_busy__WEBPACK_IMPORTED_MODULE_28__["NgBusyModule"],
                 ngx_stripe__WEBPACK_IMPORTED_MODULE_24__["NgxStripeModule"].forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
             ],
             declarations: [
@@ -710,7 +707,7 @@ var CalendarComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container bg-white rounded shadow p-4\">\n\n  <div class=\"alert alert-info\" *ngIf=\"feedback!=null\">\n    {{feedback}}\n  </div>\n\n  <div class=\"alert alert-warning\" *ngIf=\"error!=null\">\n    {{error}}\n  </div>\n\n  <div [ngBusy]=\"busy\"></div>\n\n  <div class=\"col-md-6 offset-md-3\">\n    <p>Sie möchten uns etwas mitteilen? Bitte benutzen Sie das untenstehende Formular</p>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && onSubmit()\" #f=\"ngForm\" novalidate>\n      <div class=\"form-group\">\n        <label for=\"name\">Name</label>\n        <input id=\"name\" type=\"text\" class=\"form-control\" name=\"name\" [(ngModel)]=\"model.name\" #name=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && name.invalid }\" required/>\n        <div *ngIf=\"f.submitted && name.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"name.errors.required\">Bitte Name eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"email\">Email</label>\n        <input id=\"email\" type=\"text\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && email.invalid }\" required email/>\n        <div *ngIf=\"f.submitted && email.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"email.errors.required\">Bitte geben Sie Ihre E-Mail adresse ein</div>\n          <div *ngIf=\"email.errors.email\">Bitte geben Sie eine gültige E-Mail adresse ein</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"message\">Nachricht</label>\n        <textarea id=\"message\" class=\"form-control\" name=\"message\" [(ngModel)]=\"model.message\" #message=\"ngModel\"\n                  [ngClass]=\"{ 'is-invalid': f.submitted && message.invalid }\" required minlength=\"5\">\n          </textarea>\n        <div *ngIf=\"f.submitted && message.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"message.errors.required\">Bitte geben Sie eine Nachricht ein</div>\n          <div *ngIf=\"message.errors.minlength\">Nachricht mit mindestens 5 Zeichen</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <button class=\"btn btn-primary\">Senden</button>\n      </div>\n    </form>\n  </div>\n</div>\n"
+module.exports = "<div class=\"container bg-white rounded shadow p-4\">\n\n  <div class=\"alert alert-info\" *ngIf=\"feedback!=null\">\n    {{feedback}}\n  </div>\n\n  <div class=\"alert alert-warning\" *ngIf=\"error!=null\">\n    {{error}}\n  </div>\n\n  <div class=\"col-md-6 offset-md-3\">\n    <p>Sie möchten uns etwas mitteilen? Bitte benutzen Sie das untenstehende Formular</p>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && onSubmit()\" #f=\"ngForm\" novalidate>\n      <div class=\"form-group\">\n        <label for=\"name\">Name</label>\n        <input id=\"name\" type=\"text\" class=\"form-control\" name=\"name\" [(ngModel)]=\"model.name\" #name=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && name.invalid }\" required/>\n        <div *ngIf=\"f.submitted && name.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"name.errors.required\">Bitte Name eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"email\">Email</label>\n        <input id=\"email\" type=\"text\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && email.invalid }\" required email/>\n        <div *ngIf=\"f.submitted && email.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"email.errors.required\">Bitte geben Sie Ihre E-Mail adresse ein</div>\n          <div *ngIf=\"email.errors.email\">Bitte geben Sie eine gültige E-Mail adresse ein</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"message\">Nachricht</label>\n        <textarea id=\"message\" class=\"form-control\" name=\"message\" [(ngModel)]=\"model.message\" #message=\"ngModel\"\n                  [ngClass]=\"{ 'is-invalid': f.submitted && message.invalid }\" required minlength=\"5\">\n          </textarea>\n        <div *ngIf=\"f.submitted && message.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"message.errors.required\">Bitte geben Sie eine Nachricht ein</div>\n          <div *ngIf=\"message.errors.minlength\">Nachricht mit mindestens 5 Zeichen</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <button class=\"btn btn-primary\">Senden</button>\n      </div>\n    </form>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -762,7 +759,7 @@ var ContactComponent = /** @class */ (function () {
             email: this.model.email,
             message: this.model.message
         };
-        this.busy = this.http.post(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].backendUrl + '/api/contact', data).subscribe(function (data) {
+        this.http.post(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].backendUrl + '/api/contact', data).subscribe(function (data) {
             if (data.success) {
                 _this.feedback = "Vielen Dank für Ihre Mitteilung";
             }
@@ -935,7 +932,7 @@ var ForgotLandingComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container bg-white rounded shadow p-4\">\n\n\n  <div class=\"alert alert-danger\" *ngIf=\"errormessage!=null\">\n    {{errormessage}}\n  </div>\n  <div class=\"alert alert-info\" *ngIf=\"infomessage!=null\">\n    {{infomessage}}\n    <button (click)=\"goBack()\">Weiter</button>\n  </div>\n\n  <div class=\"col-md-6 offset-md-3\" *ngIf=\"!sent\">\n    <h1>Passwort vergessen?</h1>\n    <p>Kein problem. Wie lautet Ihre E-Mail Adresse?</p>\n\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && onSubmit()\" #f=\"ngForm\" novalidate>\n      <div class=\"form-group\">\n        <label for=\"email\">Email</label>\n        <input id=\"email\" type=\"email\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && email.invalid }\" required/>\n        <div *ngIf=\"f.submitted && email.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"lastName.errors.required\">Bitte gültige E-Mail Adresse eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <button class=\"btn btn-primary\">Senden</button>\n      </div>\n    </form>\n  </div>\n</div>\n"
+module.exports = "<div class=\"container bg-white rounded shadow p-4\">\n\n\n  <div class=\"alert alert-danger\" *ngIf=\"errormessage!=null\">\n    {{errormessage}}\n  </div>\n  <div class=\"alert alert-info\" *ngIf=\"infomessage!=null\">\n    {{infomessage}}\n    <button (click)=\"goBack()\">Weiter</button>\n  </div>\n\n  <div class=\"col-md-6 offset-md-3\">\n    <h1>Passwort vergessen?</h1>\n    <p>Kein problem. Wie lautet Ihre E-Mail Adresse?</p>\n\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && onSubmit()\" #f=\"ngForm\" novalidate>\n      <div class=\"form-group\">\n        <label for=\"email\">Email</label>\n        <input id=\"email\" type=\"email\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && email.invalid }\" required/>\n        <div *ngIf=\"f.submitted && email.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"lastName.errors.required\">Bitte gültige E-Mail Adresse eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <button class=\"btn btn-primary\">Senden</button>\n      </div>\n    </form>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1208,7 +1205,7 @@ var InternalComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container bg-white rounded shadow p-4\">\n  <p>Die angeforderte Seite erfordert eine Authentisierung.</p>\n\n  <div class=\"alert alert-danger\" *ngIf=\"error!=null\">\n    {{error}}\n  </div>\n\n  <div class=\"col-md-6 offset-md-3\">\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && onSubmit()\" #f=\"ngForm\" novalidate>\n      <div class=\"form-group\">\n        <label for=\"username\">Benutzername</label>\n        <input id=\"username\" type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\"\n               #username=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && username.invalid }\" required/>\n        <div *ngIf=\"f.submitted && username.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"username.errors.required\">Bitte Benutzername eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"password\">Passwort</label>\n        <input id=\"password\" type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\"\n               #password=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && password.invalid }\" required/>\n        <div *ngIf=\"f.submitted && password.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"password.errors.required\">Bitte Passwort eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <button class=\"btn btn-primary\">Senden</button>\n      </div>\n    </form>\n  </div>\n\n  <div class=\"col-md-6 offset-md-3\">\n    <button type=\"button\" (click)=\"initiatePwReset()\" class=\"btn btn-outline-secondary\">Ich weiss mein Passwort nicht mehr</button>\n  </div>\n  <div class=\"col-md-6 offset-md-3\">\n    <button type=\"button\" (click)=\"startRegistration()\" class=\"btn btn-outline-secondary\">Ich habe noch kein Passwort</button>\n  </div>\n</div>\n"
+module.exports = "<div class=\"container bg-white rounded shadow p-4\">\n  <p>Die angeforderte Seite erfordert eine Authentisierung.</p>\n\n  <div class=\"alert alert-danger\" *ngIf=\"error!=null\">\n    {{error}}\n  </div>\n\n  <div class=\"col-md-6 offset-md-3\">\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && onSubmit()\" #f=\"ngForm\" novalidate>\n      <div class=\"form-group\">\n        <label for=\"username\">Benutzername</label>\n        <input id=\"username\" type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\"\n               #username=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && username.invalid }\" required/>\n        <div *ngIf=\"f.submitted && username.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"username.errors.required\">Bitte Benutzername eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"password\">Passwort</label>\n        <input id=\"password\" type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\"\n               #password=\"ngModel\"\n               [ngClass]=\"{ 'is-invalid': f.submitted && password.invalid }\" required/>\n        <div *ngIf=\"f.submitted && password.invalid\" class=\"invalid-feedback\">\n          <div *ngIf=\"password.errors.required\">Bitte Passwort eingeben</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <button class=\"btn btn-primary\">Senden</button>\n      </div>\n    </form>\n  </div>\n\n  <div class=\"col-md-6 offset-md-3\">\n    <a class=\"button\" routerLink=\"/forgot\">Ich weiss mein Passwort nicht mehr</a>\n  </div>\n  <div class=\"col-md-6 offset-md-3\">\n    <a class=\"button\" routerLink=\"/register\">Ich habe noch kein Passwort und möchte mich registrieren</a>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1316,13 +1313,9 @@ var LoginComponent = /** @class */ (function () {
         });
     };
     LoginComponent.prototype.ngOnInit = function () {
+        console.log("OnInit called");
+        // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    };
-    LoginComponent.prototype.initiatePwReset = function () {
-        this.router.navigateByUrl("/forgot?forward=" + this.returnUrl);
-    };
-    LoginComponent.prototype.startRegistration = function () {
-        this.router.navigateByUrl("/register?forward=" + this.returnUrl);
     };
     LoginComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1722,10 +1715,9 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 var RegisterComponent = /** @class */ (function () {
-    function RegisterComponent(http, router, route, location) {
+    function RegisterComponent(http, router, location) {
         this.http = http;
         this.router = router;
-        this.route = route;
         this.location = location;
         this.model = {};
         this.errormessage = null;
@@ -1768,7 +1760,7 @@ var RegisterComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./register.component.html */ "./src/app/register/register.component.html"),
             styles: [__webpack_require__(/*! ./register.component.sass */ "./src/app/register/register.component.sass")]
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"], _angular_common__WEBPACK_IMPORTED_MODULE_4__["Location"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"], _angular_common__WEBPACK_IMPORTED_MODULE_4__["Location"]])
     ], RegisterComponent);
     return RegisterComponent;
 }());
@@ -2272,7 +2264,7 @@ module.exports = "<div class=\"container\">\n  <nav class=\"navbar navbar-expand
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "nav img {\n  height: 100px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9pcmluYS9JZGVhUHJvamVjdHMvbWh6L3NyYy9tYWluL2Zyb250ZW5kL3NyYy9hcHAvdWkvaGVhZGVyL2hlYWRlci5jb21wb25lbnQuc2FzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUVJLGNBQWEsRUFBRyIsImZpbGUiOiJzcmMvYXBwL3VpL2hlYWRlci9oZWFkZXIuY29tcG9uZW50LnNhc3MiLCJzb3VyY2VzQ29udGVudCI6WyJuYXYge1xuICBpbWcge1xuICAgIGhlaWdodDogMTAwcHg7IH0gfVxuIl19 */"
+module.exports = "nav img {\n  height: 100px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9zaWx2aW8vSWRlYVByb2plY3RzL21oei9zcmMvbWFpbi9mcm9udGVuZC9zcmMvYXBwL3VpL2hlYWRlci9oZWFkZXIuY29tcG9uZW50LnNhc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFFSSxjQUFhLEVBQUciLCJmaWxlIjoic3JjL2FwcC91aS9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5zYXNzIiwic291cmNlc0NvbnRlbnQiOlsibmF2IHtcbiAgaW1nIHtcbiAgICBoZWlnaHQ6IDEwMHB4OyB9IH1cbiJdfQ== */"
 
 /***/ }),
 
@@ -2526,7 +2518,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/irina/IdeaProjects/mhz/src/main/frontend/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/silvio/IdeaProjects/mhz/src/main/frontend/src/main.ts */"./src/main.ts");
 
 
 /***/ })
