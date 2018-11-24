@@ -2,7 +2,7 @@ package com.silviomoser.demo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silviomoser.demo.security.AuthenticationResult;
-import com.silviomoser.demo.security.CustomFilter;
+import com.silviomoser.demo.security.UsernamePasswordFilter;
 import com.silviomoser.demo.security.JwtAuthenticationFilter;
 import com.silviomoser.demo.security.JwtTokenProvider;
 import com.silviomoser.demo.security.SecurityUserDetailsService;
@@ -24,7 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
@@ -65,9 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CustomFilter authenticationFilter() throws Exception {
-        CustomFilter authenticationFilter
-                = new CustomFilter();
+    public UsernamePasswordFilter authenticationFilter() throws Exception {
+        UsernamePasswordFilter authenticationFilter
+                = new UsernamePasswordFilter();
         authenticationFilter.setAuthenticationSuccessHandler(this::loginSuccessHandler);
         authenticationFilter.setAuthenticationFailureHandler(this::loginFailureHandler);
         authenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
@@ -141,7 +140,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/internal/api/**").hasRole("USER")
                 .antMatchers("/api/protected/**").hasRole("USER")
                 .and()
-                .addFilterBefore(authenticationFilter(), CustomFilter.class);
+                .addFilterBefore(authenticationFilter(), UsernamePasswordFilter.class)
+                .addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordFilter.class);
 
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/");
 

@@ -10,6 +10,7 @@ import com.silviomoser.demo.repository.AddressListRepository;
 import com.silviomoser.demo.repository.CalendarEventRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.utils.PdfBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,7 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
  * Created by silvio on 29.07.18.
  */
 @RestController
+@Slf4j
 public class InternalApi {
 
     @Autowired
@@ -45,7 +47,7 @@ public class InternalApi {
 
 
     @RequestMapping(value="/internal/api/calendar", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> getPDF(@RequestParam(name = "year", required = false) String  year) throws DocumentException {
+    public ResponseEntity<InputStreamResource> getPDF(@RequestParam(name = "year", required = false) String  year) {
         final LocalDate now = LocalDate.now();
         final LocalDate from = LocalDate.of(Integer.parseInt(year), 1, 1);
         final LocalDate to = from.with(lastDayOfYear());;
@@ -55,7 +57,8 @@ public class InternalApi {
 
 
     @RequestMapping(value="/internal/api/addresslist", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "organization", required = true) String  organization) throws DocumentException {
+    public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "organization", required = true) String  organization) {
+        log.debug("enter getAddressList");
         final ByteArrayInputStream bis = PdfBuilder.generatePdfListReport(addressListRepository.findByOrganization(organization), AddressListEntry.class);
         return pdfResponse(bis, organization);
     }
