@@ -1,45 +1,50 @@
 package com.silviomoser.demo.api.authentication;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.silviomoser.demo.api.contact.EmailModel;
+import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.data.Views;
-import com.silviomoser.demo.repository.UserRepository;
-import com.silviomoser.demo.security.utils.PasswordUtils;
 import com.silviomoser.demo.security.utils.SecurityUtils;
-import com.silviomoser.demo.services.ContactService;
+import com.silviomoser.demo.services.PasswordResetService;
+import com.silviomoser.demo.services.ServiceException;
+import com.silviomoser.demo.ui.i18.I18Helper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import java.util.Locale;
 
 @Slf4j
 @RestController
-public class AuthenticationApi {
+public class AuthenticationApi implements ApiController {
+
 
     @Autowired
-    UserRepository userRepository;
+    PasswordResetService passwordResetService;
 
     @Autowired
-    ContactService contactService;
+    I18Helper i18Helper;
 
 
+    @ApiOperation(value = "Get details on the currently logged in user")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = Person.class),
+            @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @JsonView(Views.Public.class)
-    @RequestMapping("/auth/user")
+    @RequestMapping(URL_AUTH_USER)
     public Person my() {
         final Person me = SecurityUtils.getMe();
         if (me == null) {
-            //Person p = new Person();
-            //p.setFirstName("Silvio");
-            //p.setLastName("Moser");
-            //return p;
             throw new ApiException("Not authorized", HttpStatus.UNAUTHORIZED);
         }
         log.debug(String.format("my() returns '%s'", me));
@@ -47,30 +52,35 @@ public class AuthenticationApi {
     }
 
 
-    @JsonView(Views.Public.class)
-    @RequestMapping("/auth/initPwReset")
-    public void initPwReset(@RequestParam(name = "username", required = true) String username) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-
-        if (optionalUser.isPresent()) {
-            final User user = optionalUser.get();
-            user.setResetToken(PasswordUtils.generateToken(50));
-            userRepository.save(user);
-
-            EmailModel emailModel = new EmailModel();
-            emailModel.setEmail(user.getPerson().getEmail());
-            emailModel.setName("");
-            //TODO: That wont work
-            contactService.sendSimpleMail(emailModel);
-
-        } else {
-            log.warn("User {} does not exist");
-            throw new ApiException("Invalid userId", HttpStatus.BAD_REQUEST);
+    @ApiOperation(value = "Start password reset process")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Technical error")
+    })
+    @RequestMapping(value = URL_AUTH_INITPWRESET, method = RequestMethod.POST)
+    public void initPwReset(Locale locale, @RequestBody ResetPasswordForm resetPasswordForm) {
+        log.debug("enter initPwReset: " + resetPasswordForm);
+        try {
+            passwordResetService.startPwReset(resetPasswordForm.getEmail(), resetPasswordForm.getForward());
+        } catch (ServiceException e) {
+            log.error(e.getMessage(), e);
+            throw new ApiException(i18Helper.getMessage(i18Helper.getMessage("generic_techerror")), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/auth/redeemtoken", method = RequestMethod.GET)
-    public void verifyEmail(@RequestParam String token) {
-        log.info("Redeem reset token " + token);
+    @ApiOperation(value = "Redeem a change password token")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Technical error")
+    })
+    @RequestMapping(value = URL_AUTH_REDEEMTOKEN, method = RequestMethod.POST)
+    public void redeemToken(@RequestBody RedeemTokenForm redeemTokenForm) {
+        try {
+            User user = passwordResetService.redeemToken(redeemTokenForm.getToken(), redeemTokenForm.getPassword(), redeemTokenForm.getPassword_confirmation());
+            log.info("User {} has successfully updated password", user.getUsername());
+        } catch (ServiceException e) {
+            log.error(e.getMessage(), e);
+            throw new ApiException(i18Helper.getMessage("pwreset_exception_passwordrules"));
+        }
     }
 }

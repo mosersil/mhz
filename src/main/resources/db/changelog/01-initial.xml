@@ -12,8 +12,11 @@
             <column name="ADVERTISE" type="boolean">
                 <constraints nullable="true"/>
             </column>
-            <column name="DATE" type="datetime">
+            <column name="DATE_START" type="datetime">
                 <constraints nullable="false"/>
+            </column>
+            <column name="DATE_END" type="datetime">
+                <constraints nullable="true"/>
             </column>
             <column name="DRESS_CODE" type="int">
                 <constraints nullable="false"/>

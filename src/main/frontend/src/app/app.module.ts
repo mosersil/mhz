@@ -26,6 +26,8 @@ import {PaymentComponent} from './payment/payment.component';
 import {NgxStripeModule} from 'ngx-stripe';
 import {TransactionsComponent} from './transactions/transactions.component';
 import {TokenInterceptor} from "./token-interceptor";
+import { ForgotLandingComponent } from './forgot-landing/forgot-landing.component';
+import {QRCodeModule} from "angularx-qrcode";
 
 
 @NgModule({
@@ -37,6 +39,7 @@ import {TokenInterceptor} from "./token-interceptor";
     FormsModule,
     ReactiveFormsModule,
     AngularFontAwesomeModule,
+    QRCodeModule,
     NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
   ],
   declarations: [
@@ -54,6 +57,7 @@ import {TokenInterceptor} from "./token-interceptor";
     ForgotComponent,
     PaymentComponent,
     TransactionsComponent,
+    ForgotLandingComponent,
   ],
 
   providers: [

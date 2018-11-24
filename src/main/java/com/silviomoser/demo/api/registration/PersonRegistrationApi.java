@@ -64,7 +64,7 @@ public class PersonRegistrationApi {
                     .email(registrationDataSubmission.getEmail())
                     .password(registrationDataSubmission.getPassword())
                     .roles(RoleType.USER.name())
-                    .verificationToken(PasswordUtils.generateToken(60))
+                    .verificationToken(PasswordUtils.generateToken(60, false))
                     .bulid();
 
             log.debug("created person object: {}", person);

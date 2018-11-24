@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 import javax.mail.internet.MimeMessage;
 import java.util.Optional;
 
+import static com.silviomoser.demo.security.utils.PasswordUtils.hashPassword;
+import static com.silviomoser.demo.security.utils.PasswordUtils.isValidPassword;
+
 @Service
 @Slf4j
-public class PwResetService {
+public class PasswordResetService {
 
     @Autowired
     public JavaMailSender javaMailSender;
@@ -25,12 +28,12 @@ public class PwResetService {
     @Autowired
     UserRepository userRepository;
 
-    public void startPwReset(String username) throws ServiceException {
+    public void startPwReset(String username, String forward) throws ServiceException {
         final Optional<User> optionalUser = userRepository.findByUsername(username);
 
         if (optionalUser.isPresent()) {
             final User user = optionalUser.get();
-            user.setResetToken(PasswordUtils.generateToken(50));
+            user.setResetToken(PasswordUtils.generateToken(50, false));
             userRepository.save(user);
 
             final MimeMessage message = javaMailSender.createMimeMessage();
@@ -40,7 +43,7 @@ public class PwResetService {
                 helper.setFrom(pwResetConfiguration.getEmailFrom());
                 helper.setTo(user.getPerson().getEmail());
                 helper.setSubject(user.getPerson().getFirstName() + " hat das Passwort vergessen?");
-                helper.setText(renderEmailText(user));
+                helper.setText(renderEmailText(user, forward));
                 javaMailSender.send(message);
 
             } catch (Exception e) {
@@ -54,8 +57,25 @@ public class PwResetService {
         }
     }
 
-    private String renderEmailText(User user) {
-        return String.format("Hallo %s,\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", FormatUtils.toFirstLastName(user.getPerson()), "http://localhost:8085/auth/redeemtoken");
+    public User redeemToken(String token, String newPassword, String newPasswordConfirmation) throws ServiceException {
+        final Optional<User> optionalUser = userRepository.findByResetToken(token);
+        if (!optionalUser.isPresent()) {
+            log.warn("Invalid resettoken");
+            throw new ServiceException("Invalid reset token");
+        }
+
+
+        if (!isValidPassword(newPassword, newPasswordConfirmation)) {
+            throw new ServiceException("Invalid password");
+        }
+        User user = optionalUser.get();
+        user.setPassword(newPassword);
+        userRepository.save(user);
+        return user;
+    }
+
+    private String renderEmailText(User user, String forward) {
+        return String.format("Hallo %s,\n\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", FormatUtils.toFirstLastName(user.getPerson()), String.format("%s?token=%s&forward=%s", pwResetConfiguration.getLandingPage(), user.getResetToken(), forward));
     }
 
 

@@ -29,7 +29,7 @@ public class CalendarView extends AbstractCrudView<CalendarEvent> {
         grid.setWidth(1200, Unit.PIXELS);
         grid.addColumn(CalendarEvent::getId).setCaption("#").setWidth(70);
 
-        grid.addColumn(CalendarEvent::getDate).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
+        grid.addColumn(CalendarEvent::getDateStart).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
                 .ofLocalizedDate(FormatStyle.LONG)
                 .withLocale(Locale.GERMAN))).setCaption("Datum/Zeit").setWidth(150);
         grid.addColumn(CalendarEvent::getTitle).setCaption("Anlass");
@@ -42,7 +42,7 @@ public class CalendarView extends AbstractCrudView<CalendarEvent> {
     public CalendarEvent createNew() {
         return CalendarEvent.builder()
                 .title("Neuer Anlass")
-                .date(LocalDateTime.now())
+                .dateStart(LocalDateTime.now())
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from "../environments/environment";
+import {saveAs} from "file-saver";
 
 
 const httpOptions = {
@@ -42,6 +43,19 @@ export class CalendarService {
     } else {
       return this.http.get<Event[]>(environment.backendUrl + '/public/api/calendar?publicOnly=true&max=' + max);
     }
+  }
+
+  downloadCalendarIcal(publicOnly:boolean) {
+    this.http.get(environment.backendUrl+'/public/api/ical', {responseType: 'blob'}).subscribe(response => {
+      try {
+        let isFileSaverSupported = !!new Blob;
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+      let blob = new Blob([response], { type: 'text/calendar' });
+      saveAs(blob, `mhz.ics`);
+    });
   }
 
 }

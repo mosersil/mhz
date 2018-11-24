@@ -21,11 +21,69 @@
     <tbody>
 
     <tr *ngFor="let event of events">
-      <td *ngIf="event.isFullDay">{{event.date | date : "dd.MM.yyyy"}}</td>
-      <td *ngIf="!event.isFullDay">{{event.date | date : "dd.MM.yyyy, hh:mm"}}</td>
+      <td *ngIf="event.isFullDay">{{event.dateStart | date : "dd.MM.yyyy"}}</td>
+      <td *ngIf="!event.isFullDay">{{event.dateStart | date : "dd.MM.yyyy, hh:mm"}}</td>
       <td>{{event.title}}</td>
       <td>{{event.location}}</td>
     </tr>
     </tbody>
   </table>
+  <button type="button" class="btn btn-primary" (click)="downloadIcal()" title="Download aller Anlässe im ics Format">
+    <i class="fa fa-download" aria-hidden="true"></i>
+  </button>
+  &nbsp;
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" title="QR code für Ihr Mobiltelefon">
+    <i class="fa fa-qrcode" aria-hidden="true"></i>
+  </button>
+  &nbsp;
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#subscribeModal" title="URLs für Outlook/iCalendar">
+    <i class="fa fa-calendar" aria-hidden="true"></i>
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Kalender Importieren</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Um alle Anlässe in dein Mobiltelefon zu importieren, einfach den QR Code scannen:<br/><br/>
+          <b>Alle Anlässe:</b>
+          <qrcode [qrdata]="subscribe_url" [size]="125" [level]="'M'"></qrcode><br/><br/>
+          <b>Nur öffentliche:</b>
+          <qrcode [qrdata]="subscribe_url + '?publicOnly=true'" [size]="125" [level]="'M'"></qrcode>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="subscribeModal" tabindex="-1" role="dialog" aria-labelledby="subscribeModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="subscribeModalLabel">Kalender abonnieren</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Um den MHZ Kalender in Ihr Kalenderprogramm (z.b. Outlook, ICal, etc) zu importieren und automatisch zu aktualisieren, können Sie folgende URL kopieren und in Ihrem Kalenderprogramm einfügen:
+          <br/><br/>
+          <b>Nur öffentliche Anlässe</b><br/>
+          {{subscribe_url}}?publicOnly=true<br/><br/>
+          <b>Alle Anlässe</b><br/>
+          {{subscribe_url}}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </div>

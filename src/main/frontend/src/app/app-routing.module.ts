@@ -14,9 +14,9 @@ import {ForgotComponent} from "./forgot/forgot.component";
 import {RegisterComponent} from "./register/register.component";
 import {PaymentComponent} from "./payment/payment.component";
 import {TransactionsComponent} from "./transactions/transactions.component";
+import {ForgotLandingComponent} from "./forgot-landing/forgot-landing.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
   {path: 'home', component: HomeComponent},
   {path: 'news', component: NewsComponent},
   {path: 'calendar', component: CalendarComponent},
@@ -26,10 +26,12 @@ const routes: Routes = [
   {path: 'contact', component: ContactComponent},
   {path: 'login', component: LoginComponent},
   {path: 'forgot', component: ForgotComponent},
+  {path: 'resetpass', component: ForgotLandingComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'payment', component: PaymentComponent, canActivate: [AuthGuard]},
   {path: 'intra', component: InternalComponent, canActivate: [AuthGuard]},
   {path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard]},
+  {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', component: HomeComponent},
 
 

@@ -27,3 +27,7 @@
 
 #Data files
 /src/main/resources/db/static/*.csv
+
+
+#Generated frontend
+#/src/main/resources/static
