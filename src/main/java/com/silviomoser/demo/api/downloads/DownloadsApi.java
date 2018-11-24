@@ -1,9 +1,14 @@
 package com.silviomoser.demo.api.downloads;
 
+import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
+import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.data.StaticFile;
 import com.silviomoser.demo.services.FileService;
 import com.silviomoser.demo.ui.i18.I18Helper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,20 +24,25 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @RestController
-public class DownloadsApi {
+public class DownloadsApi implements ApiController {
 
     @Autowired
     FileService fileService;
     @Autowired
     private I18Helper i18Helper;
 
-    @RequestMapping(value = "/public/api/download")
+    @ApiOperation(value = "Download a public static file")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad request")
+    })
+    @RequestMapping(value = URL_DOWNLOADS, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> publicDownload(@RequestParam(name = "id", required = true) Long id) {
 
-        StaticFile staticFile = fileService.findById(id);
+        final StaticFile staticFile = fileService.findById(id);
 
         if (staticFile.getRole() != null) {
-            throw new ApiException(i18Helper.getMessage("Keine Berechtigung für diese Resource"), HttpStatus.UNAUTHORIZED);
+            throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
         }
 
         if (staticFile != null) {
