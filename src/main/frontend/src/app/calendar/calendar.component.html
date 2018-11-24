@@ -52,8 +52,11 @@
           </button>
         </div>
         <div class="modal-body">
-          Um alle Anlässe in dein Mobiltelefon zu importieren, einfach den QR Code scannen:
-          <qrcode [qrdata]="subscribe_url" [size]="256" [level]="'M'"></qrcode>
+          Um alle Anlässe in dein Mobiltelefon zu importieren, einfach den QR Code scannen:<br/><br/>
+          <b>Alle Anlässe:</b>
+          <qrcode [qrdata]="subscribe_url" [size]="125" [level]="'M'"></qrcode><br/><br/>
+          <b>Nur öffentliche:</b>
+          <qrcode [qrdata]="subscribe_url + '?publicOnly=true'" [size]="125" [level]="'M'"></qrcode>
         </div>
       </div>
     </div>
