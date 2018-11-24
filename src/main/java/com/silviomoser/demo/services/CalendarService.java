@@ -2,18 +2,14 @@ package com.silviomoser.demo.services;
 
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
-import biweekly.property.DateTimeStamp;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.repository.CalendarEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +53,7 @@ public class CalendarService {
 
 
     private Date localDateToDate(LocalDateTime localDateTime) {
-        ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
+        final ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
     }
 }
