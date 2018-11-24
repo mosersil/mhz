@@ -23,7 +23,7 @@ public class ContactMailApi {
     private ContactService contactService;
 
     @Autowired
-            private I18Helper i18Helper;
+    private I18Helper i18Helper;
 
     final TtlMap<String, String> hitCache = new TtlMap<>(TimeUnit.SECONDS, 10);
 
@@ -33,7 +33,7 @@ public class ContactMailApi {
 
         EmailStatus emailStatus = new EmailStatus();
 
-        if (hitCache.get(request.getRemoteAddr())==null) {
+        if (hitCache.get(request.getRemoteAddr()) == null) {
             hitCache.put(request.getRemoteAddr(), request.getRemoteAddr());
             emailStatus = contactService.sendSimpleMail(emailModel);
         } else {

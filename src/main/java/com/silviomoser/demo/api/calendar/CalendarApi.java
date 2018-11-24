@@ -42,7 +42,7 @@ public class CalendarApi implements ApiController {
     CalendarService calendarService;
 
 
-    @CrossOrigin(origins = "*")
+
     @ApiOperation(value = "List events starting from a given date")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = CalendarEvent.class),
