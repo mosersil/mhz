@@ -26,6 +26,7 @@ import {PaymentComponent} from './payment/payment.component';
 import {NgxStripeModule} from 'ngx-stripe';
 import {TransactionsComponent} from './transactions/transactions.component';
 import {TokenInterceptor} from "./token-interceptor";
+import {QRCodeModule} from "angularx-qrcode";
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import {TokenInterceptor} from "./token-interceptor";
     FormsModule,
     ReactiveFormsModule,
     AngularFontAwesomeModule,
+    QRCodeModule,
     NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
   ],
   declarations: [

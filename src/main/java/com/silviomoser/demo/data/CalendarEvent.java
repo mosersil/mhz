@@ -22,8 +22,13 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
 
     @NotNull
     @PdfReport(header = "Datum")
-    @Column(name = "DATE")
-    private LocalDateTime date;
+    @Column(name = "DATE_START")
+    private LocalDateTime dateStart;
+
+
+    @NotNull
+    @Column(name = "DATE_END")
+    private LocalDateTime dateEnd;
 
     @NotNull
     @Column(name = "TITLE")
@@ -61,6 +66,6 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
 
     @Override
     public int compareTo(CalendarEvent o) {
-            return this.getDate().compareTo(o.getDate());
+            return this.getDateStart().compareTo(o.getDateStart());
     }
 }
