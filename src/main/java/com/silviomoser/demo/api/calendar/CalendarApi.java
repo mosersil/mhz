@@ -4,6 +4,7 @@ import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import biweekly.property.DateTimeStamp;
+import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.repository.CalendarEventRepository;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @Slf4j
-public class CalendarApi {
+public class CalendarApi implements ApiController {
 
     @Autowired
     CalendarEventRepository repository;
@@ -41,13 +42,13 @@ public class CalendarApi {
     CalendarService calendarService;
 
 
-    @CrossOrigin(origins = "*")
+
     @ApiOperation(value = "List events starting from a given date")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = CalendarEvent.class),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    @RequestMapping(value = "/public/api/calendar", method = RequestMethod.GET)
+    @RequestMapping(value = URL_CALENDAR, method = RequestMethod.GET)
     public List<CalendarEvent> list(@RequestParam(name = "max", required = false) Integer max,
                                     @RequestParam(name = "startFrom", required = false) String startFrom,
                                     @RequestParam(name = "publicOnly", required = false, defaultValue = "false") boolean publicOnly) {

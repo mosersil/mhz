@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {NewsService} from "../../news.service";
-import {Person} from "../../person";
 import {AuthenticationService} from "../../authentication.service";
-import {Observable, Subject, Subscription} from "rxjs";
 import {Router} from "@angular/router";
 
 

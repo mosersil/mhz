@@ -1,11 +1,18 @@
 package com.silviomoser.demo.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class PwResetConfiguration {
 
+    @NotBlank
     private String emailFrom;
+    @NotBlank
+    private String landingPage;
+
 }

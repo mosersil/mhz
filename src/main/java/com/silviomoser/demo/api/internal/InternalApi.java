@@ -15,6 +15,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,7 +54,7 @@ public class InternalApi {
         return pdfResponse(bis, "jahresprogramm"+year);
     }
 
-
+    @PreAuthorize("hasAuthority('ROLE_DATAVIEWER')")
     @RequestMapping(value="/internal/api/addresslist", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "organization", required = true) String  organization) throws DocumentException {
         final ByteArrayInputStream bis = PdfBuilder.generatePdfListReport(addressListRepository.findByOrganization(organization), AddressListEntry.class);

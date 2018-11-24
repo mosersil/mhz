@@ -12,7 +12,6 @@ export class CalendarComponent implements OnInit {
   backendUrl: string = environment.backendUrl;
   events;
   showOnlyPublic: boolean = true;
-  subscribeCalendarQrCode: string = "test"
   subscribe_url: string = environment.backendUrl+'/public/api/ical'
 
   constructor(private _calendarService: CalendarService) {

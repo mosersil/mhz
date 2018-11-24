@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Person} from "../person";
 import {AuthenticationService} from "../authentication.service";
 import {environment} from "../../environments/environment";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {saveAs} from "file-saver";
 
 
@@ -35,7 +35,7 @@ export class InternalComponent implements OnInit {
   }
 
   downloadFile(uri: string) {
-    this.http.get(this.backendUrl+uri, {responseType: 'blob'}).subscribe(response => {
+    this.http.get(this.backendUrl + uri, {responseType: 'blob'}).subscribe(response => {
       console.log("get successful")
       try {
         let isFileSaverSupported = !!new Blob;
@@ -43,7 +43,7 @@ export class InternalComponent implements OnInit {
         console.log(e);
         return;
       }
-      let blob = new Blob([response], { type: 'image/jpeg' });
+      let blob = new Blob([response], {type: 'image/jpeg'});
       saveAs(blob, `file.png`);
     });
   }

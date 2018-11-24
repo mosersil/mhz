@@ -21,12 +21,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     @Autowired
-    private SecurityUserDetailsService  customUserDetailsService;
+    private SecurityUserDetailsService customUserDetailsService;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getHeader("Authorization")!=null && !request.getHeader("Authorization").isEmpty()) {
+        if (request.getHeader("Authorization") != null && !request.getHeader("Authorization").isEmpty()) {
             log.debug("enter JwtAuthenticationFilter");
             try {
                 String jwt = getJwtFromRequest(request);
