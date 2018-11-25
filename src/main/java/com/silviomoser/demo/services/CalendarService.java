@@ -4,15 +4,20 @@ import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.repository.CalendarEventRepository;
+import com.silviomoser.demo.utils.PdfBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
 @Service
 public class CalendarService {
@@ -21,7 +26,7 @@ public class CalendarService {
     private CalendarEventRepository calendarEventRepository;
 
 
-    public ICalendar getSubscribeCalendarEvents(boolean publicOnly) {
+    public ICalendar getIcalCalendar(boolean publicOnly) {
         final LocalDateTime localDate = LocalDateTime.now().minusYears(1);
         List<CalendarEvent> calendarEventList = calendarEventRepository.findCalendarEventsFromStartDate(localDate);
 
@@ -43,12 +48,16 @@ public class CalendarService {
             event.setSummary(it.getTitle());
             event.setDescription(it.getRemarks());
             event.setLocation(it.getLocation());
-
-
             ical.addEvent(event);
         });
-
         return ical;
+    }
+
+    public List<CalendarEvent> getAllEventsForCurrentYear(int year) {
+        final LocalDate now = LocalDate.now();
+        final LocalDate from = LocalDate.of(year, 1, 1);
+        final LocalDate to = from.with(lastDayOfYear());
+        return calendarEventRepository.findCalendarEventsBetween(from.atStartOfDay(), to.atTime(23, 59));
     }
 
 

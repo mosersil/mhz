@@ -2,6 +2,7 @@ package com.silviomoser.demo.data;
 
 import com.silviomoser.demo.data.type.Gender;
 import com.silviomoser.demo.utils.PdfReport;
+import com.silviomoser.demo.utils.XlsReport;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
@@ -17,21 +18,27 @@ import javax.persistence.Table;
 public class AddressListEntry  extends AbstractEntity {
 
     @PdfReport(header = "Anrede")
+    @XlsReport(header = "Anrede")
     @Column(name = "GENDER")
     private Gender gender;
     @PdfReport(header = "Vorname")
+    @XlsReport(header = "Vorname")
     @Column(name = "FIRST_NAME")
     private String firstName;
+    @XlsReport(header = "Name")
     @PdfReport(header = "Name")
     @Column(name = "LAST_NAME")
     private String lastName;
     @PdfReport(header = "Adresse")
+    @XlsReport(header = "Adresse")
     @Column(name = "ADDRESS")
     private String address;
     @PdfReport(header = "PLZ")
+    @XlsReport(header = "PLZ")
     @Column(name = "ZIP")
     private String zip;
     @PdfReport(header = "Ort")
+    @XlsReport(header = "Ort")
     @Column(name = "CITY")
     private String city;
     @Column(name = "ORGANIZATION")

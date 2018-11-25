@@ -2,6 +2,8 @@ package com.silviomoser.demo.api.internal;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.itextpdf.text.DocumentException;
+import com.silviomoser.demo.api.core.ApiController;
+import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.AddressListEntry;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.data.Person;
@@ -9,6 +11,10 @@ import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.repository.AddressListRepository;
 import com.silviomoser.demo.repository.CalendarEventRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
+import com.silviomoser.demo.services.AddressListFormat;
+import com.silviomoser.demo.services.AddresslistService;
+import com.silviomoser.demo.services.CalendarService;
+import com.silviomoser.demo.services.ServiceException;
 import com.silviomoser.demo.utils.PdfBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +23,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
+import java.util.Map;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
@@ -32,49 +41,41 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
  */
 @RestController
 @Slf4j
-public class InternalApi {
+public class InternalApi implements ApiController {
 
     @Autowired
-    CalendarEventRepository calendarEventRepository;
+    CalendarService calendarService;
 
     @Autowired
-    AddressListRepository addressListRepository;
+    private AddresslistService addresslistService;
 
-    @JsonView(Views.Public.class)
-    @RequestMapping("/internal/api/user")
-    public Person my() {
-        return SecurityUtils.getMe();
-    }
-
-
-    @RequestMapping(value="/internal/api/calendar", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> getPDF(@RequestParam(name = "year", required = false) String  year) {
-        final LocalDate now = LocalDate.now();
-        final LocalDate from = LocalDate.of(Integer.parseInt(year), 1, 1);
-        final LocalDate to = from.with(lastDayOfYear());;
-        final ByteArrayInputStream bis = PdfBuilder.generatePdfListReport(calendarEventRepository.findCalendarEventsBetween(from.atStartOfDay(), to.atTime(23, 59)), CalendarEvent.class);
-        return pdfResponse(bis, "jahresprogramm"+year);
+    @PreAuthorize("hasAuthority('ROLE_DATAVIEWER')")
+    @RequestMapping(value = URL_INTERNAL_CALENDAR, method = RequestMethod.GET)
+    public ModelAndView getPDF(@RequestParam(name = "year", required = false) String year,
+                                                      @RequestParam(name = "format") AddressListFormat format) {
+        try {
+            int currentYear = Integer.parseInt(year);
+            log.debug("Assemble calendar for year {} in format {}", year, format);
+            return new ModelAndView(format.name(), "entries", calendarService.getAllEventsForCurrentYear(currentYear));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ApiException(e.getMessage());
+        }
     }
 
     @PreAuthorize("hasAuthority('ROLE_DATAVIEWER')")
-    @RequestMapping(value="/internal/api/addresslist", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "organization", required = true) String  organization) {
-        log.debug("enter getAddressList");
-        final ByteArrayInputStream bis = PdfBuilder.generatePdfListReport(addressListRepository.findByOrganization(organization), AddressListEntry.class);
-        return pdfResponse(bis, organization);
+    @RequestMapping(value = URL_INTERNAL_ADDRESSLIST, method = RequestMethod.GET)
+    public ModelAndView getAddressList(@RequestParam(name = "organization") String organization,
+                                       @RequestParam(name = "format") AddressListFormat format) {
+        try {
+            log.debug("Assemble document {} in format {}", organization, format);
+            return new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organization));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ApiException(e.getMessage());
+        }
+
     }
 
-
-
-    private ResponseEntity<InputStreamResource> pdfResponse(ByteArrayInputStream bis, String fileName) {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", String.format("inline; filename=%s.pdf", fileName));
-
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
-    }
 
 }

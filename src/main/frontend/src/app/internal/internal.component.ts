@@ -4,6 +4,7 @@ import {AuthenticationService} from "../authentication.service";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {saveAs} from "file-saver";
+import {RequestOptions, ResponseContentType} from "@angular/http";
 
 
 @Component({
@@ -16,6 +17,8 @@ export class InternalComponent implements OnInit {
   backendUrl: string = environment.backendUrl;
   person: Person = new Person();
   errorMessage = null;
+  year_actual = 2018
+  year_next = 2019
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
   }
@@ -34,20 +37,36 @@ export class InternalComponent implements OnInit {
     )
   }
 
-  downloadFile(uri: string) {
-    this.http.get(this.backendUrl + uri, {responseType: 'blob'}).subscribe(response => {
-      console.log("get successful")
-      try {
-        let isFileSaverSupported = !!new Blob;
-      } catch (e) {
-        console.log(e);
-        return;
-      }
-      let blob = new Blob([response], {type: 'image/jpeg'});
-      saveAs(blob, `file.png`);
-    });
+
+  downloadFile(uri: string, type: string) {
+    this.http.get(environment.backendUrl + uri, {
+      responseType: 'arraybuffer'
+    })
+      .subscribe(response => this.downLoadFile(response, type));
   }
 
+  /**
+   * Method is use to download file.
+   * @param data - Array Buffer data
+   * @param type - type of the document.
+   */
+  downLoadFile(data: any, type: string) {
+    var blob = new Blob([data], {type: type});
 
-
+    switch (type) {
+      case 'application/vnd.ms-excel':
+        saveAs(blob, 'download.xls');
+        break;
+      case 'application/pdf':
+        saveAs(blob, 'download.pdf')
+        break;
+    }
+    /*
+    var url = window.URL.createObjectURL(blob);
+    var pwa = window.open(url);
+    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+      alert('Bitte popup-blocker in Ihrem browser deaktivieren.');
+    }
+    */
+  }
 }

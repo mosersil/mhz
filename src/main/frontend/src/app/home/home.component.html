@@ -53,10 +53,10 @@
             <p class="card-text">Unsere nächsten Termine:</p>
             <ul class="list-group" *ngFor=" let event of events">
               <li class="list-group-item border-0" *ngIf="!event.isFullDay">
-                {{event.date | date : "dd.MM.yyyy"}} : {{event.title}} ({{event.date | date : "hh:mm"}})
+                {{event.dateStart | date : "dd.MM.yyyy"}} : {{event.title}} ({{event.dateStart | date : "hh:mm"}})
               </li>
               <li class="list-group-item border-0" *ngIf="event.isFullDay">
-                {{event.date | date : "dd.MM.yyyy"}} : {{event.title}}
+                {{event.dateStart | date : "dd.MM.yyyy"}} : {{event.title}}
               </li>
             </ul>
             <a class="btn btn-primary" routerLink="/calendar">Alle unsere Auftritte</a>

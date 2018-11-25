@@ -2,6 +2,7 @@ package com.silviomoser.demo.data;
 
 import com.silviomoser.demo.data.type.DressCode;
 import com.silviomoser.demo.utils.PdfReport;
+import com.silviomoser.demo.utils.XlsReport;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,38 +23,46 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
 
     @NotNull
     @PdfReport(header = "Datum")
+    @XlsReport(header = "Beginn")
     @Column(name = "DATE_START")
     private LocalDateTime dateStart;
 
 
     @NotNull
     @Column(name = "DATE_END")
+    @XlsReport(header = "Ende")
     private LocalDateTime dateEnd;
 
     @NotNull
     @Column(name = "TITLE")
     @PdfReport(header = "Anlass")
+    @XlsReport(header = "Anlass")
     private String title;
 
     @Column(name = "FULL_DAY")
+    @XlsReport(header = "Ganztägig")
     private boolean fullDay;
 
     @Column(name = "PUBLIC_EVENT")
+    @XlsReport(header = "Öffentlich")
     private boolean publicEvent;
 
     @Column(name="ADVERTISE")
     private boolean advertise;
 
     @PdfReport(header = "Bemerkungen")
+    @XlsReport(header = "Bemerkungen")
     @Column(name = "REMARKS")
     private String remarks;
 
     @PdfReport(header = "Ort")
+    @XlsReport(header = "Ort")
     @Column(name = "LOCATION")
     private String location;
 
     @Column(name="DRESS_CODE")
     @PdfReport(header = "Tenue")
+    @XlsReport(header = "Tenue")
     private DressCode dressCode;
 
     @OneToMany(fetch = FetchType.EAGER,
