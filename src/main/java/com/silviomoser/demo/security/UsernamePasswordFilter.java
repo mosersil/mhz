@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by silvio on 30.07.18.
  */
-public class CustomFilter extends UsernamePasswordAuthenticationFilter {
+public class UsernamePasswordFilter extends UsernamePasswordAuthenticationFilter {
 
 
     @Override

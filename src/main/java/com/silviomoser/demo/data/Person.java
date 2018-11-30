@@ -2,6 +2,7 @@ package com.silviomoser.demo.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.Gender;
+import com.silviomoser.demo.utils.OrganizationUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +10,8 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -76,6 +79,12 @@ public class Person extends AbstractEntity {
 
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private PersonVerification personVerification;
+
+    @JsonView(Views.Public.class)
+    @Transient
+    public List<String> getOrganizations() {
+        return OrganizationUtils.getActiveOrganizations(this);
+    }
 
     @Override
     public String toString() {

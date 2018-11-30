@@ -2,8 +2,6 @@ package com.silviomoser.demo.api.calendar;
 
 import biweekly.Biweekly;
 import biweekly.ICalendar;
-import biweekly.component.VEvent;
-import biweekly.property.DateTimeStamp;
 import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.CalendarEvent;
@@ -14,14 +12,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -42,7 +34,7 @@ public class CalendarApi implements ApiController {
     CalendarService calendarService;
 
 
-
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "List events starting from a given date")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = CalendarEvent.class),
@@ -83,7 +75,7 @@ public class CalendarApi implements ApiController {
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/public/api/ical", produces = "text/calendar", method = RequestMethod.GET)
     public String calendarDownload(@RequestParam(name = "publicOnly", required = false, defaultValue = "false") boolean publicOnly) {
-        final ICalendar calendar = calendarService.getSubscribeCalendarEvents(publicOnly);
+        final ICalendar calendar = calendarService.getIcalCalendar(publicOnly);
         return Biweekly.write(calendar).go();
     }
 

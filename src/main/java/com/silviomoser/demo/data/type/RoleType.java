@@ -6,7 +6,8 @@ import com.silviomoser.demo.ui.i18.I18Helper;
 public enum RoleType implements HasLabel{
 
     USER("role_user"),
-    ADMIN("role_admin");
+    ADMIN("role_admin"),
+    DATAVIEWER("role_dataviewer");
 
     String tag;
 

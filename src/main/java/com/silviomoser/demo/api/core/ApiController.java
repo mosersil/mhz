@@ -7,4 +7,7 @@ public interface ApiController {
     String URL_AUTH_USER = "/auth/user";
     String URL_AUTH_INITPWRESET = "/auth/initPwReset";
     String URL_AUTH_REDEEMTOKEN = "/auth/redeemToken";
+
+    String URL_INTERNAL_ADDRESSLIST = "/api/protected/internal/addresslist";
+    String URL_INTERNAL_CALENDAR = "/api/protected/internal/calendar";
 }

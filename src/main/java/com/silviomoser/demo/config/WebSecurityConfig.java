@@ -1,7 +1,11 @@
 package com.silviomoser.demo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.silviomoser.demo.security.*;
+import com.silviomoser.demo.security.AuthenticationResult;
+import com.silviomoser.demo.security.UsernamePasswordFilter;
+import com.silviomoser.demo.security.JwtAuthenticationFilter;
+import com.silviomoser.demo.security.JwtTokenProvider;
+import com.silviomoser.demo.security.SecurityUserDetailsService;
 import com.vaadin.spring.annotation.EnableVaadin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CustomFilter authenticationFilter() throws Exception {
-        CustomFilter authenticationFilter
-                = new CustomFilter();
+    public UsernamePasswordFilter authenticationFilter() throws Exception {
+        UsernamePasswordFilter authenticationFilter
+                = new UsernamePasswordFilter();
         authenticationFilter.setAuthenticationSuccessHandler(this::loginSuccessHandler);
         authenticationFilter.setAuthenticationFailureHandler(this::loginFailureHandler);
         authenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
@@ -135,7 +139,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/internal/api/**").hasRole("USER")
                 .antMatchers("/api/protected/**").hasRole("USER")
                 .and()
-                .addFilterBefore(authenticationFilter(), CustomFilter.class);
+                .addFilterBefore(authenticationFilter(), UsernamePasswordFilter.class)
+                .addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordFilter.class);
 
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/");
 

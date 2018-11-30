@@ -31,3 +31,5 @@
 
 #Generated frontend
 /src/main/resources/static
+
+/logs

@@ -14,7 +14,6 @@ import * as jwt_decode from 'jwt-decode';
 export class AuthenticationService {
 
 
-  forward: string
 
   me: Person;
   authenticated: boolean
@@ -28,7 +27,9 @@ export class AuthenticationService {
     this.authenticated_change.subscribe(value => {
       this.authenticated = value;
     })
-    this.getMe();
+    if (this.authenticated == undefined) {
+      this.getMe();
+    }
   }
 
 
