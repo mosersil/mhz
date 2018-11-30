@@ -30,6 +30,6 @@
 
 
 #Generated frontend
-#/src/main/resources/static
+/src/main/resources/static
 
 /logs
