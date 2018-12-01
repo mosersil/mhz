@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {GalleryItem, ImageItem} from "@ngx-gallery/core";
 
 @Component({
   selector: 'app-social',
@@ -7,10 +8,19 @@ import {Component, OnInit} from '@angular/core';
 })
 export class SocialComponent implements OnInit {
 
+  images: GalleryItem[];
+
   constructor() {
   }
 
   ngOnInit() {
+
+      // Set gallery items array
+      this.images = [
+        new ImageItem({ src: '/assets/logo/logo.jpg', thumb: '/assets/logo/logo.jpg' }),
+        new ImageItem({ src: '/assets/images/1.jpg', thumb: '/assets/images/1.jpg' })
+  ];
+
   }
 
 }
