@@ -8,8 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +27,15 @@ public class Person extends AbstractEntity {
     @JsonView(Views.Public.class)
     @NotNull
     @Column(name = "FIRST_NAME", nullable = false, length = 30)
+    @Size(min = 2, max = 30)
+    @Pattern(regexp = "[A-Z][a-z]+")
     private String firstName;
 
     @JsonView(Views.Public.class)
     @NotNull
     @Column(name = "LAST_NAME", nullable = false, length = 30)
+    @Size(min = 2, max = 30)
+    @Pattern(regexp = "[A-Za-z\\s]+")
     private String lastName;
 
     @JsonView(Views.Public.class)
@@ -42,25 +45,31 @@ public class Person extends AbstractEntity {
 
     @JsonView(Views.Public.class)
     @NotNull
+    @Pattern(regexp = "[A-Za-z\\s]+")
     @Column(name = "ADDRESS1", nullable = false, length = 50)
     private String address1;
 
     @JsonView(Views.Public.class)
+    //@Pattern(regexp = "[a-z]+")
     @Column(name = "ADDRESS2", length = 50)
     private String address2;
 
     @JsonView(Views.Public.class)
+    //@Pattern(regexp = "[0-9]+")
     @Column(name = "ZIP", nullable = false, length = 10)
     private String zip;
 
     @JsonView(Views.Public.class)
+    //@Pattern(regexp = "[A-Z][a-z\\s]+")
     @Column(name = "CITY", nullable = false, length = 30)
     private String city;
 
     @Column(name = "LANDLINE", length = 20)
+    //@Pattern(regexp = "[0-9]+")
     private String landline;
 
     @Column(name = "MOBILE", length = 20)
+    //@Pattern(regexp = "[0-9]+")
     private String mobile;
 
     @Email
@@ -86,20 +95,4 @@ public class Person extends AbstractEntity {
         return OrganizationUtils.getActiveOrganizations(this);
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", gender=" + gender +
-                ", address1='" + address1 + '\'' +
-                ", address2='" + address2 + '\'' +
-                ", zip='" + zip + '\'' +
-                ", city='" + city + '\'' +
-                ", landline='" + landline + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", email='" + email + '\'' +
-                ", user=" + user +
-                '}';
-    }
 }

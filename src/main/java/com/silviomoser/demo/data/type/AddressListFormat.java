@@ -1,4 +1,4 @@
-package com.silviomoser.demo.services;
+package com.silviomoser.demo.data.type;
 
 public enum AddressListFormat {
     PDF,XLS

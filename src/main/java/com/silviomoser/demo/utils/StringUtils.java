@@ -37,4 +37,16 @@ public class StringUtils {
     public static boolean isValidEmailAddress(String input) {
         return  (isNotBlank(input) && EmailValidator.getInstance().isValid(input));
     }
+
+    public static String capitalizeFirstCharacter(String input) {
+        if (input!=null) {
+            input=input.trim();
+            if (input.length()>1) {
+                input = input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+            } else {
+                return input.toUpperCase();
+            }
+        }
+        return input;
+    }
 }

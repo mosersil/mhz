@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static com.silviomoser.demo.utils.StringUtils.capitalizeFirstCharacter;
 import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
 
 public class PersonBuilder {
@@ -39,7 +40,7 @@ public class PersonBuilder {
 
     public PersonBuilder firstName(String firstName) {
         if (isNotBlank(firstName)) {
-            this.firstName = firstName;
+            this.firstName = capitalizeFirstCharacter(firstName);
         }
         return this;
     }
