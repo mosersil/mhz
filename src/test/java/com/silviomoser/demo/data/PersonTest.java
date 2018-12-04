@@ -1,7 +1,6 @@
 package com.silviomoser.demo.data;
 
 
-import com.silviomoser.demo.data.builder.PersonBuilder;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -29,15 +28,21 @@ public class PersonTest {
         Person person = new Person();
 
         Set<ConstraintViolation<Person>> violations = validator.validate(person);
-        assertThat(violations).hasSize(3);
+        assertThat(violations).hasSize(4);
     }
 
     @DataProvider(name = "testValidFirstNameDp")
     private Object[][] testValidFirstName() {
         return new Object[][] {
                 {"Silvio", true},
+                {"silvio", true},
+                {"环保部", true},
+                {"Hans-Rudolf", true},
+                {"Arkadius Vincenz", true},
                 {" Silvio", false},
-                {"silvio", false}
+                {"Silvio ", false},
+                {"SELECT * FROM", false},
+                {"<script>", false}
         };
     }
 
@@ -51,7 +56,32 @@ public class PersonTest {
         } else {
             assertThat(violations).isNotEmpty();
         }
+    }
 
+    @DataProvider(name = "testValidLastNameDp")
+    private Object[][] testValidLastNameDp() {
+        return new Object[][] {
+                {"Moser", true},
+                {"von Moser", true},
+                {"Häberli", true},
+                {"Moser-Katalevskaya", true},
+                {"环保部", true},
+                {" Moser", false},
+                {"SELECT * FROM", false},
+                {"<script>", false}
+        };
+    }
+
+    @Test(dataProvider = "testValidLastNameDp")
+    public void testValidLastName(String lastName, boolean isValid) {
+        Person person = new Person();
+        person.setLastName(lastName);
+        Set<ConstraintViolation<Person>> violations = validator.validateProperty(person, "lastName");
+        if (isValid) {
+            assertThat(violations).isEmpty();
+        } else {
+            assertThat(violations).isNotEmpty();
+        }
     }
 
 }

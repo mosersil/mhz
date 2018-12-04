@@ -4,7 +4,6 @@ import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.PersonVerification;
 import com.silviomoser.demo.data.User;
-import com.silviomoser.demo.data.builder.PersonBuilder;
 import com.silviomoser.demo.data.type.RoleType;
 import com.silviomoser.demo.repository.PersonRepository;
 import com.silviomoser.demo.repository.PersonVerificationRepository;
@@ -53,7 +52,7 @@ public class PersonRegistrationApi {
     public ResponseEntity<Long> registerPerson(Locale locale, @RequestBody PersonRegistrationDataSubmission registrationDataSubmission) {
         log.debug("called registerPerson: {}", registrationDataSubmission);
         try {
-            final Person person = new PersonBuilder()
+            final Person person = Person.builder()
                     .gender(registrationDataSubmission.getGender())
                     .firstName(registrationDataSubmission.getFirstName())
                     .lastName(registrationDataSubmission.getLastName())
