@@ -28,11 +28,15 @@ import {TransactionsComponent} from './transactions/transactions.component';
 import {TokenInterceptor} from "./token-interceptor";
 import { ForgotLandingComponent } from './forgot-landing/forgot-landing.component';
 import {QRCodeModule} from "angularx-qrcode";
+import {NgxPopperModule} from "ngx-popper";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {GalleryModule} from "@ngx-gallery/core";
 
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     UiModule,
     HttpClientModule,
     AppRoutingModule,
@@ -40,6 +44,8 @@ import {QRCodeModule} from "angularx-qrcode";
     ReactiveFormsModule,
     AngularFontAwesomeModule,
     QRCodeModule,
+    NgxPopperModule,
+    GalleryModule.withConfig({ dots: true, thumbPosition: "top", imageSize: "contain" }),
     NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
   ],
   declarations: [

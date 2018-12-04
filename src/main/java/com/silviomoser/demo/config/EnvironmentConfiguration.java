@@ -50,6 +50,14 @@ public class EnvironmentConfiguration {
     }
 
     @Bean
+    public ImageServiceConfiguration imageServiceConfiguration() {
+        final ImageServiceConfiguration imageServiceConfiguration = new ImageServiceConfiguration();
+        imageServiceConfiguration.setBaseUrl(environment.getProperty("image.baseurl", "http://localhost:8085"));
+        imageServiceConfiguration.setStoragePath(environment.getProperty("image.storagePath", "/opt/mhz/images/"));
+        return imageServiceConfiguration;
+    }
+
+    @Bean
     @RequestScope
     public I18Helper i18Helper() {
         return new I18Helper();
