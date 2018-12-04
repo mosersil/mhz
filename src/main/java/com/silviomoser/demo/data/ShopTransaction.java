@@ -22,6 +22,7 @@ public class ShopTransaction extends AbstractEntity implements Comparable<ShopTr
 
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
+    @ToString.Exclude
     private Person person;
 
     @JsonView(Views.Public.class)

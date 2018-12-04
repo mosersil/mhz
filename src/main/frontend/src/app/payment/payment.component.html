@@ -6,11 +6,12 @@
 
   <div class="col-sm-12 form-group">
 
-    <form novalidate (ngSubmit)="buy()" [formGroup]="stripeTest">
-      <input type="text" formControlName="name" placeholder="Jane Doe">
+    <form name="form" (ngSubmit)="f.form.valid && buy()" #f="ngForm" novalidate>
+      <label for="cardHolder">Karteninhaber</label>
+      <input id="cardHolder" type="text" formControlName="name" placeholder="{{cardholder}}">
       <div id="card-element" class="field"></div>
-      <button type="submit">
-        BUY
+      <button class="btn btn-primary" type="submit">
+        Bezahlen
       </button>
     </form>
   </div>

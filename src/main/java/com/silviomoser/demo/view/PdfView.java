@@ -1,15 +1,11 @@
 package com.silviomoser.demo.view;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.silviomoser.demo.data.AbstractEntity;
+import com.silviomoser.demo.data.ShopTransaction;
 import com.silviomoser.demo.data.type.HasLabel;
 import com.silviomoser.demo.utils.PdfReport;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -18,8 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,9 +31,42 @@ public class PdfView extends AbstractITextPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<AbstractEntity> items = (List<AbstractEntity>) model.get("entries");
-        Class type = items.get(0).getClass();
-        generatePdfListReport(items, type, document);
+        if (model.containsKey("entries")) {
+            List<AbstractEntity> items = (List<AbstractEntity>) model.get("entries");
+            Class type = items.get(0).getClass();
+            generatePdfListReport(items, type, document);
+        }
+        if (model.containsKey("transaction")) {
+            ShopTransaction transaction = (ShopTransaction) model.get("transaction");
+            generatePdfTransaction(transaction, document);
+        }
+    }
+
+    private void generatePdfTransaction(ShopTransaction transaction, Document document) {
+        try {
+            Image logo = Image.getInstance("classpath:logo/logo.jpg");
+            logo.scaleToFit(100, 100);
+
+            Paragraph documentTitle = new Paragraph(String.format("Ihr einkauf vom %s", transaction.getDate()));
+
+
+            com.itextpdf.text.List list = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            ListItem item = new ListItem(transaction.getPerson().getFirstName());
+            item.setAlignment(Element.ALIGN_JUSTIFIED);
+            list.add(item);
+
+            document.add(logo);
+            document.add(documentTitle);
+
+            document.add(list);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static <T> void generatePdfListReport(List<T> items, Class<T> tClass, Document document) {
@@ -64,7 +95,7 @@ public class PdfView extends AbstractITextPdfView {
         try {
             for (T it : items) {
                 final List<String> line = new ArrayList<>();
-                index=0;
+                index = 0;
                 for (Field f : tClass.getDeclaredFields()) {
                     final Annotation[] annotations = f.getDeclaredAnnotations();
                     for (Annotation annotation : annotations) {
@@ -73,7 +104,7 @@ public class PdfView extends AbstractITextPdfView {
                             String out;
                             if (object.getClass() == LocalDateTime.class) {
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                                out = ((LocalDateTime)object).format(formatter);
+                                out = ((LocalDateTime) object).format(formatter);
                             } else {
                                 if (object instanceof HasLabel) {
                                     out = ((HasLabel) object).getLabel();
@@ -82,7 +113,7 @@ public class PdfView extends AbstractITextPdfView {
                                 }
                             }
                             line.add(out);
-                            if (out.length()> maxLengths[index]) {
+                            if (out.length() > maxLengths[index]) {
                                 maxLengths[index] = out.length();
                             }
                             index++;

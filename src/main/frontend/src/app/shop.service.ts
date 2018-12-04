@@ -126,5 +126,9 @@ export class ShopService {
     return this.http.get(environment.backendUrl + "/api/protected/shop/transaction?id=" + this.purchaseId);
   }
 
+  getMyTransactions() {
+    return this.http.get(environment.backendUrl+"/api/protected/shop/transactions");
+  }
+
 
 }

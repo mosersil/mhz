@@ -24,6 +24,7 @@ public class ShopItemPurchase extends AbstractEntity {
     @Column(name = "AMOUNT")
     private int amount;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "SHOP_TRANSACTION_ID")
     private ShopTransaction transaction;

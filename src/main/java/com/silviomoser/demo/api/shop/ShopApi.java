@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -131,16 +132,23 @@ public class ShopApi {
     }
 
 
-    @RequestMapping(value = "/api/protected/shop/receipt", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "id", required = true) long id) throws DocumentException {
+    @RequestMapping(value = "/api/protected/shop/receipt", method = RequestMethod.GET)
+    public ModelAndView getReceipt(@RequestParam(name = "id") long id) {
         ShopTransaction shopTransaction = shopTransactionRepository.findById(id).get();
         if (shopTransaction.getPerson().equals(SecurityUtils.getMe())) {
-            ByteArrayInputStream bis = PdfBuilder.generateReceipt(shopTransaction);
-            return pdfResponse(bis, "receipt");
+            try {
+                log.debug("Assemble document {} in format {}", id, "PDF");
+                return new ModelAndView("PDF", "transaction", shopTransaction);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                throw new ApiException(e.getMessage());
+            }
         }
         throw new ApiException("Invalid request");
 
     }
+
+
 
 
     private ResponseEntity<InputStreamResource> pdfResponse(ByteArrayInputStream bis, String fileName) {
