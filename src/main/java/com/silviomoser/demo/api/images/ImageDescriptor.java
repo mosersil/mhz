@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class ImageDescriptor {
-    int height;
-    int width;
-    String resource;
+    String src;
+    String thumb;
 }

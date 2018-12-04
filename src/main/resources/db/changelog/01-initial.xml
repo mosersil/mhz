@@ -305,6 +305,32 @@
             </column>
         </createTable>
 
+        <createTable tableName="IMAGE">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+
+            <column name="DATE" type="date">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="RAW" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="THUMBNAIL" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="DESCRIPTION" type="varchar(200)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="APPROVED" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
 
         <createView viewName="VIEW_ADDRESSLIST">
             SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, CONCAT(P.ADDRESS1, CHAR(13), P.ADDRESS2) AS ADDRESS,

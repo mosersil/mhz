@@ -45,7 +45,7 @@ import {GalleryModule} from "@ngx-gallery/core";
     AngularFontAwesomeModule,
     QRCodeModule,
     NgxPopperModule,
-    GalleryModule,
+    GalleryModule.withConfig({ dots: true, thumbPosition: "top", imageSize: "contain" }),
     NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
   ],
   declarations: [
