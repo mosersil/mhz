@@ -57,4 +57,21 @@ public class StringUtilsTest {
     public void testIsValidEmailAddress(String input, boolean expected) {
         assertThat(StringUtils.isValidEmailAddress(input)).isEqualTo(expected);
     }
+
+    @DataProvider(name = "testCapitalizeFirstDp")
+    public Object[][] testCapitalizeFirstDp() {
+        return new Object[][]{
+                {null, null},
+                {"max", "Max"},
+                {"  max", "Max"},
+                {"m", "M"},
+                {"", ""},
+                {" ", ""}
+        };
+    }
+
+    @Test(dataProvider = "testCapitalizeFirstDp")
+    public void testCapitalizeFirst(String input, String expected) {
+        assertThat(StringUtils.capitalizeFirstCharacter(input)).isEqualTo(expected);
+    }
 }

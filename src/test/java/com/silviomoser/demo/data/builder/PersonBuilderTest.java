@@ -31,7 +31,7 @@ public class PersonBuilderTest {
     @Test(dataProvider = "testBulidDp")
     public void testBulid(String gender, String firstName, String lastName, String address1, String address2, String zip,
                           String city, String email, String password, String roles, String landline, String mobile) {
-        Person person = new PersonBuilder()
+        Person person = Person.builder()
                 .gender(gender)
                 .firstName(firstName)
                 .lastName(lastName)
