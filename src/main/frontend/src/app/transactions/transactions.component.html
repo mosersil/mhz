@@ -14,7 +14,6 @@
 
 
     <tr *ngFor="let transaction of transactions">
-      <th scope="row">x</th>
       <td>{{transaction.date}}</td>
       <td>
         <ul *ngFor="let purchase of transaction.shopItemPurchases">

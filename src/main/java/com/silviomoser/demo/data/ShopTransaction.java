@@ -2,6 +2,7 @@ package com.silviomoser.demo.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
+import com.silviomoser.demo.data.type.ShopPaymentType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -36,6 +37,10 @@ public class ShopTransaction extends AbstractEntity implements Comparable<ShopTr
     @JsonView(Views.Public.class)
     @Column(name = "STATUS")
     private ShopOrderStatusType status = ShopOrderStatusType.INITIATED;
+
+    @JsonView(Views.Public.class)
+    @Column(name = "PAYMENT")
+    private ShopPaymentType payment;
 
     @Column(name = "PAYMENT_ID")
     private String paymentId;

@@ -6,6 +6,7 @@ import {LoginForm} from "./login-form";
 import {Observable, Subject} from "rxjs";
 import {LoginResponse} from "./login-response";
 import * as jwt_decode from 'jwt-decode';
+import {isUndefined} from "util";
 
 
 @Injectable({
@@ -35,15 +36,17 @@ export class AuthenticationService {
 
   // Uses http.get() to load data from a single API endpoint
   async getMe() {
-    this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
-        this.me_change.next(success);
-        this.authenticated_change.next(true);
-      }, error1 => {
-      console.log("error: " + error1.error.message);
-        this.me_change.next(null);
-        this.authenticated_change.next(false);
-      }
-    )
+    if (isUndefined(this.me)) {
+      this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
+          this.me_change.next(success);
+          this.authenticated_change.next(true);
+        }, error1 => {
+          console.log("error: " + error1.error.message);
+          this.me_change.next(null);
+          this.authenticated_change.next(false);
+        }
+      )
+    }
   }
 
   public getToken(): string {

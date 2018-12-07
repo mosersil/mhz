@@ -225,6 +225,9 @@
             <column name="STATUS" type="int">
                 <constraints nullable="false"/>
             </column>
+            <column name="PAYMENT" type="int">
+                <constraints nullable="false"/>
+            </column>
             <column name="PAYMENT_ID" type="varchar(50)">
                 <constraints nullable="true"/>
             </column>
