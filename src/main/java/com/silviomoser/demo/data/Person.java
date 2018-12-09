@@ -53,31 +53,29 @@ public class Person extends AbstractEntity {
 
     @JsonView(Views.Public.class)
     @NotNull
-    @Pattern(regexp = "[A-Za-z\\s]+")
     @Column(name = "ADDRESS1", nullable = false, length = 50)
     private String address1;
 
     @JsonView(Views.Public.class)
-    //@Pattern(regexp = "[a-z]+")
     @Column(name = "ADDRESS2", length = 50)
     private String address2;
 
     @JsonView(Views.Public.class)
-    //@Pattern(regexp = "[0-9]+")
+    @Pattern(regexp = "[0-9]+")
     @Column(name = "ZIP", nullable = false, length = 10)
     private String zip;
 
     @JsonView(Views.Public.class)
-    //@Pattern(regexp = "[A-Z][a-z\\s]+")
+    @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
     @Column(name = "CITY", nullable = false, length = 30)
     private String city;
 
     @Column(name = "LANDLINE", length = 20)
-    //@Pattern(regexp = "[0-9]+")
+    @Pattern(regexp = "[0-9]+")
     private String landline;
 
     @Column(name = "MOBILE", length = 20)
-    //@Pattern(regexp = "[0-9]+")
+    @Pattern(regexp = "[0-9]+")
     private String mobile;
 
     @Email
