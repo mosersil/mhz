@@ -118,8 +118,14 @@ export class ShopService {
       cardholder_name: name,
       token: token.id
     };
-    console.log("create payment now: " + data);
     return this.http.post(environment.backendUrl + "/api/protected/shop/createpayment", data);
+  }
+
+  createAdvancePayment() {
+    var data = {
+      transactionId: this.transactionId
+    };
+    return this.http.post(environment.backendUrl + "/api/protected/shop/createadvancepayment", data);
   }
 
   getTransactionDetails() {
@@ -127,7 +133,7 @@ export class ShopService {
   }
 
   getMyTransactions() {
-    return this.http.get(environment.backendUrl+"/api/protected/shop/transactions");
+    return this.http.get(environment.backendUrl + "/api/protected/shop/transactions");
   }
 
 

@@ -1,5 +1,9 @@
 <div class="container bg-white rounded shadow p-4">
 
+  <div class="alert alert-info" *ngIf="paymentpending!=null">
+    {{error}}
+  </div>
+
   <table class="table">
     <thead>
     <tr>
@@ -14,13 +18,16 @@
 
 
     <tr *ngFor="let transaction of transactions">
-      <td>{{transaction.date}}</td>
+      <td>{{transaction.date | date : "dd.MM.yyyy, hh:mm" }}</td>
       <td>
         <ul *ngFor="let purchase of transaction.shopItemPurchases">
           <li>{{purchase.amount}} x {{purchase.item.name}}</li>
         </ul>
       </td>
-      <td>{{transaction.status}}</td>
+      <td>
+        <i class="fa fa-money" aria-hidden="true"></i>
+        {{transaction.status}}
+      </td>
       <td>
         <span
           (click)="downloadReceipt(transaction.id)"

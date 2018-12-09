@@ -50,11 +50,16 @@ public class ShopHelper {
         StringBuilder stringBuilder = new StringBuilder();
         switch (shopTransaction.getPayment()) {
             case CREDITCARD:
-                stringBuilder.append("Zahlung erfolgte mit Kreditkarte");
+                stringBuilder.append("Ihre Kreditkarte wurde mit dem Gesamtbetrag belastet. Vielen Dank!");
+                break;
             case BILL:
-                return "Zahlung per Rechnung an Lieferadresse.";
+                stringBuilder.append("Zahlung per Rechnung.");
+                break;
+            case ADVANCE:
+                stringBuilder.append("Bitte Gesamtbetrag auf folgendes Konto Überweisen: CH98 0900 0000 8002 1249 2\nKontoinhaber: Musikverein Harmonie Zürich, 8000 Zürich");
+                break;
         }
-        return null;
+        return stringBuilder.toString();
 
     }
 }

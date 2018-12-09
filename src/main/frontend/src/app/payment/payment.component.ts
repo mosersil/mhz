@@ -82,8 +82,7 @@ export class PaymentComponent implements OnInit {
 
   buy() {
     const name = this.stripeTest.get('name').value;
-    this.stripeService
-      .createToken(this.card, {name})
+    this.stripeService.createToken(this.card, {name})
       .subscribe(result => {
         if (result.token) {
           // Use the token to create a charge or a customer
@@ -101,6 +100,14 @@ export class PaymentComponent implements OnInit {
           console.log(result.error.message);
         }
       });
+  }
+
+  buy_bill() {
+    this._shopService.createAdvancePayment().subscribe(success => {
+      this.router.navigate(['transactions']);
+    }, error1 => {
+      this.error = error1.error.message;
+    })
   }
 
   getCart() {

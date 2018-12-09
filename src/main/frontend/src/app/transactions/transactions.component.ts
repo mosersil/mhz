@@ -3,6 +3,7 @@ import {ShopService} from "../shop.service";
 import {environment} from "../../environments/environment";
 import {saveAs} from "file-saver";
 import {HttpClient} from "@angular/common/http";
+import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
   selector: 'app-transactions',
@@ -12,6 +13,7 @@ import {HttpClient} from "@angular/common/http";
 export class TransactionsComponent implements OnInit {
 
   transactions;
+  paymentpending: string = null;
 
   constructor(private _shopService: ShopService, private _http: HttpClient) {
   }
@@ -24,6 +26,13 @@ export class TransactionsComponent implements OnInit {
     this._shopService.getMyTransactions().subscribe(success => {
       this.transactions = success;
     }, error1 => console.log(error1))
+
+    for (let entry of this.transactions) {
+      if (entry.status=="AWAITING_PAYMENT") {
+        this.paymentpending="Eine Zahlung ist pendent.";
+      }
+    }
+
   }
 
   downloadReceipt(id: string) {

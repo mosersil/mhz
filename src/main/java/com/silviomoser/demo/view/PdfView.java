@@ -3,6 +3,7 @@ package com.silviomoser.demo.view;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.CMYKColor;
+import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -16,6 +17,7 @@ import com.silviomoser.demo.data.type.ShopItemType;
 import com.silviomoser.demo.utils.FormatUtils;
 import com.silviomoser.demo.utils.PdfReport;
 import org.apache.commons.beanutils.PropertyUtils;
+import sun.font.FontFamily;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.silviomoser.demo.api.shop.ShopHelper.calculateTotal;
 import static com.silviomoser.demo.api.shop.ShopHelper.formatCurrency;
@@ -118,13 +121,48 @@ public class PdfView extends AbstractITextPdfView {
             address_paragraph.setAlignment(Element.ALIGN_LEFT);
             document.add(payment_paragraph);
 
-            //if (transaction.getShopItemPurchases().stream().filter(shopItemPurchase -> shopItemPurchase.getItem().getShopItemType().equals(ShopItemType.TICKET)))
-            document.newPage();
-            PdfContentByte canvasTickets = writer.getDirectContent();
-            Rectangle rect = new Rectangle(36, 36, 559, 806);
-            rect.setBorder(Rectangle.BOX);
-            rect.setBorderWidth(2);
-            canvasTickets.rectangle(rect);
+            List<ShopItemPurchase> ticketPurchases = transaction.getShopItemPurchases().stream().filter(shopItemPurchase -> shopItemPurchase.getItem().getShopItemType().equals(ShopItemType.TICKET)).collect(Collectors.toList());
+
+
+            if (ticketPurchases!=null && ticketPurchases.size()>0) {
+                document.newPage();
+                int yPos = 806;
+                for (ShopItemPurchase it : ticketPurchases) {
+                    PdfContentByte canvasTickets = writer.getDirectContent();
+                    Rectangle rect = new Rectangle(36, yPos, 559, yPos - 200);
+                    rect.setBorder(Rectangle.BOX);
+                    rect.setBorderWidth(1);
+                    Image ticketLogo = Image.getInstance("classpath:logo/logo.jpg");
+                    ticketLogo.scaleToFit(100, 100);
+                    ticketLogo.setAbsolutePosition(45, yPos-100);
+                    canvasTickets.addImage(ticketLogo);
+                    canvasTickets.rectangle(rect);
+
+
+                    ColumnText ctTitle = new ColumnText(canvasTickets);
+                    Phrase titleText;
+                    if (it.getAmount()>1) {
+                        titleText = new Phrase(it.getItem().getName()+"\n"+it.getAmount()+" Personen");
+                    }
+                    else {
+                        titleText = new Phrase(it.getItem().getName()+"\n"+ "1 Person");
+                    }
+
+                    titleText.setFont(new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
+                    ctTitle.setSimpleColumn(titleText, 200, yPos-50, 560, yPos-80, 15, Element.ALIGN_LEFT);
+                    ctTitle.go();
+
+                    ColumnText ct = new ColumnText(canvasTickets);
+                    Phrase myText = new Phrase(it.getItem().getDescription());
+                    myText.setFont(new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC));
+                    ct.setSimpleColumn(myText, 48, yPos-120, 560, yPos-200, 15, Element.ALIGN_LEFT);
+                    ct.go();
+
+                    yPos = yPos - 200;
+                }
+
+
+            }
 
         } catch (DocumentException e) {
             e.printStackTrace();
