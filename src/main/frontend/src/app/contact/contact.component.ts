@@ -11,6 +11,7 @@ import {HttpClient} from "@angular/common/http";
 export class ContactComponent {
 
   model: any = {};
+  processing: boolean = false;
 
   feedback: any;
   error: any;
@@ -19,6 +20,7 @@ export class ContactComponent {
   }
 
   onSubmit() {
+    this.processing=true;
     var data = {
       name: this.model.name,
       email: this.model.email,
@@ -27,8 +29,10 @@ export class ContactComponent {
     this.http.post<ContactResponse>(environment.backendUrl + '/api/contact', data).subscribe(data => {
       if (data.success) {
         this.feedback = "Vielen Dank für Ihre Mitteilung";
+        this.processing=false
       } else {
         this.error = data.errorDetails
+        this.processing=false;
       }
     }, error1 => {
       this.error = error1.error.message;
