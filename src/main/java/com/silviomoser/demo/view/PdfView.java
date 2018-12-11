@@ -14,6 +14,7 @@ import com.silviomoser.demo.data.ShopItemPurchase;
 import com.silviomoser.demo.data.ShopTransaction;
 import com.silviomoser.demo.data.type.HasLabel;
 import com.silviomoser.demo.data.type.ShopItemType;
+import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.utils.FormatUtils;
 import com.silviomoser.demo.utils.PdfReport;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -72,14 +73,21 @@ public class PdfView extends AbstractITextPdfView {
             canvas.lineTo(559, 722);
             canvas.closePathStroke();
 
-            placeAbsoluteText(writer, String.format("Ihr Einkauf vom %s", transaction.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))), 200, 750);
+            String documentTitle = null;
+            if (transaction.getStatus().equals(ShopOrderStatusType.PAYED)) {
+                documentTitle = String.format("Ihr Einkauf vom %s", transaction.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+            } else {
+                documentTitle = String.format("Rechnung " + transaction.getId());
+            }
+
+            placeAbsoluteText(writer, documentTitle, 200, 750);
 
 
             PdfPTable table = new PdfPTable(5);
             table.setSpacingBefore(20);
             table.setPaddingTop(100);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{1,2, 5, 3, 3});
+            table.setWidths(new int[]{1, 2, 5, 3, 3});
 
             addCell(table, "#");
             addCell(table, "Anzahl");
@@ -88,13 +96,13 @@ public class PdfView extends AbstractITextPdfView {
             addCell(table, "Gesamtpreis");
             int position = 1;
             for (ShopItemPurchase it : transaction.getShopItemPurchases()) {
-                addRow(table, new String[]{""+position, "" + it.getAmount(), it.getItem().getName(), formatCurrency(it.getItem().getPrice(), "CHF"), formatCurrency(calculateTotal(it), "CHF")},
-                        new int[] {Element.ALIGN_CENTER, Element.ALIGN_RIGHT, Element.ALIGN_LEFT, Element.ALIGN_RIGHT, Element.ALIGN_RIGHT});
+                addRow(table, new String[]{"" + position, "" + it.getAmount(), it.getItem().getName(), formatCurrency(it.getItem().getPrice(), "CHF"), formatCurrency(calculateTotal(it), "CHF")},
+                        new int[]{Element.ALIGN_CENTER, Element.ALIGN_RIGHT, Element.ALIGN_LEFT, Element.ALIGN_RIGHT, Element.ALIGN_RIGHT});
                 position++;
             }
-            addRow(table, new String[]{"","","","",""});
-            addRow(table, new String[]{"", "", "","TOTAL", ""+ formatCurrency(calculateTotal(transaction), "CHF")},
-                    new int[] {Element.ALIGN_LEFT, Element.ALIGN_LEFT, Element.ALIGN_LEFT, Element.ALIGN_RIGHT, Element.ALIGN_RIGHT});
+            addRow(table, new String[]{"", "", "", "", ""});
+            addRow(table, new String[]{"", "", "", "TOTAL", "" + formatCurrency(calculateTotal(transaction), "CHF")},
+                    new int[]{Element.ALIGN_LEFT, Element.ALIGN_LEFT, Element.ALIGN_LEFT, Element.ALIGN_RIGHT, Element.ALIGN_RIGHT});
 
 
             document.add(logo);
@@ -121,46 +129,48 @@ public class PdfView extends AbstractITextPdfView {
             address_paragraph.setAlignment(Element.ALIGN_LEFT);
             document.add(payment_paragraph);
 
-            List<ShopItemPurchase> ticketPurchases = transaction.getShopItemPurchases().stream().filter(shopItemPurchase -> shopItemPurchase.getItem().getShopItemType().equals(ShopItemType.TICKET)).collect(Collectors.toList());
+            if (transaction.getStatus().equals(ShopOrderStatusType.PAYED)) {
+                List<ShopItemPurchase> ticketPurchases = transaction.getShopItemPurchases().stream().filter(shopItemPurchase -> shopItemPurchase.getItem().getShopItemType().equals(ShopItemType.TICKET)).collect(Collectors.toList());
+
+                if (ticketPurchases != null && ticketPurchases.size() > 0) {
+                    document.newPage();
+                    int yPos = 806;
+                    for (ShopItemPurchase it : ticketPurchases) {
+                        PdfContentByte canvasTickets = writer.getDirectContent();
+                        Rectangle rect = new Rectangle(36, yPos, 559, yPos - 200);
+                        rect.setBorder(Rectangle.BOX);
+                        rect.setBorderWidth(1);
+                        Image ticketLogo = Image.getInstance("classpath:logo/logo.jpg");
+                        ticketLogo.scaleToFit(100, 100);
+                        ticketLogo.setAbsolutePosition(45, yPos - 100);
+                        canvasTickets.addImage(ticketLogo);
+                        canvasTickets.rectangle(rect);
 
 
-            if (ticketPurchases!=null && ticketPurchases.size()>0) {
-                document.newPage();
-                int yPos = 806;
-                for (ShopItemPurchase it : ticketPurchases) {
-                    PdfContentByte canvasTickets = writer.getDirectContent();
-                    Rectangle rect = new Rectangle(36, yPos, 559, yPos - 200);
-                    rect.setBorder(Rectangle.BOX);
-                    rect.setBorderWidth(1);
-                    Image ticketLogo = Image.getInstance("classpath:logo/logo.jpg");
-                    ticketLogo.scaleToFit(100, 100);
-                    ticketLogo.setAbsolutePosition(45, yPos-100);
-                    canvasTickets.addImage(ticketLogo);
-                    canvasTickets.rectangle(rect);
+                        StringBuilder titleTextBuilder = new StringBuilder();
+                        ColumnText ctTitle = new ColumnText(canvasTickets);
 
+                        if (it.getAmount() > 1) {
+                            titleTextBuilder.append(it.getItem().getName() + "\n" + it.getAmount() + " Personen");
+                        } else {
+                            titleTextBuilder.append(it.getItem().getName() + "\n" + "1 Person");
+                        }
+                        titleTextBuilder.append(" (" + FormatUtils.toFirstLastName(it.getTransaction().getPerson()) + ")");
+                        Phrase titleText = new Phrase(titleTextBuilder.toString());
 
-                    ColumnText ctTitle = new ColumnText(canvasTickets);
-                    Phrase titleText;
-                    if (it.getAmount()>1) {
-                        titleText = new Phrase(it.getItem().getName()+"\n"+it.getAmount()+" Personen");
+                        titleText.setFont(new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
+                        ctTitle.setSimpleColumn(titleText, 200, yPos - 50, 560, yPos - 80, 15, Element.ALIGN_LEFT);
+                        ctTitle.go();
+
+                        ColumnText ct = new ColumnText(canvasTickets);
+                        Phrase myText = new Phrase(it.getItem().getDescription());
+                        myText.setFont(new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC));
+                        ct.setSimpleColumn(myText, 48, yPos - 120, 560, yPos - 200, 15, Element.ALIGN_LEFT);
+                        ct.go();
+
+                        yPos = yPos - 200;
                     }
-                    else {
-                        titleText = new Phrase(it.getItem().getName()+"\n"+ "1 Person");
-                    }
-
-                    titleText.setFont(new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
-                    ctTitle.setSimpleColumn(titleText, 200, yPos-50, 560, yPos-80, 15, Element.ALIGN_LEFT);
-                    ctTitle.go();
-
-                    ColumnText ct = new ColumnText(canvasTickets);
-                    Phrase myText = new Phrase(it.getItem().getDescription());
-                    myText.setFont(new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC));
-                    ct.setSimpleColumn(myText, 48, yPos-120, 560, yPos-200, 15, Element.ALIGN_LEFT);
-                    ct.go();
-
-                    yPos = yPos - 200;
                 }
-
 
             }
 
@@ -269,7 +279,7 @@ public class PdfView extends AbstractITextPdfView {
     }
 
     private static void addRow(PdfPTable table, String[] it, int[] alignments) {
-        int i=0;
+        int i = 0;
         for (String anIt : it) {
             PdfPCell hcell;
             hcell = new PdfPCell(new Phrase(anIt, BODY_FONT));
@@ -287,7 +297,8 @@ public class PdfView extends AbstractITextPdfView {
 
     }
 
-    private void placeAbsoluteText(PdfWriter writer, String text, int x, int y) throws IOException, DocumentException {
+    private static void placeAbsoluteText(PdfWriter writer, String text, int x, int y) throws
+            IOException, DocumentException {
         PdfContentByte cb = writer.getDirectContent();
         BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         cb.saveState();

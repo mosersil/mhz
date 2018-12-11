@@ -1,16 +1,12 @@
 <div class="container bg-white rounded shadow p-4">
 
-  <div class="alert alert-info" *ngIf="paymentpending!=null">
-    {{error}}
-  </div>
-
   <table class="table">
     <thead>
     <tr>
       <th scope="col" style="width: 20%">Datum</th>
       <th scope="col" style="width: 60%">Artikel</th>
       <th scope="col" style="width: 10%">Status</th>
-      <th scope="col" style="width: 10%">Quittung</th>
+      <th scope="col" style="width: 10%">Rechnung/Quittung</th>
 
     </tr>
     </thead>
@@ -24,9 +20,13 @@
           <li>{{purchase.amount}} x {{purchase.item.name}}</li>
         </ul>
       </td>
-      <td>
+      <td *ngIf="transaction.status === 'AWAITING_PAYMENT'">
         <i class="fa fa-money" aria-hidden="true"></i>
-        {{transaction.status}}
+        Zahlung Pendent
+      </td>
+      <td *ngIf="transaction.status === 'PAYED'">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        Abgeschlossen
       </td>
       <td>
         <span

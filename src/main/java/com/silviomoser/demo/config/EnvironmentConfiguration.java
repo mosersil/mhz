@@ -37,8 +37,8 @@ public class EnvironmentConfiguration {
     @Bean
     public PwResetConfiguration pwResetConfiguration() {
         PwResetConfiguration pwResetConfiguration = new PwResetConfiguration();
-        pwResetConfiguration.setEmailFrom(environment.getProperty(""));
-        pwResetConfiguration.setLandingPage("");
+        pwResetConfiguration.setEmailFrom(environment.getProperty("pwreset.email.from"));
+        pwResetConfiguration.setLandingPage(environment.getProperty("pwreset.landingpage"));
         return pwResetConfiguration;
     }
 
