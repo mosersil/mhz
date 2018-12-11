@@ -7,10 +7,31 @@ import com.silviomoser.demo.data.Person;
  */
 public class FormatUtils {
 
+    private static final String LINE_BREAK = "\n";
+
     public static final String toFirstLastName(Person person) {
-        if (person==null) {
+        if (person == null) {
             return "";
         }
-        return person.getFirstName()+ " " + person.getLastName();
+        return person.getFirstName() + " " + person.getLastName();
+    }
+
+    public static final String fullAddress(Person person) {
+        if (person == null) {
+            return "";
+        }
+        final StringBuilder stringBuilder = new StringBuilder(toFirstLastName(person))
+                .append(LINE_BREAK)
+                .append(person.getAddress1());
+        if (person.getAddress2() != null && !person.getAddress2().isEmpty()) {
+            stringBuilder
+                    .append(LINE_BREAK)
+                    .append(person.getAddress2());
+        }
+        stringBuilder.append(LINE_BREAK)
+                .append(person.getZip())
+                .append(" ")
+                .append(person.getCity());
+        return stringBuilder.toString();
     }
 }

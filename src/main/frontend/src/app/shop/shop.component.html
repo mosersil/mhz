@@ -3,11 +3,13 @@
     <div class="col-sm-8">
       <div class="card mb-2" *ngFor="let shopitem of shopItems">
         <div class="card-header">
-          {{shopitem.name}} (CHF {{shopitem.price/100 | currency }})
+          {{shopitem.name}} ({{shopitem.price/100 | currency: 'CHF ' }})
         </div>
         <div class="card-body">
           <p class="card-text">{{shopitem.description}}</p>
-          <input class="btn btn-primary" (click)="addItemToCart(shopitem)" value="In den Warenkorb"/>
+          <button class="btn btn-primary" (click)="addItemToCart(shopitem)">
+            In den Warenkorb
+          </button>
         </div>
       </div>
     </div>
@@ -20,7 +22,7 @@
               {{c.count}} x {{c.name}} <i class="fa fa-minus-square" (click)="removeItemFromCart(c)"></i>
             </li>
           </ul>
-          Total : {{ total/100 | currency}}
+          Total : {{ total/100 | currency: 'CHF '}}
           <div>
             <button type="submit" class="btn btn-primary" (click)="submitOrder()" [hidden]="total==0">
               weiter
