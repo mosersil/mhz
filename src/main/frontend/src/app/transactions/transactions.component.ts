@@ -26,13 +26,6 @@ export class TransactionsComponent implements OnInit {
     this._shopService.getMyTransactions().subscribe(success => {
       this.transactions = success;
     }, error1 => console.log(error1))
-
-    for (let entry of this.transactions) {
-      if (entry.status=="AWAITING_PAYMENT") {
-        this.paymentpending="Eine Zahlung ist pendent.";
-      }
-    }
-
   }
 
   downloadReceipt(id: string) {

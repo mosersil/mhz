@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by silvio on 14.10.18.
@@ -60,7 +61,8 @@ public class ShopApi {
     @JsonView(Views.Public.class)
     @RequestMapping(value = "/api/protected/shop/transactions", method = RequestMethod.GET)
     public List<ShopTransaction> listTransactions() {
-        return shopTransactionRepository.findByPerson(SecurityUtils.getMe());
+        List<ShopTransaction> myTransactions =  shopTransactionRepository.findByPerson(SecurityUtils.getMe());
+        return myTransactions.stream().filter(shopTransaction -> shopTransaction.getStatus()==ShopOrderStatusType.PAYED||shopTransaction.getStatus()==ShopOrderStatusType.AWAITING_PAYMENT).collect(Collectors.toList());
     }
 
 

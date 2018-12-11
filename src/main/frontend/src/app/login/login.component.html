@@ -8,7 +8,7 @@
   <div class="col-md-6 offset-md-3">
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
       <div class="form-group">
-        <label for="username">Benutzername</label>
+        <label for="username">Benutzername/Email Adresse</label>
         <input id="username" type="text" class="form-control" name="username" [(ngModel)]="model.username"
                #username="ngModel"
                [ngClass]="{ 'is-invalid': f.submitted && username.invalid }" required/>
