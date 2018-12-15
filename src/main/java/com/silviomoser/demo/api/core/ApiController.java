@@ -13,4 +13,6 @@ public interface ApiController {
 
     String URL_PUBLIC_IMAGES = "/api/public/images";
     String URL_PUBLIC_IMAGE = "/api/public/image";
+
+    String URL_CONTACT = "/api/public/contact";
 }

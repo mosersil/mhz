@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ContactResponse} from "../contact-response";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
+import {CaptchaComponent} from "angular-captcha";
 
 @Component({
   selector: 'app-contact',
@@ -16,27 +17,42 @@ export class ContactComponent {
   feedback: any;
   error: any;
 
+  @ViewChild(CaptchaComponent) captchaComponent: CaptchaComponent;
+
+
   constructor(private http: HttpClient) {
   }
 
   onSubmit() {
-    this.processing=true;
-    var data = {
-      name: this.model.name,
-      email: this.model.email,
-      message: this.model.message
-    };
-    this.http.post<ContactResponse>(environment.backendUrl + '/api/contact', data).subscribe(data => {
-      if (data.success) {
-        this.feedback = "Vielen Dank für Ihre Mitteilung";
-        this.processing=false
+    this.processing = true;
+
+    this.captchaComponent.validateUnsafe((isCaptchaCodeCorrect: boolean) => {
+      if (isCaptchaCodeCorrect) {
+        var data = {
+          name: this.model.name,
+          email: this.model.email,
+          message: this.model.message,
+          captchaCode: this.captchaComponent.captchaCode,
+          captchaId: this.captchaComponent.captchaId
+        };
+        this.http.post<ContactResponse>(environment.backendUrl + '/api/public/contact', data).subscribe(data => {
+          this.error=null;
+          this.feedback = "Vielen Dank für Ihre Mitteilung";
+          setTimeout(function(){
+            this.processing = false;
+          },15000);
+
+        }, error1 => {
+          this.error = error1.error.message;
+        });
       } else {
-        this.error = data.errorDetails
-        this.processing=false;
+        this.feedback=null;
+        this.error = "Der eingegebene Prüfcode ist nicht korrekt.";
+        this.processing = false;
       }
-    }, error1 => {
-      this.error = error1.error.message;
-    })
+    });
+
+
   }
 
 

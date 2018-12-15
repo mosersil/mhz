@@ -8,8 +8,8 @@
     {{error}}
   </div>
 
+  <p>Sie möchten uns etwas mitteilen? Am schnellsten erreicht uns Ihre Mitteilung, wenn Sie das untenstehende Kontaktformular benutzen.</p>
   <div class="col-md-6 offset-md-3">
-    <p>Sie möchten uns etwas mitteilen? Bitte benutzen Sie das untenstehende Formular</p>
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
       <div class="form-group">
         <label for="name">Name</label>
@@ -31,7 +31,7 @@
       <div class="form-group">
         <label for="message">Nachricht</label>
         <textarea id="message" class="form-control" name="message" [(ngModel)]="model.message" #message="ngModel"
-                  [ngClass]="{ 'is-invalid': f.submitted && message.invalid }" required minlength="5">
+                  [ngClass]="{ 'is-invalid': f.submitted && message.invalid }" required minlength="5" rows="10" >
           </textarea>
         <div *ngIf="f.submitted && message.invalid" class="invalid-feedback">
           <div *ngIf="message.errors.required">Bitte geben Sie eine Nachricht ein</div>
@@ -39,8 +39,17 @@
         </div>
       </div>
       <div class="form-group">
+        <label for="captchaCode">Als Schutz vor Missbrauch, bitten wir Sie den angezeigten Code zu wiederholen:</label>
+        <botdetect-captcha styleName="exampleCaptcha"></botdetect-captcha>
+        <input id="captchaCode" type="text" name="captcha">
+      </div>
+      <div class="form-group">
         <button class="btn btn-primary" [disabled]="processing" >Senden</button>
       </div>
     </form>
   </div>
+  <p>Natürlich können Sie uns auch auf dem herkömmlichen Weg per Briefpost erreichen. Unsere Adresse lautet:</p>
+  <p>Musikverein Harmonie Zürich-Oberstrass<br />
+    8000 Zürich
+  </p>
 </div>

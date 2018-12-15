@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
  * Created by silvio on 20.08.18.
  */
 @Data
-public class EmailModel {
+public class contactFormModel {
 
     @NotBlank
     private String name;
@@ -20,5 +20,11 @@ public class EmailModel {
 
     @NotBlank
     private String message;
+
+    @NotBlank
+    private String captchaCode;
+
+    @NotBlank
+    private String captchaId;
 
 }
