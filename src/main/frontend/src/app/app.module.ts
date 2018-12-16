@@ -32,6 +32,7 @@ import {NgxPopperModule} from "ngx-popper";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GalleryModule} from "@ngx-gallery/core";
 import {BotDetectCaptchaModule} from "angular-captcha";
+import {NgxSpinnerModule} from "ngx-spinner";
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import {BotDetectCaptchaModule} from "angular-captcha";
     BotDetectCaptchaModule.forRoot({
       captchaEndpoint: '/botdetectcaptcha'
       }
-    )
+    ),
+    NgxSpinnerModule
   ],
   declarations: [
     AppComponent,

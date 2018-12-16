@@ -3,6 +3,7 @@ import {ContactResponse} from "../contact-response";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {CaptchaComponent} from "angular-captcha";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-contact',
@@ -13,6 +14,7 @@ export class ContactComponent {
 
   model: any = {};
   processing: boolean = false;
+  isHuman: boolean = true;
 
   feedback: any;
   error: any;
@@ -20,14 +22,16 @@ export class ContactComponent {
   @ViewChild(CaptchaComponent) captchaComponent: CaptchaComponent;
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private spinner: NgxSpinnerService) {
   }
 
   onSubmit() {
     this.processing = true;
+    this.spinner.show();
 
     this.captchaComponent.validateUnsafe((isCaptchaCodeCorrect: boolean) => {
       if (isCaptchaCodeCorrect) {
+        this.isHuman=true;
         var data = {
           name: this.model.name,
           email: this.model.email,
@@ -37,17 +41,18 @@ export class ContactComponent {
         };
         this.http.post<ContactResponse>(environment.backendUrl + '/api/public/contact', data).subscribe(data => {
           this.error=null;
+          this.spinner.hide();
           this.feedback = "Vielen Dank für Ihre Mitteilung";
-          setTimeout(function(){
-            this.processing = false;
-          },15000);
+          this.processing = false;
 
         }, error1 => {
           this.error = error1.error.message;
         });
       } else {
+        this.spinner.hide();
+        this.error="Der eingegebene Prüfcode stimmt nicht überein."
         this.feedback=null;
-        this.error = "Der eingegebene Prüfcode ist nicht korrekt.";
+        this.isHuman=false;
         this.processing = false;
       }
     });
