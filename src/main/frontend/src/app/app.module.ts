@@ -31,6 +31,8 @@ import {QRCodeModule} from "angularx-qrcode";
 import {NgxPopperModule} from "ngx-popper";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GalleryModule} from "@ngx-gallery/core";
+import {BotDetectCaptchaModule} from "angular-captcha";
+import {NgxSpinnerModule} from "ngx-spinner";
 
 
 @NgModule({
@@ -47,6 +49,11 @@ import {GalleryModule} from "@ngx-gallery/core";
     NgxPopperModule,
     GalleryModule.withConfig({ dots: true, thumbPosition: "top", imageSize: "contain" }),
     NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
+    BotDetectCaptchaModule.forRoot({
+      captchaEndpoint: '/botdetectcaptcha'
+      }
+    ),
+    NgxSpinnerModule
   ],
   declarations: [
     AppComponent,

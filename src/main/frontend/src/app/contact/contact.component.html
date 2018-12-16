@@ -1,3 +1,4 @@
+<ngx-spinner></ngx-spinner>
 <div class="container bg-white rounded shadow p-4">
 
   <div class="alert alert-info" *ngIf="feedback!=null">
@@ -8,11 +9,12 @@
     {{error}}
   </div>
 
-  <div class="col-md-6 offset-md-3">
-    <p>Sie möchten uns etwas mitteilen? Bitte benutzen Sie das untenstehende Formular</p>
+  <p *ngIf="feedback==null">Sie möchten uns etwas mitteilen? Am schnellsten erreicht uns Ihre Mitteilung, wenn Sie das untenstehende
+    Kontaktformular benutzen.</p>
+  <div class="col-md-6 offset-md-3" *ngIf="feedback==null">
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
       <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name">Vor-/Nachname:</label>
         <input id="name" type="text" class="form-control" name="name" [(ngModel)]="model.name" #name="ngModel"
                [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required/>
         <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
@@ -20,7 +22,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">Ihre Email Adresse:</label>
         <input id="email" type="text" class="form-control" name="email" [(ngModel)]="model.email" #email="ngModel"
                [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email/>
         <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
@@ -29,18 +31,36 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="message">Nachricht</label>
+        <label for="message">Ihre Nachricht an uns:</label>
         <textarea id="message" class="form-control" name="message" [(ngModel)]="model.message" #message="ngModel"
-                  [ngClass]="{ 'is-invalid': f.submitted && message.invalid }" required minlength="5">
+                  [ngClass]="{ 'is-invalid': f.submitted && message.invalid }" required minlength="5" rows="10" maxlength="2000">
           </textarea>
         <div *ngIf="f.submitted && message.invalid" class="invalid-feedback">
           <div *ngIf="message.errors.required">Bitte geben Sie eine Nachricht ein</div>
           <div *ngIf="message.errors.minlength">Nachricht mit mindestens 5 Zeichen</div>
         </div>
       </div>
-      <div class="form-group">
-        <button class="btn btn-primary">Senden</button>
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <botdetect-captcha styleName="exampleCaptcha"></botdetect-captcha>
+            <label for="captchaCode">Als Schutz vor Missbrauch, bitten wir Sie den oben angezeigten Code zu
+              wiederholen:</label>
+            <input id="captchaCode" type="text" class="form-control" name="captchaCode" [(ngModel)]="model.captchaCode" #captchaCode="ngModel"
+                   [ngClass]="{ 'is-invalid': (f.submitted && !isHuman)|| (f.submitted && captchaCode.invalid)}" required />
+            <div  class="invalid-feedback">
+              <div>Bitte wiederholen Sie den angezeigten Code</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 10px;">
+        <button class="btn btn-primary" [disabled]="processing">Senden</button>
       </div>
     </form>
   </div>
+  <p>Natürlich können Sie uns auch auf dem herkömmlichen Weg per Briefpost erreichen. Unsere Adresse lautet:</p>
+  <p>Musikverein Harmonie Zürich-Oberstrass<br/>
+    8000 Zürich
+  </p>
 </div>
