@@ -1,3 +1,40 @@
-<p>
-  transactions works!
-</p>
+<div class="container bg-white rounded shadow p-4">
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col" style="width: 20%">Datum</th>
+      <th scope="col" style="width: 60%">Artikel</th>
+      <th scope="col" style="width: 10%">Status</th>
+      <th scope="col" style="width: 10%">Rechnung/Quittung</th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+
+    <tr *ngFor="let transaction of transactions">
+      <td>{{transaction.date | date : "dd.MM.yyyy, hh:mm" }}</td>
+      <td>
+        <ul *ngFor="let purchase of transaction.shopItemPurchases">
+          <li>{{purchase.amount}} x {{purchase.item.name}}</li>
+        </ul>
+      </td>
+      <td *ngIf="transaction.status === 'AWAITING_PAYMENT'">
+        <i class="fa fa-money" aria-hidden="true"></i>
+        Zahlung Pendent
+      </td>
+      <td *ngIf="transaction.status === 'PAYED'">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        Abgeschlossen
+      </td>
+      <td>
+        <span
+          (click)="downloadReceipt(transaction.id)"
+          class="fa fa-file-pdf-o"
+          aria-hidden="true"></span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

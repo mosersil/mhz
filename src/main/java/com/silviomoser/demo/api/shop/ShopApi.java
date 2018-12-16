@@ -6,6 +6,7 @@ import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.config.PaymentConfiguration;
 import com.silviomoser.demo.data.*;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
+import com.silviomoser.demo.data.type.ShopPaymentType;
 import com.silviomoser.demo.repository.ShopItemPurchaseRepository;
 import com.silviomoser.demo.repository.ShopItemRepository;
 import com.silviomoser.demo.repository.ShopTransactionRepository;
@@ -26,9 +27,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by silvio on 14.10.18.
@@ -58,7 +61,8 @@ public class ShopApi {
     @JsonView(Views.Public.class)
     @RequestMapping(value = "/api/protected/shop/transactions", method = RequestMethod.GET)
     public List<ShopTransaction> listTransactions() {
-        return shopTransactionRepository.findByPerson(SecurityUtils.getMe());
+        List<ShopTransaction> myTransactions =  shopTransactionRepository.findByPerson(SecurityUtils.getMe());
+        return myTransactions.stream().filter(shopTransaction -> shopTransaction.getStatus()==ShopOrderStatusType.PAYED||shopTransaction.getStatus()==ShopOrderStatusType.AWAITING_PAYMENT).collect(Collectors.toList());
     }
 
 
@@ -131,12 +135,17 @@ public class ShopApi {
     }
 
 
-    @RequestMapping(value = "/api/protected/shop/receipt", produces = MediaType.APPLICATION_PDF_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> getAddressList(@RequestParam(name = "id", required = true) long id) throws DocumentException {
+    @RequestMapping(value = "/api/protected/shop/receipt", method = RequestMethod.GET)
+    public ModelAndView getReceipt(@RequestParam(name = "id") long id) {
         ShopTransaction shopTransaction = shopTransactionRepository.findById(id).get();
         if (shopTransaction.getPerson().equals(SecurityUtils.getMe())) {
-            ByteArrayInputStream bis = PdfBuilder.generateReceipt(shopTransaction);
-            return pdfResponse(bis, "receipt");
+            try {
+                log.debug("Assemble document {} in format {}", id, "PDF");
+                return new ModelAndView("PDF", "transaction", shopTransaction);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                throw new ApiException(e.getMessage());
+            }
         }
         throw new ApiException("Invalid request");
 
@@ -154,8 +163,25 @@ public class ShopApi {
                 .body(new InputStreamResource(bis));
     }
 
+    @RequestMapping(value = "/api/protected/shop/createadvancepayment", method = RequestMethod.POST)
+    public void createAdvancePayment(@RequestBody CreateAdvancePaymentDataSubmission createAdvancePaymentDataSubmission) {
+        final long transactionId = createAdvancePaymentDataSubmission.getTransactionId();
+
+        final Optional<ShopTransaction> optionalShopTransaction = shopTransactionRepository.findById(transactionId);
+        if (optionalShopTransaction.isPresent()) {
+            final ShopTransaction shopTransaction = optionalShopTransaction.get();
+            shopTransaction.setPayment(ShopPaymentType.ADVANCE);
+            shopTransaction.setStatus(ShopOrderStatusType.AWAITING_PAYMENT);
+            shopTransactionRepository.save(shopTransaction);
+        } else {
+            log.warn("No valid transaction found for id '{}'", createAdvancePaymentDataSubmission.getTransactionId());
+            throw new ApiException("No valid transaction found");
+        }
+
+    }
+
     @RequestMapping(value = "/api/protected/shop/createpayment", method = RequestMethod.POST)
-    public void createPayPalPayment(@RequestBody CreatePaymentDataSubmission createPaymentDataSubmission) {
+    public void createCreditCardPayment(@RequestBody CreatePaymentDataSubmission createPaymentDataSubmission) {
         log.info("start creating payment for transaction '{}', cardholder '{}'", createPaymentDataSubmission.getTransactionId(), createPaymentDataSubmission.getCardholder_name());
         Stripe.apiKey = paymentConfiguration.getPrivateKey();
 
@@ -178,6 +204,7 @@ public class ShopApi {
                 shopTransaction.setPaymentResponse(charge.getLastResponse().code());
                 shopTransaction.setPaymentStatus(charge.getStatus());
                 shopTransaction.setPaymentId(charge.getId());
+                shopTransaction.setPayment(ShopPaymentType.CREDITCARD);
                 shopTransaction.setStatus(ShopOrderStatusType.PAYED);
                 shopTransactionRepository.save(shopTransaction);
                 //response.sendRedirect("/#!/shop-transactions");

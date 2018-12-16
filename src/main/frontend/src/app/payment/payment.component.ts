@@ -4,6 +4,9 @@ import {HttpClient} from "@angular/common/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Element as StripeElement, Elements, ElementsOptions, StripeService} from "ngx-stripe";
 import {Router} from "@angular/router";
+import {AuthenticationService} from "../authentication.service";
+import {Person} from "../person";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-payment',
@@ -18,6 +21,7 @@ export class PaymentComponent implements OnInit {
   readyForPayment = false;
   error: string = null;
   stripeTest: FormGroup;
+  cardholder: string;
 
 // optional parameters
   elementsOptions: ElementsOptions = {
@@ -25,7 +29,7 @@ export class PaymentComponent implements OnInit {
   };
 
 
-  constructor(private _shopService: ShopService, private http: HttpClient, private fb: FormBuilder, private stripeService: StripeService, private router: Router) {
+  constructor(private _shopService: ShopService, private http: HttpClient, private fb: FormBuilder, private stripeService: StripeService, private router: Router, private _authenticationService: AuthenticationService) {
   }
 
   get total(): number {
@@ -35,6 +39,15 @@ export class PaymentComponent implements OnInit {
   ngOnInit() {
     //console.log("total= " + this._shopService.total);
     //this.total = this._shopService.total;
+
+
+    this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
+        this.cardholder = success.firstName + " " + success.lastName;
+      }, error1 => {
+        console.log("error: " + error1.error.message);
+      }
+    )
+
 
     this._shopService.assignPersonToOrder();
 
@@ -69,8 +82,7 @@ export class PaymentComponent implements OnInit {
 
   buy() {
     const name = this.stripeTest.get('name').value;
-    this.stripeService
-      .createToken(this.card, {name})
+    this.stripeService.createToken(this.card, {name})
       .subscribe(result => {
         if (result.token) {
           // Use the token to create a charge or a customer
@@ -88,6 +100,14 @@ export class PaymentComponent implements OnInit {
           console.log(result.error.message);
         }
       });
+  }
+
+  buy_bill() {
+    this._shopService.createAdvancePayment().subscribe(success => {
+      this.router.navigate(['transactions']);
+    }, error1 => {
+      this.error = error1.error.message;
+    })
   }
 
   getCart() {

@@ -1,6 +1,10 @@
 package com.silviomoser.demo.api.contact;
 
+import com.captcha.botdetect.web.servlet.SimpleCaptcha;
+import com.silviomoser.demo.api.core.ApiController;
+import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.services.ContactService;
+import com.silviomoser.demo.services.ServiceException;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import com.silviomoser.demo.utils.TtlMap;
 import lombok.extern.slf4j.Slf4j;
@@ -17,32 +21,28 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RestController
-public class ContactMailApi {
+public class ContactMailApi implements ApiController {
 
     @Autowired
     private ContactService contactService;
 
-    @Autowired
-    private I18Helper i18Helper;
-
-    final TtlMap<String, String> hitCache = new TtlMap<>(TimeUnit.SECONDS, 10);
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/api/contact", method = RequestMethod.POST)
-    public EmailStatus sendEmail(HttpServletRequest request, @Valid @RequestBody EmailModel emailModel) {
+    @RequestMapping(value = URL_CONTACT, method = RequestMethod.POST)
+    public void sendEmail(HttpServletRequest request, @Valid @RequestBody contactFormModel contactFormModel) {
 
-        EmailStatus emailStatus = new EmailStatus();
-
-        if (hitCache.get(request.getRemoteAddr()) == null) {
-            hitCache.put(request.getRemoteAddr(), request.getRemoteAddr());
-            emailStatus = contactService.sendSimpleMail(emailModel);
-        } else {
-            log.warn("Too many hits detected by {}", request.getRemoteAddr());
-            emailStatus.setSuccess(false);
-            emailStatus.setErrorDetails(i18Helper.getMessage("contact_toomanyrequests"));
+        try {
+            contactService.sendContactForm(request,
+                    contactFormModel.getName(),
+                    contactFormModel.getEmail(),
+                    contactFormModel.getMessage(),
+                    contactFormModel.getCaptchaCode(),
+                    contactFormModel.getCaptchaId());
+        } catch (ServiceException e) {
+            throw new ApiException(e.getMessage());
         }
-        log.info("Contact form has been submitted by {}: {}", emailModel.getEmail(), emailModel.getMessage());
-        return emailStatus;
+
+        log.info("Contact form has been submitted by {}: {}", contactFormModel.getEmail(), contactFormModel.getMessage());
     }
 
 }

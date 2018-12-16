@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Table(name = "MEMBERSHIP")
 public class Membership extends AbstractEntity {
 
-
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")

@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   events;
   main_background: string = "url('" + environment.backendUrl + "/public/api/background')";
-  hotArticle: Article = null;
+  hotArticle;
 
   constructor(private _calendarService: CalendarService, private _newsService: NewsService) {
   }
@@ -27,7 +27,6 @@ export class HomeComponent implements OnInit {
     this._calendarService.getPublicEvents(5).subscribe(
       data => {
         this.events = data
-        console.log(data)
       },
       err => console.error(err),
       () => console.log('done loading events: ' + this.events)
@@ -38,7 +37,6 @@ export class HomeComponent implements OnInit {
   getArticle() {
     this._newsService.getArticle().subscribe(
       data => {
-        console.log("article: " + data);
         this.hotArticle = data;
       },
       //err => console.error(err),
