@@ -44,7 +44,7 @@
         <div class="card-body">
           <div class="form-group">
             <botdetect-captcha styleName="exampleCaptcha"></botdetect-captcha>
-            <label for="captchaCode">Als Schutz vor Missbrauch, bitten wir Sie den oben angezeigten Code zu
+            <label for="captchaCode">Bitte wiederholen Sie den oben angezeigten Code zu
               wiederholen:</label>
             <input id="captchaCode" type="text" class="form-control" name="captchaCode" [(ngModel)]="model.captchaCode" #captchaCode="ngModel"
                    [ngClass]="{ 'is-invalid': (f.submitted && !isHuman)|| (f.submitted && captchaCode.invalid)}" required />
