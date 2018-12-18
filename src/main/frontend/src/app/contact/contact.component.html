@@ -26,8 +26,8 @@
         <input id="email" type="text" class="form-control" name="email" [(ngModel)]="model.email" #email="ngModel"
                [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email/>
         <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
-          <div *ngIf="email.errors.required">Bitte geben Sie Ihre E-Mail adresse ein</div>
-          <div *ngIf="email.errors.email">Bitte geben Sie eine gültige E-Mail adresse ein</div>
+          <div *ngIf="email.errors.required">Bitte geben Sie Ihre E-Mail Adresse ein</div>
+          <div *ngIf="email.errors.email">Bitte geben Sie eine gültige E-Mail Adresse ein</div>
         </div>
       </div>
       <div class="form-group">
@@ -44,8 +44,7 @@
         <div class="card-body">
           <div class="form-group">
             <botdetect-captcha styleName="exampleCaptcha"></botdetect-captcha>
-            <label for="captchaCode">Bitte wiederholen Sie den oben angezeigten Code zu
-              wiederholen:</label>
+            <label for="captchaCode">Bitte wiederholen Sie den oben angezeigten Code:</label>
             <input id="captchaCode" type="text" class="form-control" name="captchaCode" [(ngModel)]="model.captchaCode" #captchaCode="ngModel"
                    [ngClass]="{ 'is-invalid': (f.submitted && !isHuman)|| (f.submitted && captchaCode.invalid)}" required />
             <div  class="invalid-feedback">
