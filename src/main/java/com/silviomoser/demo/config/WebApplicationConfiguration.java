@@ -3,6 +3,7 @@ package com.silviomoser.demo.config;
 import com.captcha.botdetect.web.servlet.SimpleCaptchaServlet;
 import com.silviomoser.demo.view.ExcelViewResolver;
 import com.silviomoser.demo.view.PdfViewResolver;
+import com.vaadin.spring.annotation.EnableVaadin;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -19,6 +20,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 @Configuration
+@EnableVaadin
 public class WebApplicationConfiguration implements WebMvcConfigurer {
 
     @Override
@@ -30,8 +32,7 @@ public class WebApplicationConfiguration implements WebMvcConfigurer {
     @Bean
     public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> containerCustomizer() {
         return container -> {
-            container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND,
-                    "/notFound"));
+            container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notFound"));
         };
     }
 
