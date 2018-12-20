@@ -6,14 +6,10 @@ import com.silviomoser.demo.security.UsernamePasswordFilter;
 import com.silviomoser.demo.security.JwtAuthenticationFilter;
 import com.silviomoser.demo.security.JwtTokenProvider;
 import com.silviomoser.demo.security.SecurityUserDetailsService;
-import com.vaadin.spring.annotation.EnableVaadin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -44,9 +39,7 @@ import java.util.Arrays;
  */
 @Configuration
 @EnableWebSecurity
-@EnableVaadin
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
-@EnableJpaAuditing
 @Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -65,8 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UsernamePasswordFilter authenticationFilter() throws Exception {
-        UsernamePasswordFilter authenticationFilter
-                = new UsernamePasswordFilter();
+        UsernamePasswordFilter authenticationFilter = new UsernamePasswordFilter();
         authenticationFilter.setAuthenticationSuccessHandler(this::loginSuccessHandler);
         authenticationFilter.setAuthenticationFailureHandler(this::loginFailureHandler);
         authenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
@@ -128,13 +120,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();
         http.anonymous().disable().exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                .authenticationEntryPoint(new AuthenticationEndpoint());
 
         http
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers("/vaadinServlet/UIDL/**").permitAll()
                 .antMatchers("/vaadinServlet/HEARTBEAT/**").permitAll()
+                .antMatchers("/app/login").permitAll()
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/internal/api/**").hasRole("USER")
                 .antMatchers("/api/protected/**").hasRole("USER")
@@ -161,11 +154,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
 
     @Bean
     public RememberMeServices rememberMeServices() {
