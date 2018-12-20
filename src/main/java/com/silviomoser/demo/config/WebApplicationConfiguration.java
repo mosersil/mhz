@@ -57,13 +57,7 @@ public class WebApplicationConfiguration implements WebMvcConfigurer {
 
     @Bean
     public ServletContextInitializer initializer() {
-        return new ServletContextInitializer() {
-
-            @Override
-            public void onStartup(ServletContext servletContext) throws ServletException {
-                servletContext.setInitParameter("BDC_configFileLocation", "/resources/botdetect.xml");
-            }
-        };
+        return servletContext -> servletContext.setInitParameter("BDC_configFileLocation", "/resources/botdetect.xml");
     }
 
 }
