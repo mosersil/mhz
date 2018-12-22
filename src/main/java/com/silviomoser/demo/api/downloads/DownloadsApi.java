@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,7 @@ public class DownloadsApi implements ApiController {
     @Autowired
     private I18Helper i18Helper;
 
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "Download a public static file")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),

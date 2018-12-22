@@ -2,9 +2,12 @@ package com.silviomoser.demo.services;
 
 
 import com.silviomoser.demo.config.FileServiceConfiguration;
+import com.silviomoser.demo.data.CalendarEvent;
+import com.silviomoser.demo.data.Role;
 import com.silviomoser.demo.data.StaticFile;
 import com.silviomoser.demo.data.type.FileType;
 import com.silviomoser.demo.repository.StaticFileRepository;
+import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.utils.StaticFileUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,6 +52,24 @@ public class FileService {
     public ByteArrayInputStream download(StaticFile staticFile) throws IOException {
         final File file = new File(fileServiceConfiguration.getDirectory() + "/" + staticFile.getLocation());
         return new ByteArrayInputStream(FileUtils.readFileToByteArray(file));
+    }
+
+    public StaticFile save(FileHandle fileHandle, String title, String description, Role role, String keywords, CalendarEvent event) {
+
+        StaticFile staticFile = StaticFile.builder()
+                .person(SecurityUtils.getMe())
+                .fileType(fileHandle.getFileType())
+                .title(title)
+                .description(description)
+                .role(role)
+                .keywords(keywords)
+                .location(fileHandle.getName())
+                .event(event)
+                .build();
+
+        staticFileRepository.save(staticFile);
+
+        return staticFile;
     }
 
 

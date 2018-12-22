@@ -16,6 +16,7 @@
       <th scope="col">Datum</th>
       <th scope="col">Anlass</th>
       <th scope="col">Ort</th>
+      <th scope="col">Downloads</th>
     </tr>
     </thead>
     <tbody>
@@ -25,6 +26,20 @@
       <td *ngIf="!event.isFullDay">{{event.dateStart | date : "dd.MM.yyyy, hh:mm"}}</td>
       <td>{{event.title}}</td>
       <td>{{event.location}}</td>
+      <td>
+        <ul *ngFor="let file of event.files" style="list-style-type: none; padding: 0px; margin: 0px">
+          <li *ngIf="file.fileType=='PDF'" (click)="downloadAttachment(file.id, 'application/pdf')">
+            <span
+              class="fa fa-file-pdf-o"
+              aria-hidden="true"></span>&nbsp;{{file.title}}
+          </li>
+          <li *ngIf="file.fileType=='XLSX'">
+            <span
+              class="fa fa-file-excel-o"
+              aria-hidden="true"></span>&nbsp;{{file.title}}
+          </li>
+        </ul>
+        {{event.file}}</td>
     </tr>
     </tbody>
   </table>

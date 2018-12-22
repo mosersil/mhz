@@ -42,6 +42,9 @@
             <li class="dropdown-item">
               <a class="nav-link" routerLink="transactions" routerLinkActive="active">Meine Einkäufe</a>
             </li>
+            <li class="dropdown-item" *ngIf="isAdministrator">
+              <a class="nav-link" routerLink="admin" routerLinkActive="active">Administration</a>
+            </li>
             <li class="dropdown-item">
               <a class="nav-link" (click)="logout()">Logout</a>
             </li>

@@ -32,6 +32,7 @@ const routes: Routes = [
   {path: 'intra', component: InternalComponent, canActivate: [AuthGuard]},
   {path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: 'admin', redirectTo: '/app', pathMatch: 'full'},
   {path: '**', component: HomeComponent},
 
 

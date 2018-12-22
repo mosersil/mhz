@@ -13,6 +13,7 @@ import {Router} from "@angular/router";
 export class HeaderComponent implements OnInit {
 
   hotarticle = null;
+  isAdministrator: boolean = true;
 
   backendUrl = environment.backendUrl;
 

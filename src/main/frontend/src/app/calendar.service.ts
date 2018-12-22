@@ -58,4 +58,29 @@ export class CalendarService {
     });
   }
 
+
+  downloadAttachment(id: string, type: string) {
+    this.http.get(environment.backendUrl + "/public/api/download?id="+id, {
+      responseType: 'arraybuffer'
+    })
+      .subscribe(response => this.downLoadFile(response, type));
+  }
+
+  /**
+   * Method is use to download file.
+   * @param data - Array Buffer data
+   * @param type - type of the document.
+   */
+  downLoadFile(data: any, type: string) {
+    var blob = new Blob([data], {type: type});
+
+    switch (type) {
+      case 'application/vnd.ms-excel':
+        saveAs(blob, 'download.xls');
+        break;
+      case 'application/pdf':
+        saveAs(blob, 'download.pdf')
+        break;
+    }
+
 }
