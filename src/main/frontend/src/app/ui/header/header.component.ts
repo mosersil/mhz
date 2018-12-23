@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
 
   backendUrl = environment.backendUrl;
 
-  constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService, private router: Router) {
+  constructor(public _newsService: NewsService, public _authenticationService: AuthenticationService, private router: Router) {
   }
 
 
