@@ -30,7 +30,7 @@
       <ul class="nav navbar-nav navbar-right">
 
 
-        <li class="nav-item dropdown" *ngIf="isAuthenticated(); else showLoginOnly">
+        <li class="nav-item dropdown" *ngIf="_authenticationService.isAuthenticated(); else showLoginOnly">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-user fa-lg" aria-hidden="true"></span>
@@ -42,7 +42,7 @@
             <li class="dropdown-item">
               <a class="nav-link" routerLink="transactions" routerLinkActive="active">Meine Einkäufe</a>
             </li>
-            <li class="dropdown-item" *ngIf="isAdministrator">
+            <li class="dropdown-item" *ngIf="_authenticationService.administrator">
               <a class="nav-link" href="/app">Administration</a>
             </li>
             <li class="dropdown-item">

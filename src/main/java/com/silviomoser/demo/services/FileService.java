@@ -56,7 +56,7 @@ public class FileService {
     public ByteArrayInputStream download(StaticFile staticFile) throws ServiceException {
         final String absolutePath = addTrailingSlash(fileServiceConfiguration.getDirectory()) + staticFile.getLocation();
         final File file = new File(absolutePath);
-        if (file.exists()) {
+        if (!file.exists()) {
             log.warn(String.format("File %s does not exist", file));
             throw new ServiceException(String.format("File %s does not exist", file));
         }

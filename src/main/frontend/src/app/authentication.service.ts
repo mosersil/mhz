@@ -15,34 +15,52 @@ import {isUndefined} from "util";
 export class AuthenticationService {
 
 
-
   me: Person;
-  authenticated: boolean
+  authenticated: boolean;
+  administrator: boolean = false;
   me_change: Subject<Person> = new Subject<Person>();
-  authenticated_change: Subject<boolean> = new Subject<boolean>()
+  authenticated_change: Subject<boolean> = new Subject<boolean>();
+  administrator_change: Subject<boolean> = new Subject<boolean>();
 
   constructor(private http: HttpClient) {
     this.me_change.subscribe(value => {
       this.me = value;
     });
+
     this.authenticated_change.subscribe(value => {
       this.authenticated = value;
-    })
+    });
+
+    this.administrator_change.subscribe(value => {
+      this.administrator = value;
+    });
+
     if (this.authenticated == undefined) {
       this.getMe();
     }
   }
 
 
-  async getMe() {
+  public getMe() {
     if (isUndefined(this.me)) {
       this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
           this.me_change.next(success);
           this.authenticated_change.next(true);
+
+          if (success) {
+            success.user.roles.forEach(role => {
+              if (role.type == 'ADMIN') {
+                this.administrator_change.next(true);
+              }
+            });
+          } else {
+            this.administrator_change.next(false);
+          }
         }, error1 => {
-          console.log("error: " + error1.error.message);
+          //console.log("error: " + error1.error.message);
           this.me_change.next(null);
           this.authenticated_change.next(false);
+          this.administrator_change.next(false);
         }
       )
     }
@@ -86,6 +104,8 @@ export class AuthenticationService {
 
   logout() {
     localStorage.removeItem("jwt");
-    return this.http.get(environment.backendUrl + '/logout')
+    this.authenticated = false;
+    this.administrator_change.next(false);
+    return this.http.get(environment.backendUrl + '/logout');
   }
 }

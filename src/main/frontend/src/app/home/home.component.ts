@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   events;
   main_background: string = "url('" + environment.backendUrl + "/public/api/background')";
-  hotArticle;
+  hotArticle: any;
 
   constructor(private _calendarService: CalendarService, private _newsService: NewsService) {
   }
