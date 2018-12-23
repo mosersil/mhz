@@ -16,10 +16,13 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 @SpringComponent
@@ -34,44 +37,84 @@ public class CalendarEditor extends AbstractEditor<CalendarEvent> {
 
     private I18Helper i18Helper = new I18Helper(VaadinSession.getCurrent().getLocale());
 
-    TextField title = new TextField("Anlass");
-    DateTimeField dateStart = new DateTimeField("Datum/Zeit (Beginn)");
-    DateTimeField dateEnd = new DateTimeField("Datum/Zeit (Beginn)");
-    CheckBox fullDay = new CheckBox("Ganztägiger Anlass");
-    CheckBox publicEvent = new CheckBox("Öffentlicher Anlass");
-    TextArea remarks = new TextArea("Bemerkungen");
-    final FileReceiver fileReceiver = new FileReceiver();
-    final Upload upload = new Upload("Anhang hinzufügen", fileReceiver);
-    final Grid<StaticFile> fileGrid = new Grid("Datei Anhänge");
-    TextField fileNameEditor = new TextField("Name");
-    final ComboBox<Role> roleEditor = new ComboBox<>(i18Helper.getMessage("file_authorization"));
-    RadioButtonGroup<DressCode> dressCodeRadioButtonGroup = new RadioButtonGroup<>("Dresscode", DataProvider.ofItems(DressCode.values()));
+    private final TextField title = new TextField("Anlass");
+    private final DateTimeField dateStart = new DateTimeField("Datum/Zeit (Beginn)");
+    private final DateTimeField dateEnd = new DateTimeField("Datum/Zeit (Ende)");
+    private final CheckBox fullDay = new CheckBox("Ganztägiger Anlass");
+    private final CheckBox publicEvent = new CheckBox("Öffentlicher Anlass");
+    private final TextArea remarks = new TextArea("Bemerkungen");
+    private final FileReceiver fileReceiver = new FileReceiver();
+    private final Upload upload = new Upload("Anhang hinzufügen", fileReceiver);
+    private final Grid<StaticFile> fileGrid = new Grid("Verknüpfte Anhänge");
+    private final TextField fileNameEditor = new TextField("Name");
+    private final ComboBox<Role> roleEditor = new ComboBox<>(i18Helper.getMessage("file_authorization"));
+    private final RadioButtonGroup<DressCode> dressCodeRadioButtonGroup = new RadioButtonGroup<>("Dresscode", DataProvider.ofItems(DressCode.values()));
 
-    Button removeSelectedFile = new Button("Remove");
+    private final Button removeSelectedFile = new Button("Markierte Anhänge entfernen");
 
-    StaticFile selectedStaticFile;
+    private StaticFile selectedStaticFile;
+
+    private final TabSheet tabSheet = new TabSheet();
 
 
     @Override
     public Layout initLayout() {
-        dressCodeRadioButtonGroup.setItemCaptionGenerator(it -> i18Helper.getMessage(it.getTag()));
-        FormLayout layout = new FormLayout();
+
+        tabSheet.setHeight(700.0f, Unit.PIXELS);
+        tabSheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
+        tabSheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
+
+
+        tabSheet.addTab(assembleBaseTab(), "Anlass Daten");
+        tabSheet.addTab(assembleAttachmentsTab(), "Downloads");
+
+        final FormLayout layout = new FormLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
         setWidth(700);
-        remarks.setSizeFull();
 
-        title.setWidth(400, Unit.PIXELS);
-        fullDay.setDescription("Ein ganztägiger Anlass erscheint ohne genaue von/bis Zeitangabe im Veranstaltungskalender");
-        publicEvent.setDescription("Ein öffentlicher Anlass erscheint im Veranstaltungskalender auf der Homepage");
+        upload.setButtonCaption("Datei auswählen...");
 
+        layout.addComponents(tabSheet);
+        return layout;
+    }
+
+    @Override
+    public Binder initBinder() {
+        final Binder<CalendarEvent> binder = new Binder<>(CalendarEvent.class);
+        binder.forField(title)
+                .asRequired("Bitte Titel vom Anlass angeben")
+                .withValidator(new StringLengthValidator("Ungültige Eingabe", 3, 30))
+                .bind(CalendarEvent::getTitle, CalendarEvent::setTitle);
+        binder.forField(dressCodeRadioButtonGroup)
+                .asRequired("Bitte Dresscode wählen")
+                .bind(CalendarEvent::getDressCode, CalendarEvent::setDressCode);
+
+        binder.forField(dateStart).asRequired("Bitte Startdatum/Zeit angeben");
+        binder.forField(dateEnd).asRequired("Bitte Enddatum/Zeit angeben oder Anlass als ganztägig markieren");
+        binder.bindInstanceFields(this);
+        return binder;
+    }
+
+    public void populateFields() {
+        if (actualEntity.getFiles()!=null) {
+            fileGrid.setItems(actualEntity.getFiles());
+        } else {
+            fileGrid.setItems(new HashSet<>(0));
+        }
+    }
+
+
+    private VerticalLayout assembleAttachmentsTab() {
+
+        final VerticalLayout attachmentsTab = new VerticalLayout();
 
         roleEditor.setItems(roleRepository.findAll());
         roleEditor.setItemCaptionGenerator((ItemCaptionGenerator<Role>) role -> role.getType().getLabel());
 
-        Binder<StaticFile> binder = fileGrid.getEditor().getBinder();
-        Binder.Binding<StaticFile, String> titleBinding = binder.bind(fileNameEditor, StaticFile::getTitle, StaticFile::setTitle);
-        Binder.Binding<StaticFile, Role> roleBinding = binder.bind(roleEditor, StaticFile::getRole, StaticFile::setRole);
+        final Binder<StaticFile> binder = fileGrid.getEditor().getBinder();
+        final Binder.Binding<StaticFile, String> titleBinding = binder.bind(fileNameEditor, StaticFile::getTitle, StaticFile::setTitle);
+        final Binder.Binding<StaticFile, Role> roleBinding = binder.bind(roleEditor, StaticFile::getRole, StaticFile::setRole);
 
         fileGrid.addColumn(StaticFile::getTitle).setCaption("Titel").setEditorBinding(titleBinding);
         fileGrid.addColumn(StaticFile::getRole).setCaption("Berechtigung").setEditorBinding(roleBinding);
@@ -85,46 +128,37 @@ public class CalendarEditor extends AbstractEditor<CalendarEvent> {
             selectedStaticFile = event.getItem();
         });
 
+        //removeSelectedFile.setCaption("Markierte entfernen");
+
         removeSelectedFile.addClickListener(event -> {
             actualEntity.getFiles().remove(selectedStaticFile);
             fileGrid.setItems(actualEntity.getFiles());
         });
 
 
-
-
-
-
-
-        // Create the upload with a caption and set receiver later
-
-        upload.setButtonCaption("Start Upload");
         upload.addSucceededListener(fileReceiver);
 
-        layout.addComponents(title, dateStart, dateEnd, fullDay, publicEvent, remarks, dressCodeRadioButtonGroup, fileGrid, upload, removeSelectedFile);
-        return layout;
+
+        attachmentsTab.addComponents(fileGrid, removeSelectedFile, upload);
+
+        return attachmentsTab;
     }
 
-    @Override
-    public Binder initBinder() {
-        Binder<CalendarEvent> binder = new Binder<>(CalendarEvent.class);
-        binder.forField(title)
-                .asRequired("Bitte Titel vom Anlass angeben")
-                .withValidator(new StringLengthValidator("Ungültige Eingabe", 3, 30))
-                .bind(CalendarEvent::getTitle, CalendarEvent::setTitle);
-        binder.forField(dressCodeRadioButtonGroup)
-                .asRequired("Bitte Dresscode wählen")
-                .bind(CalendarEvent::getDressCode, CalendarEvent::setDressCode);
 
-        //binder.forField(filesSelect).bind(CalendarEvent::getFiles, CalendarEvent::setFiles);
-        binder.bindInstanceFields(this);
-        return binder;
+    private VerticalLayout assembleBaseTab() {
+        final VerticalLayout baseAttributesTab = new VerticalLayout();
+
+        dressCodeRadioButtonGroup.setItemCaptionGenerator(it -> i18Helper.getMessage(it.getTag()));
+        remarks.setSizeFull();
+
+        title.setWidth(400, Unit.PIXELS);
+        fullDay.setDescription("Ein ganztägiger Anlass erscheint ohne genaue von/bis Zeitangabe im Veranstaltungskalender");
+        publicEvent.setDescription("Ein öffentlicher Anlass erscheint im Veranstaltungskalender auf der Homepage");
+
+        baseAttributesTab.addComponents(title, dateStart, dateEnd, fullDay, publicEvent, remarks, dressCodeRadioButtonGroup);
+
+        return baseAttributesTab;
     }
-
-    public void populateFields() {
-        fileGrid.setItems(actualEntity.getFiles());
-    }
-
 
 
     // Implement both receiver that saves upload in a file and

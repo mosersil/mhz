@@ -11,6 +11,7 @@ import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.utils.StaticFileUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @Service("fileService")
 @Getter
 @Setter
+@Slf4j
 public class FileService {
 
     @Autowired
@@ -44,19 +46,27 @@ public class FileService {
     }
 
     public StaticFile findById(long id) {
-        Optional<StaticFile> optionalStaticFile = staticFileRepository.findById(id);
+        final Optional<StaticFile> optionalStaticFile = staticFileRepository.findById(id);
         return optionalStaticFile.isPresent() ? optionalStaticFile.get() : null;
     }
 
 
-    public ByteArrayInputStream download(StaticFile staticFile) throws IOException {
+    public ByteArrayInputStream download(StaticFile staticFile) throws ServiceException {
         final File file = new File(fileServiceConfiguration.getDirectory() + "/" + staticFile.getLocation());
-        return new ByteArrayInputStream(FileUtils.readFileToByteArray(file));
+        if (file.exists()) {
+            throw new ServiceException(String.format("File %s does not exist", staticFile.getLocation()));
+        }
+        try {
+            return new ByteArrayInputStream(FileUtils.readFileToByteArray(file));
+        } catch (IOException e) {
+            log.warn(String.format("Unexpected exception occured when downloading file %s: %s", staticFile, e.getMessage()), e);
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 
     public StaticFile save(FileHandle fileHandle, String title, String description, Role role, String keywords, CalendarEvent event) {
 
-        StaticFile staticFile = StaticFile.builder()
+        final StaticFile staticFile = StaticFile.builder()
                 .person(SecurityUtils.getMe())
                 .fileType(fileHandle.getFileType())
                 .title(title)

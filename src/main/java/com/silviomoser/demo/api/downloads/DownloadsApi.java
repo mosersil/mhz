@@ -5,10 +5,12 @@ import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.data.StaticFile;
 import com.silviomoser.demo.services.FileService;
+import com.silviomoser.demo.services.ServiceException;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @RestController
+@Slf4j
 public class DownloadsApi implements ApiController {
 
     @Autowired
@@ -44,6 +47,7 @@ public class DownloadsApi implements ApiController {
         final StaticFile staticFile = fileService.findById(id);
 
         if (staticFile.getRole() != null) {
+            log.warn(String.format("rejected attempt to download file id '%s' (unauthorized)", id));
             throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
         }
 
@@ -51,7 +55,7 @@ public class DownloadsApi implements ApiController {
             try {
                 final ByteArrayInputStream bis = fileService.download(staticFile);
                 return downloadResponse(bis, staticFile);
-            } catch (IOException e) {
+            } catch (ServiceException e) {
                 throw new ApiException(e.getMessage());
             }
         }

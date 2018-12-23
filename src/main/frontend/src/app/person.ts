@@ -1,3 +1,5 @@
+import {Role} from "./role";
+
 export class Person {
 
   //gender: string
@@ -5,4 +7,5 @@ export class Person {
   lastName: string;
   email: string;
   organizations: string[];
+  roles: Role[]
 }

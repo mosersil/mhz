@@ -41,6 +41,7 @@ public class StaticFile extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
+    @ToString.Exclude
     private Person person;
 
     @Column(name = "LOCATION")

@@ -75,6 +75,7 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     @XlsReport(header = "Tenue")
     private DressCode dressCode;
 
+    @ToString.Exclude
     @JsonView(Views.Public.class)
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "event",
@@ -83,6 +84,7 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     )
     private Set<StaticFile> files;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "event")
     private Set<Participation> participants;
 

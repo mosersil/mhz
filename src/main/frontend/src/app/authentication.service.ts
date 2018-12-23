@@ -34,7 +34,6 @@ export class AuthenticationService {
   }
 
 
-  // Uses http.get() to load data from a single API endpoint
   async getMe() {
     if (isUndefined(this.me)) {
       this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
