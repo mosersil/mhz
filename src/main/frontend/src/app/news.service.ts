@@ -15,9 +15,7 @@ export class NewsService {
   constructor(private http: HttpClient) {
   }
 
-  // Uses http.get() to load data from a single API endpoint
   getArticle() {
-    console.log("Backend: " + environment.backendUrl);
     return this.http.get<Article>(environment.backendUrl + '/public/api/article');
   }
 }

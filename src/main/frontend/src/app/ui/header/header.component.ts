@@ -3,6 +3,8 @@ import {environment} from "../../../environments/environment";
 import {NewsService} from "../../news.service";
 import {AuthenticationService} from "../../authentication.service";
 import {Router} from "@angular/router";
+import {Role} from "../../role";
+import {Person} from "../../person";
 
 
 @Component({
@@ -16,24 +18,17 @@ export class HeaderComponent implements OnInit {
 
   backendUrl = environment.backendUrl;
 
-  constructor(private _newsService: NewsService, private _authenticationService: AuthenticationService, private router: Router) {
-    console.log("backend: " + this.backendUrl);
+  constructor(public _newsService: NewsService, public _authenticationService: AuthenticationService, private router: Router) {
   }
 
 
   ngOnInit() {
-    console.log("header: onInit called. Backend: " + this.backendUrl);
     this.getArticle();
-
   }
 
   public logout() {
     this._authenticationService.logout();
     this.router.navigate(['home']);
-  }
-
-  isAuthenticated() {
-    return this._authenticationService.isAuthenticated();
   }
 
 

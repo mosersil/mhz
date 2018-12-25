@@ -12,7 +12,7 @@ export class CalendarComponent implements OnInit {
   backendUrl: string = environment.backendUrl;
   events;
   showOnlyPublic: boolean = true;
-  subscribe_url: string = environment.backendUrl+'/public/api/ical'
+  subscribe_url: string = environment.backendUrl + '/public/api/ical'
 
   constructor(private _calendarService: CalendarService) {
   }
@@ -32,10 +32,12 @@ export class CalendarComponent implements OnInit {
 
 
   downloadIcal() {
-    console.log("hallo");
     this._calendarService.downloadCalendarIcal(true);
   }
 
+  downloadAttachment(id: string, type: string) {
+    this._calendarService.downloadAttachment(id, type)
+  }
 
 
   public toggleShowOnlyPublic() {

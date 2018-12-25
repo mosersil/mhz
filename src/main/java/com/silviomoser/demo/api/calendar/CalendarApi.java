@@ -2,9 +2,11 @@ package com.silviomoser.demo.api.calendar;
 
 import biweekly.Biweekly;
 import biweekly.ICalendar;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.data.CalendarEvent;
+import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.repository.CalendarEventRepository;
 import com.silviomoser.demo.services.CalendarService;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +38,7 @@ public class CalendarApi implements ApiController {
 
     @CrossOrigin(origins = "*")
     @ApiOperation(value = "List events starting from a given date")
+    @JsonView(Views.Public.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = CalendarEvent.class),
             @ApiResponse(code = 400, message = "Bad request")

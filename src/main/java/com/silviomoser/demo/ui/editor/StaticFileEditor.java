@@ -98,7 +98,7 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
 
         public void uploadSucceeded(Upload.SucceededEvent event) {
             actualEntity.setFileType(FileType.byMimeType(event.getMIMEType().toUpperCase()));
-            actualEntity.setLocation(fileHandle.getName());
+            actualEntity.setLocation(this.fileHandle.getName());
             actualEntity.setPerson(SecurityUtils.getMe());
         }
     }

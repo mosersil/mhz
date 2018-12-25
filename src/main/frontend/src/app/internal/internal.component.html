@@ -4,7 +4,11 @@
     <strong>Herzlich willkommen</strong><br/> {{person.firstName}} {{person.lastName}}
   </div>
 
-  <h2>Terminkalender</h2>
+
+
+
+
+  <h2>Jahresprogramm</h2>
   <table class="table">
     <thead>
     <tr>
@@ -19,30 +23,30 @@
 
     <tr>
       <th scope="row">1</th>
-      <td>Jahresprogramm</td>
+      <td>Jahresprogramm {{year_actual}}</td>
       <td>Alle Termine im Jahr {{year_actual}}</td>
       <td>
         <span
-          (click)="downloadFile('/api/protected/internal/calendar?year=2018&format=PDF', 'application/pdf')"
+          (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=PDF', 'application/pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
         <span
-          (click)="downloadFile('/api/protected/internal/calendar?year=2018&format=XLS', 'application/vnd.ms-excel')"
+          (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=XLS', 'application/vnd.ms-excel')"
           class="fa fa-file-excel-o" aria-hidden="true"></span>
       </td>
     </tr>
 
     <tr>
       <th scope="row">2</th>
-      <td>Ausblick</td>
+      <td>Ausblick {{year_next}}</td>
       <td>Alle Termine im Jahr {{year_next}}</td>
       <td>
          <span
-           (click)="downloadFile('/api/protected/internal/calendar?year=2019&format=PDF', 'application/pdf')"
+           (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=PDF', 'application/pdf')"
            class="fa fa-file-pdf-o"
            aria-hidden="true"></span>&nbsp;
         <span
-          (click)="downloadFile('/api/protected/internal/calendar?year=2019&format=XLS', 'application/vnd.ms-excel')"
+          (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=XLS', 'application/vnd.ms-excel')"
           class="fa fa-file-excel-o" aria-hidden="true"></span>
       </td>
     </tr>

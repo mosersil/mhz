@@ -20,6 +20,7 @@
         <loadData tableName="SHOP_ITEM_PURCHASE" file="../static/shop_item_purchase.csv" relativeToChangelogFile="true" quotchar="'"/>
         <loadData tableName="SHOP_TRANSACTION" file="../static/shop_transaction.csv" relativeToChangelogFile="true" quotchar="'" />
         <loadData tableName="IMAGE" file="../static/image.csv" relativeToChangelogFile="true" quotchar="'" />
+        <loadData tableName="STATIC_FILE" file="../static/staticfiles.csv" relativeToChangelogFile="true" quotchar="'" />
 
 <!--
         <insert tableName="PERSON">
