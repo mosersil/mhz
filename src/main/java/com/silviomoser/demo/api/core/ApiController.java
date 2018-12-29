@@ -4,6 +4,8 @@ public interface ApiController {
 
     String URL_CALENDAR = "/public/api/calendar";
     String URL_DOWNLOADS = "/public/api/download";
+    String URL_MEMBERLIST = "/api/public/members";
+    String URL_MEMBERMETA = "/api/public/member_data";
     String URL_AUTH_USER = "/auth/user";
     String URL_AUTH_INITPWRESET = "/auth/initPwReset";
     String URL_AUTH_REDEEMTOKEN = "/auth/redeemToken";

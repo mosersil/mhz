@@ -10,13 +10,25 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static com.silviomoser.demo.utils.StringUtils.capitalizeFirstCharacter;
 import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
@@ -32,40 +44,40 @@ import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
 public class Person extends AbstractEntity {
 
 
-    @JsonView(Views.Public.class)
+    @JsonView({Views.Public.class, Views.Internal.class})
     @NotNull
     @Column(name = "FIRST_NAME", nullable = false, length = 30)
     @Size(min = 2, max = 30)
     @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
     private String firstName;
 
-    @JsonView(Views.Public.class)
+    @JsonView({Views.Public.class, Views.Internal.class})
     @NotNull
     @Column(name = "LAST_NAME", nullable = false, length = 30)
     @Size(min = 2, max = 30)
     @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
     private String lastName;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     @NotNull
     @Column(name = "GENDER", nullable = false)
     private Gender gender;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     @NotNull
     @Column(name = "ADDRESS1", nullable = false, length = 50)
     private String address1;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     @Column(name = "ADDRESS2", length = 50)
     private String address2;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     @Pattern(regexp = "[0-9]+")
     @Column(name = "ZIP", nullable = false, length = 10)
     private String zip;
 
-    @JsonView(Views.Public.class)
+    @JsonView({Views.Internal.class})
     @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
     @Column(name = "CITY", nullable = false, length = 30)
     private String city;
@@ -82,12 +94,15 @@ public class Person extends AbstractEntity {
     @Column(name = "Email", length = 50, unique = true)
     private String email;
 
+    @Column(name = "BIRTHDATE")
+    private LocalDate birthDate;
+
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "person"
     )
     private Set<Membership> memberships;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
@@ -95,7 +110,7 @@ public class Person extends AbstractEntity {
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private PersonVerification personVerification;
 
-    @JsonView(Views.Public.class)
+    @JsonView({Views.Public.class, Views.Internal.class})
     @Transient
     public List<String> getOrganizations() {
         return OrganizationUtils.getActiveOrganizations(this);

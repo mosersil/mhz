@@ -1,10 +1,13 @@
 package com.silviomoser.demo.api.shop;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.itextpdf.text.DocumentException;
 import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.config.PaymentConfiguration;
-import com.silviomoser.demo.data.*;
+import com.silviomoser.demo.data.Person;
+import com.silviomoser.demo.data.ShopItem;
+import com.silviomoser.demo.data.ShopItemPurchase;
+import com.silviomoser.demo.data.ShopTransaction;
+import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.data.type.ShopPaymentType;
 import com.silviomoser.demo.repository.ShopItemPurchaseRepository;
@@ -12,7 +15,6 @@ import com.silviomoser.demo.repository.ShopItemRepository;
 import com.silviomoser.demo.repository.ShopTransactionRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.utils.FormatUtils;
-import com.silviomoser.demo.utils.PdfBuilder;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -26,11 +28,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +69,7 @@ public class ShopApi {
             @ApiResponse(code = 200, message = "Success", response = ShopTransaction.class),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     @RequestMapping(value = "/api/protected/shop/transactions", method = RequestMethod.GET)
     public List<ShopTransaction> listTransactions() {
         List<ShopTransaction> myTransactions =  shopTransactionRepository.findByPerson(SecurityUtils.getMe());

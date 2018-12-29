@@ -40,7 +40,7 @@ public class AuthenticationApi implements ApiController {
             @ApiResponse(code = 200, message = "Success", response = Person.class),
             @ApiResponse(code = 401, message = "Unauthorized")
     })
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     @RequestMapping(URL_AUTH_USER)
     public Person my() {
         final Person me = SecurityUtils.getMe();

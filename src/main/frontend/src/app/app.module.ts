@@ -26,13 +26,14 @@ import {PaymentComponent} from './payment/payment.component';
 import {NgxStripeModule} from 'ngx-stripe';
 import {TransactionsComponent} from './transactions/transactions.component';
 import {TokenInterceptor} from "./token-interceptor";
-import { ForgotLandingComponent } from './forgot-landing/forgot-landing.component';
+import {ForgotLandingComponent} from './forgot-landing/forgot-landing.component';
 import {QRCodeModule} from "angularx-qrcode";
 import {NgxPopperModule} from "ngx-popper";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GalleryModule} from "@ngx-gallery/core";
 import {BotDetectCaptchaModule} from "angular-captcha";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {ContentsModule} from "angular-contents";
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import {NgxSpinnerModule} from "ngx-spinner";
       captchaEndpoint: '/botdetectcaptcha'
       }
     ),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ContentsModule
   ],
   declarations: [
     AppComponent,
@@ -70,7 +72,7 @@ import {NgxSpinnerModule} from "ngx-spinner";
     ForgotComponent,
     PaymentComponent,
     TransactionsComponent,
-    ForgotLandingComponent,
+    ForgotLandingComponent
   ],
 
   providers: [

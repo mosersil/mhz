@@ -2,6 +2,7 @@ body, html {
   height: 100%;
 }
 
+
 .bg {
   /* The image used */
 
@@ -45,6 +46,34 @@ form.checkout button:active {
   background: rgb(165, 76, 43);
 }
 
+
+#toc_container {
+  background: #f9f9f9 none repeat scroll 0 0;
+  border: 1px solid #aaa;
+  display: table;
+  font-size: 80%;
+  margin-bottom: 1em;
+  padding: 20px;
+  width: auto;
+}
+
+.toc_title {
+  font-weight: 700;
+  text-align: center;
+}
+
+#toc_container li, #toc_container ul, #toc_container ul li{
+  list-style-type: none;
+  margin: 10px 0px 0px 0px;
+  padding: 0;
+}
+
+
+#toc_container > ul > li > ul{
+  list-style-type: disc;
+  margin-left: 10px;
+  padding: 10px;
+}
 
 
 
