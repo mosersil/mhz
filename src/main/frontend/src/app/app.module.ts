@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-
+import {LOCALE_ID, NgModule} from '@angular/core';
+import localeDe from '@angular/common/locales/de-CH';
 import {AppComponent} from './app.component';
 import {UiModule} from './ui/ui.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -34,6 +34,10 @@ import {GalleryModule} from "@ngx-gallery/core";
 import {BotDetectCaptchaModule} from "angular-captcha";
 import {NgxSpinnerModule} from "ngx-spinner";
 import {ContentsModule} from "angular-contents";
+import {registerLocaleData} from "@angular/common";
+
+
+registerLocaleData(localeDe, 'de');
 
 
 @NgModule({
@@ -48,10 +52,10 @@ import {ContentsModule} from "angular-contents";
     AngularFontAwesomeModule,
     QRCodeModule,
     NgxPopperModule,
-    GalleryModule.withConfig({ dots: true, thumbPosition: "top", imageSize: "contain" }),
+    GalleryModule.withConfig({dots: true, thumbPosition: "top", imageSize: "contain"}),
     NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
     BotDetectCaptchaModule.forRoot({
-      captchaEndpoint: '/botdetectcaptcha'
+        captchaEndpoint: '/botdetectcaptcha'
       }
     ),
     NgxSpinnerModule,
@@ -80,7 +84,10 @@ import {ContentsModule} from "angular-contents";
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
+    }, {
+    provide: LOCALE_ID, useValue: 'de'
     },
+
     CalendarService,
     ShopService,
     AuthenticationService,
@@ -88,5 +95,7 @@ import {ContentsModule} from "angular-contents";
   ],
   bootstrap: [AppComponent]
 })
+
+
 export class AppModule {
 }
