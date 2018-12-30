@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
  * Created by silvio on 20.08.18.
  */
 @Data
-public class contactFormModel {
+public class ContactFormModel {
 
     @NotBlank
     private String name;

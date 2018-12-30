@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.internet.MimeMessage;
 import java.util.Optional;
 
+import static com.silviomoser.demo.security.utils.PasswordUtils.generateToken;
 import static com.silviomoser.demo.security.utils.PasswordUtils.hashPassword;
 import static com.silviomoser.demo.security.utils.PasswordUtils.isValidPassword;
 
@@ -22,7 +23,7 @@ import static com.silviomoser.demo.security.utils.PasswordUtils.isValidPassword;
 public class PasswordResetService {
 
     @Autowired
-    public JavaMailSender javaMailSender;
+    public EmailSenderService emailSenderService;
     @Autowired
     public PwResetConfiguration pwResetConfiguration;
     @Autowired
@@ -33,23 +34,12 @@ public class PasswordResetService {
 
         if (optionalUser.isPresent()) {
             final User user = optionalUser.get();
-            user.setResetToken(PasswordUtils.generateToken(50, false));
+            user.setResetToken(generateToken(50, false));
             userRepository.save(user);
 
-            final MimeMessage message = javaMailSender.createMimeMessage();
-            final MimeMessageHelper helper = new MimeMessageHelper(message);
+            final String subject = String.format("%s hat sein Passwort vergessen?", user.getPerson().getFirstName());
 
-            try {
-                helper.setFrom(pwResetConfiguration.getEmailFrom());
-                helper.setTo(user.getPerson().getEmail());
-                helper.setSubject(user.getPerson().getFirstName() + " hat das Passwort vergessen?");
-                helper.setText(renderEmailText(user, forward));
-                javaMailSender.send(message);
-
-            } catch (Exception e) {
-                log.error("Exception while sending email", e);
-                throw new ServiceException("Could not send email", e);
-            }
+            emailSenderService.sendSimpleMail(pwResetConfiguration.getEmailFrom(), user.getPerson().getEmail(), subject, renderEmailText(user, forward));
 
         } else {
             log.warn("User {} does not exist");
@@ -68,10 +58,10 @@ public class PasswordResetService {
         if (!isValidPassword(newPassword, newPasswordConfirmation)) {
             throw new ServiceException("Invalid password");
         }
-        User user = optionalUser.get();
-        user.setPassword(newPassword);
-        userRepository.save(user);
-        return user;
+        final User user = optionalUser.get();
+        user.setPassword(PasswordUtils.hashPassword(newPassword));
+        user.setResetToken(null);
+        return userRepository.save(user);
     }
 
     private String renderEmailText(User user, String forward) {

@@ -1,29 +1,19 @@
 package com.silviomoser.demo.services;
 
 import com.captcha.botdetect.web.servlet.SimpleCaptcha;
-import com.silviomoser.demo.api.contact.contactFormModel;
-import com.silviomoser.demo.api.contact.EmailStatus;
 import com.silviomoser.demo.config.ContactConfiguration;
 import com.silviomoser.demo.ui.i18.I18Helper;
+import com.silviomoser.demo.utils.StringUtils;
 import com.silviomoser.demo.utils.TtlMap;
-import lombok.Data;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.silviomoser.demo.utils.StringUtils.isBlank;
 
@@ -55,15 +45,21 @@ public class ContactService {
             throw new ServiceException("Captcha check failed");
         }
 
+        if (!StringUtils.isValidEmailAddress(emailAddress)) {
+            throw new ServiceException("Invalid email address: " + emailAddress);
+        }
+
+        if (isBlank(name) || isBlank(message)) {
+            throw new ServiceException("Invalid attributes");
+        }
+
         if (hitCache.get(request.getRemoteAddr()) == null) {
             hitCache.put(request.getRemoteAddr(), request.getRemoteAddr());
             emailSenderService.sendSimpleMail(
                     contactConfiguration.getContactEmailFrom(),
                     contactConfiguration.getContactEmailTo(),
                     contactConfiguration.getGetContactEmailSubject(),
-                    assembleEmail(name, emailAddress, message),
-                    name,
-                    emailAddress
+                    assembleEmail(name, emailAddress, message)
                     );
         } else {
             log.warn("Too many hits detected by {}", request.getRemoteAddr());
