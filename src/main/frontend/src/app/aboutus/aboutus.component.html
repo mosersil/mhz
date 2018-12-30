@@ -1,57 +1,172 @@
 <div class="container bg-white rounded shadow p-4">
+  <div class="row">
+    <div class="col-2">
+      <div id="toc_container" class="sticky-top .d-none .d-md-block .d-xl-none">
+        <ul class="sticky-top">
+          <li><a href="about_us#unser_verein">Unser Verein</a></li>
+          <li><a href="about_us#zunftspiel">Zunftspiel</a></li>
+          <li><a href="about_us#mitglieder">Besetzung</a></li>
+          <li><a href="about_us#mitmachen">Mitmachen?</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-10">
+      <h3 id="unser_verein">Unser Verein</h3>
+      <p>
+        Wir sind ein im Zürcher Oberstrass Quartier beheimateter Musikverein, welcher 1899 gegründet wurde. Nebst
+        traditioneller Blasmusik, findet sich in unserem Repertoire vor allem zeitgemässe Unterhaltungsmusik. So
+        erfreuen wir unser Publikum an unserem Unterhaltungskonzert, unserem Konzert in der Kirche oder Sommerkonzerten
+        in und ausserhalb von unserem Quartier mit Rock-, Filmmusik bis hin zu modernen Pop Songs. Wir proben einmal pro
+        Woche am Donnerstagabend von 20 bis 22 Uhr im <a href="https://www.google.com/maps/place/Schulhaus+Riedtli/@47.3890832,8.5432731,15z/data=!4m5!3m4!1s0x0:0x94761d34ed980838!8m2!3d47.3890832!4d8.5432731">Schluhaus Riedtli</a>. Zu den regulären Proben
+        kommen vor grösseren Anlässen je nach Bedarf zusätzliche Gesamt-, Satz- oder Registerproben.
+      </p>
 
-  <h1>Über uns</h1>
-  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-  magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-  gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
-  elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
-  et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
-  sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-  dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
-  kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+      <h3 id="zunftspiel">Zunftspiel</h3>
+      <p>
+        Dass wir das Zunftspiel der <a href="http://www.zunft-oberstrass.ch/">Zunft zu Oberstrass</a> sind, macht uns
+        grosse Freude und erfüllt uns - das geben wir als Stadtzürcher Musikverein natürlich gerne zu - mit einem
+        gewissen Stolz. Wir pflegen eine sehr
+        freundschaftliche Beziehung zur Zunft und begleiten diese nicht nur am Zürcher Sechseläuten, sondern spielen
+        auch an zwei weiteren Anlässen pro Jahr für die Zunft auf.
+      </p>
+      <h3 id="mitglieder">Besetzung</h3>
+      <p>
+        Aktuell sind wir {{member_count}} Mitglieder, die bei uns wortwörtlich den Ton angeben. Wir sind keine Profis,
+        jedoch teilen wir alle die Leidenschaft für gute Blasmusik und haben einfach nur grossen Spass an der Sache!
+      </p>
+      <dl class="row">
+        <dt class="col-sm-3">Dirigent:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_conductor; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
 
-  Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat
-  nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue
-  duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-  euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+        <dt class="col-sm-3">Piccolo/Querflöte/Oboe:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_flute; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
 
-  Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
-  consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore
-  eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril
-  delenit augue duis dolore te feugait nulla facilisi.
+        <dt class="col-sm-3">Klarinette:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_clarinet; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
 
-  Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim
-  assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
-  dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
-  lobortis nisl ut aliquip ex ea commodo consequat.
+        <dt class="col-sm-3">Saxophon:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_sax; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
 
-  Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat
-  nulla facilisis.
+        <dt class="col-sm-3">Trompete/Cornet:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_trumpet; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
 
-  At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-  ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-  ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-  Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
-  consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et
-  et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua.
-  est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-  invidunt ut labore et dolore magna aliquyam erat.
+        <dt class="col-sm-3">Waldhorn:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_horn; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
 
-  Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-  voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
-  est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-  invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-  rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
-  consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-  voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.
+        <dt class="col-sm-3">Tenorhorn/Bariton:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_bariton; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
 
-  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-  magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-  gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
-  elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
-  et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
-  sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-  dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
-  kasd gubergren, no sea
+        <dt class="col-sm-3">Posaune:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_trombone; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+
+        <dt class="col-sm-3">Tuba:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_tuba; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+
+        <dt class="col-sm-3">Perkussion:</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of members_percussion; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+      </dl>
+
+
+      <h3>Vorstand</h3>
+      <p>
+        Der Vereinsvorstand setzt sich aktuell folgendermassen zusammen:
+      </p>
+
+
+      <dl class="row">
+        <dt class="col-sm-3">Präsidium</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of president; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '':", "}}
+          </span>
+        </dd>
+
+        <dt class="col-sm-3">Aktuar</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of secretary; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+
+        <dt class="col-sm-3">Kassier</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of cashier; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+
+        <dt class="col-sm-3">Bibliothekar</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of librarian; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+
+        <dt class="col-sm-3">Materialverwalter</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of logistics; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+
+        <dt class="col-sm-3">Beisitzer</dt>
+        <dd class="col-sm-9">
+          <span *ngFor="let record of board_member; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '' : ", "}}
+          </span>
+        </dd>
+      </dl>
+
+
+      <h3 id="mitmachen">Mitmachen?</h3>
+      <p>Sie spielen ein Instrument und können sich vorstellen, in unserem Verein mitzumachen? Motivierte Musikanten
+        sind bei uns immer Willkommen. Gerne dürfen Sie an einer Probe einmal unverbindlich reinschnuppern. Bitte
+        schreiben Sie uns eine Nachricht über das <a href="/contact">Kontaktformular</a>. Wir werden uns gerne bei
+        Ihnen
+        melden und freuen uns auf Sie!</p>
+    </div>
+  </div>
+
+</div>
 
 

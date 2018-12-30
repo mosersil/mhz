@@ -1,7 +1,7 @@
 <div class="container-fluid" [ngStyle]="{'background-image': main_background}" style="background-repeat: no-repeat">
   <div class="jumbotron" style="background: none">
     <div class="container bg-transparent text-white mb-5">
-      <h1>Musikverein Harmonie Zürich-Oberstrass</h1>
+      <h1 style="color: white">Musikverein Harmonie Zürich-Oberstrass</h1>
       <p>
         Demo Website für den Musikverein Harmonie Zürich-Oberstrass!
       </p>
@@ -29,8 +29,7 @@
         <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title">Lust zum mitspielen?</h5>
-            <p class="card-text">Du spielst ein Instrument und möchtest bei uns mitmachen? Hier findest du mehr
-              informationen</p>
+            <p class="card-text">Sie spielen ein Instrument und möchten Ihr Hobby in einem motivierten und geselligen Verein ausüben? Vielleicht wäre unser Verein ja etwas für Sie! Hier finden Sie weitere Informationen:</p>
             <a class="btn btn-primary" routerLink="/about_us">Mehr</a>
           </div>
         </div>
@@ -49,16 +48,15 @@
       <div class="col-md-4">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Agenda</h5>
-            <p class="card-text">Unsere nächsten Termine:</p>
-            <ul class="list-group" *ngFor=" let event of events">
-              <li class="list-group-item border-0" *ngIf="!event.isFullDay">
-                {{event.dateStart | date : "dd.MM.yyyy"}} : {{event.title}} ({{event.dateStart | date : "hh:mm"}})
-              </li>
-              <li class="list-group-item border-0" *ngIf="event.isFullDay">
-                {{event.dateStart | date : "dd.MM.yyyy"}} : {{event.title}}
-              </li>
-            </ul>
+            <h5 class="card-title">Unsere nächsten Auftritte</h5>
+            <dl *ngFor="let event of events">
+              <dt>{{event.title}}</dt>
+              <dd *ngIf="!event.fullDay">{{event.dateStart | date : "EEEE, dd.MM.yyyy"}}<br/>
+                {{event.dateStart | date : "HH:mm"}} Uhr <br>
+                {{event.location}}</dd>
+              <dd *ngIf="event.fullDay">{{event.dateStart | date : "EEEE, dd.MM.yyyy"}}<br/>
+                {{event.location}}</dd>
+            </dl>
             <a class="btn btn-primary" routerLink="/calendar">Alle unsere Auftritte</a>
           </div>
         </div>

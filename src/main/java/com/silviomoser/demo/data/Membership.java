@@ -1,10 +1,15 @@
 package com.silviomoser.demo.data;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -19,6 +24,7 @@ import java.time.LocalDateTime;
 public class Membership extends AbstractEntity {
 
     @ToString.Exclude
+    @JsonView({Views.Public.class, Views.Internal.class})
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
     private Person person;
@@ -33,6 +39,7 @@ public class Membership extends AbstractEntity {
     @Column(name = "LEAVE_DATE")
     private LocalDateTime leaveDate;
 
+    @JsonView({Views.Public.class, Views.Internal.class})
     @Column(name = "FUNCTION")
     private String function;
 

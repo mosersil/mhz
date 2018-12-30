@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-
+import {LOCALE_ID, NgModule} from '@angular/core';
+import localeDe from '@angular/common/locales/de-CH';
 import {AppComponent} from './app.component';
 import {UiModule} from './ui/ui.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -26,13 +26,18 @@ import {PaymentComponent} from './payment/payment.component';
 import {NgxStripeModule} from 'ngx-stripe';
 import {TransactionsComponent} from './transactions/transactions.component';
 import {TokenInterceptor} from "./token-interceptor";
-import { ForgotLandingComponent } from './forgot-landing/forgot-landing.component';
+import {ForgotLandingComponent} from './forgot-landing/forgot-landing.component';
 import {QRCodeModule} from "angularx-qrcode";
 import {NgxPopperModule} from "ngx-popper";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GalleryModule} from "@ngx-gallery/core";
 import {BotDetectCaptchaModule} from "angular-captcha";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {ContentsModule} from "angular-contents";
+import {registerLocaleData} from "@angular/common";
+
+
+registerLocaleData(localeDe, 'de');
 
 
 @NgModule({
@@ -47,13 +52,14 @@ import {NgxSpinnerModule} from "ngx-spinner";
     AngularFontAwesomeModule,
     QRCodeModule,
     NgxPopperModule,
-    GalleryModule.withConfig({ dots: true, thumbPosition: "top", imageSize: "contain" }),
+    GalleryModule.withConfig({dots: true, thumbPosition: "top", imageSize: "contain"}),
     NgxStripeModule.forRoot('pk_test_D19x4omdZwLxxIlJZuivB41j'),
     BotDetectCaptchaModule.forRoot({
-      captchaEndpoint: '/botdetectcaptcha'
+        captchaEndpoint: '/botdetectcaptcha'
       }
     ),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ContentsModule
   ],
   declarations: [
     AppComponent,
@@ -70,7 +76,7 @@ import {NgxSpinnerModule} from "ngx-spinner";
     ForgotComponent,
     PaymentComponent,
     TransactionsComponent,
-    ForgotLandingComponent,
+    ForgotLandingComponent
   ],
 
   providers: [
@@ -78,7 +84,10 @@ import {NgxSpinnerModule} from "ngx-spinner";
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
+    }, {
+    provide: LOCALE_ID, useValue: 'de'
     },
+
     CalendarService,
     ShopService,
     AuthenticationService,
@@ -86,5 +95,7 @@ import {NgxSpinnerModule} from "ngx-spinner";
   ],
   bootstrap: [AppComponent]
 })
+
+
 export class AppModule {
 }
