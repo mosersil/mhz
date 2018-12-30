@@ -7,16 +7,13 @@ import com.silviomoser.demo.security.utils.PasswordUtils;
 import com.silviomoser.demo.utils.FormatUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
 import java.util.Optional;
 
 import static com.silviomoser.demo.security.utils.PasswordUtils.generateToken;
-import static com.silviomoser.demo.security.utils.PasswordUtils.hashPassword;
 import static com.silviomoser.demo.security.utils.PasswordUtils.isValidPassword;
+import static com.silviomoser.demo.utils.StringUtils.isBlank;
 
 @Service
 @Slf4j
@@ -48,6 +45,9 @@ public class PasswordResetService {
     }
 
     public User redeemToken(String token, String newPassword, String newPasswordConfirmation) throws ServiceException {
+        if (isBlank(token)) {
+            throw new ServiceException("Token must not be blank");
+        }
         final Optional<User> optionalUser = userRepository.findByResetToken(token);
         if (!optionalUser.isPresent()) {
             log.warn("Invalid resettoken");
