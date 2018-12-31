@@ -1,12 +1,20 @@
 package com.silviomoser.demo.data;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by silvio on 23.07.18.
@@ -24,22 +32,32 @@ public class Article extends AbstractEntity {
 
     @NotNull
     @Column(name = "TITLE")
+    @JsonView(Views.Public.class)
     private String title;
 
     @Column(name = "TEASER")
+    @JsonView(Views.Public.class)
     private String teaser;
 
     @NotNull
     @Column(name = "TEXT")
+    @JsonView(Views.Public.class)
     private String text;
 
     @NotNull
     @Column(name = "START_DATE")
+    @JsonView(Views.Public.class)
     private LocalDateTime startDate;
 
     @NotNull
     @Column(name = "END_DATE")
+    @JsonView(Views.Public.class)
     private LocalDateTime endDate;
+
+    @NotNull
+    @JsonView(Views.Public.class)
+    @OneToMany(mappedBy = "article")
+    private List<CalendarEvent> events;
 
 
 }

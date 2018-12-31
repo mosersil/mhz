@@ -36,6 +36,9 @@
             <column name="TITLE" type="varchar(30)">
                 <constraints nullable="true"/>
             </column>
+            <column name="ARTICLE_ID" type="bigint">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
 
 

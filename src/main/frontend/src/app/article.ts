@@ -1,3 +1,5 @@
+import {Event} from "./event";
+
 export class Article {
 
   title: string;
@@ -5,4 +7,5 @@ export class Article {
   text: string;
   startDate: Date;
   endDate: Date;
+  events: Event[];
 }
