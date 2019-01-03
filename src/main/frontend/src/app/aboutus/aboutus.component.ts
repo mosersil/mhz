@@ -106,7 +106,7 @@ export class AboutusComponent implements OnInit {
 
 
       this.members_bariton = this.members_aktivmitglied.filter(item => {
-        if (item.function === 'Bariton' || item.function === 'Tenorhorn') {
+        if (item.function === 'Bariton' || item.function === 'Tenorhorn' || item.function === 'Euphonium') {
           return item;
         }
       });
@@ -118,6 +118,11 @@ export class AboutusComponent implements OnInit {
         }
       });
 
+      this.members_tuba = this.members_aktivmitglied.filter(item => {
+        if (item.function === 'Tuba' || item.function === 'Bass') {
+          return item;
+        }
+      });
 
       this.members_percussion = this.members_aktivmitglied.filter(item => {
         if (item.function === 'Schlagzeug' || item.function === 'Perkussion') {
@@ -164,7 +169,7 @@ export class AboutusComponent implements OnInit {
       );
 
       this.librarian = this.members_vorstand.filter(item => {
-          if (item.function === 'Notenverwalter') {
+          if (item.function === 'Notenverwalter' || item.function === 'Bibliothekar') {
             return item;
           }
         }

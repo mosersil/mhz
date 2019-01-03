@@ -22,4 +22,9 @@ public class StaticFileView extends AbstractCrudView<StaticFile> {
     public StaticFile createNew() {
         return StaticFile.builder().person(SecurityUtils.getMe()).build();
     }
+
+    @Override
+    public boolean applyFilter(StaticFile s, String filterString) {
+        return s.getTitle().contains(filterString);
+    }
 }

@@ -1,7 +1,10 @@
 package com.silviomoser.demo.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -10,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Created by silvio on 19.07.18.
@@ -21,6 +24,9 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Table(name = "MEMBERSHIP")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Membership extends AbstractEntity {
 
     @ToString.Exclude
@@ -34,13 +40,16 @@ public class Membership extends AbstractEntity {
     private Organization organization;
 
     @Column(name = "JOIN_DATE")
-    private LocalDateTime joinDate;
+    private LocalDate joinDate;
 
     @Column(name = "LEAVE_DATE")
-    private LocalDateTime leaveDate;
+    private LocalDate leaveDate;
 
     @JsonView({Views.Public.class, Views.Internal.class})
     @Column(name = "FUNCTION")
     private String function;
+
+    @Column(name = "REMARKS")
+    private String remarks;
 
 }

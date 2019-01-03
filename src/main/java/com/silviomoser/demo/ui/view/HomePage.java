@@ -20,9 +20,8 @@ public class HomePage extends VerticalLayout implements View {
 
     @PostConstruct
     void init() {
-
+        this.setId("homepageMain");
         Panel homePanel = new Panel("MHZ Admin Bereich");
-        homePanel.setHeight(100.0f, Unit.PERCENTAGE);
         homePanel.setSizeFull();
 
 
@@ -33,8 +32,8 @@ public class HomePage extends VerticalLayout implements View {
 
         homePanel.setContent(label);
 
-        addComponent(NavigationBar.buildNavigationBar(this));
-        addComponent(homePanel);
+        addComponents(NavigationBar.buildNavigationBar(this), homePanel);
+
 
     }
 

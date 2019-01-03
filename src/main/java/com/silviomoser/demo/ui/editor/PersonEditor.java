@@ -11,6 +11,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.RadioButtonGroup;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
 /**
@@ -21,8 +22,10 @@ import com.vaadin.ui.TextField;
 public class PersonEditor extends AbstractEditor<Person> {
 
 
+    final TextField title = new TextField(i18Helper.getMessage("person_title"));
     final TextField firstName = new TextField(i18Helper.getMessage("person_firstname"));
     final TextField lastName = new TextField(i18Helper.getMessage("person_lastname"));
+    final TextField company = new TextField(i18Helper.getMessage("person_company"));
     final RadioButtonGroup<Gender> genderRadioButtonGroup = new RadioButtonGroup<>(i18Helper.getMessage("person_gender"), DataProvider.ofItems(Gender.values()));
     final TextField address1 = new TextField(i18Helper.getMessage("person_address"));
     final TextField zip = new TextField(i18Helper.getMessage("person_zip"));
@@ -30,6 +33,8 @@ public class PersonEditor extends AbstractEditor<Person> {
     final TextField landline = new TextField(i18Helper.getMessage("person_landline"));
     final TextField mobile = new TextField(i18Helper.getMessage("person_mobile"));
     final DateField birthDate = new DateField("Geburtsdatum");
+    private final TextArea remarks = new TextArea(i18Helper.getMessage("person_remarks"));
+
 
 
     @Override
@@ -41,8 +46,8 @@ public class PersonEditor extends AbstractEditor<Person> {
         genderRadioButtonGroup.setItemCaptionGenerator(it -> i18Helper.getMessage(it.getTag()));
         firstName.setSizeFull();
         lastName.setSizeFull();
-
-        layout.addComponents(genderRadioButtonGroup, firstName, lastName, address1, zip, city, landline, mobile, birthDate);
+        remarks.setSizeFull();
+        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, birthDate, remarks);
         return layout;
     }
 

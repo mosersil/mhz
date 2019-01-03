@@ -4,7 +4,6 @@ import {AuthenticationService} from "../authentication.service";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {saveAs} from "file-saver";
-import {RequestOptions, ResponseContentType} from "@angular/http";
 
 
 @Component({
@@ -17,8 +16,8 @@ export class InternalComponent implements OnInit {
   backendUrl: string = environment.backendUrl;
   person: Person = new Person();
   errorMessage = null;
-  year_actual = 2018
-  year_next = 2019
+  year_actual = new Date().getFullYear();
+  year_next = this.year_actual+1;
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
   }

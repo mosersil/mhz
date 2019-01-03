@@ -23,7 +23,7 @@ public class MembershipService {
         final Organization organization = organizationRepository.findByName(organizationName);
 
         if (organization != null) {
-            result = membershipRepository.findByOrganization(organization);
+            result = membershipRepository.findActiveMembersByOrganization(organization);
         }
 
         return result;

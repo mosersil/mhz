@@ -114,11 +114,17 @@
             <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
+            <column name="TITLE" type="varchar(40)">
+                <constraints nullable="true"/>
+            </column>
             <column name="FIRST_NAME" type="varchar(30)">
                 <constraints nullable="false"/>
             </column>
             <column name="LAST_NAME" type="varchar(30)">
                 <constraints nullable="false"/>
+            </column>
+            <column name="COMPANY" type="varchar(50)">
+                <constraints nullable="true"/>
             </column>
             <column name="GENDER" type="int">
                 <constraints nullable="false"/>
@@ -142,10 +148,13 @@
                 <constraints nullable="true"/>
             </column>
             <column name="EMAIL" type="varchar(50)">
-                <constraints nullable="true" unique="true"/>
+                <constraints nullable="true" unique="true" />
             </column>
             <column name="BIRTHDATE" type="date">
                 <constraints nullable="true"/>
+            </column>
+            <column name="REMARKS" type="varchar(5000)">
+                <constraints nullable="true" />
             </column>
         </createTable>
 
@@ -175,7 +184,10 @@
                 <constraints nullable="true"/>
             </column>
             <column name="FUNCTION" type="varchar(30)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
+            </column>
+            <column name="REMARKS" type="varchar(500)">
+                <constraints nullable="true"/>
             </column>
         </createTable>
 
@@ -342,7 +354,7 @@
 
 
         <createView viewName="VIEW_ADDRESSLIST">
-            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, CONCAT(P.ADDRESS1, CHAR(13), P.ADDRESS2) AS ADDRESS,
+            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, P.ADDRESS1 AS ADDRESS, P.ADDRESS2,
             P.ZIP, P.CITY, O.NAME AS ORGANIZATION
             FROM PERSON AS P
             INNER JOIN MEMBERSHIP AS M ON P.ID=M.PERSON_ID

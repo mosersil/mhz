@@ -36,5 +36,12 @@ public class ArticleView extends AbstractCrudView<Article> {
                 .build();
     }
 
+    @Override
+    public boolean applyFilter(Article article, String filterString) {
+        return article.getTitle().contains(filterString);
+    }
+
+
+
 
 }
