@@ -4,12 +4,26 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.DressCode;
 import com.silviomoser.demo.utils.PdfReport;
 import com.silviomoser.demo.utils.XlsReport;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
@@ -84,6 +98,10 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     )
     private Set<StaticFile> files;
 
+    @ManyToOne
+    @JoinColumn(name = "ARTICLE_ID")
+    private Article article;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "event")
     private Set<Participation> participants;
@@ -91,5 +109,11 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     @Override
     public int compareTo(CalendarEvent o) {
             return this.getDateStart().compareTo(o.getDateStart());
+    }
+
+    @Transient
+    @JsonView(Views.Public.class)
+    public Set<StaticFile> getPublicFiles() {
+        return files == null ? null : files.stream().filter(it -> it.getRole()==null).collect(Collectors.toSet());
     }
 }

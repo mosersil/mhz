@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NewsService} from "../news.service";
+import {CalendarService} from "../calendar.service";
 
 @Component({
   selector: 'app-news',
@@ -10,7 +11,7 @@ export class NewsComponent implements OnInit {
 
   hotarticle = null;
 
-  constructor(private _newsService: NewsService) {
+  constructor(private _newsService: NewsService, private _calendarService: CalendarService) {
   }
 
   ngOnInit() {
@@ -22,10 +23,13 @@ export class NewsComponent implements OnInit {
     this._newsService.getArticle().subscribe(
       data => {
         this.hotarticle = data;
-        console.log(data)
       },
       err => console.error(err),
     );
+  }
+
+  downloadAttachment(id: string, type: string) {
+    this._calendarService.downloadAttachment(id, type)
   }
 
 }

@@ -1,6 +1,8 @@
 package com.silviomoser.demo.api.article;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.Article;
+import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.repository.ArticleRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -24,6 +26,7 @@ public class ArticleApi {
 
     @CrossOrigin(origins = "*")
     @ApiOperation(value = "List current head article")
+    @JsonView(Views.Public.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = Article.class),
             @ApiResponse(code = 400, message = "Bad request")
