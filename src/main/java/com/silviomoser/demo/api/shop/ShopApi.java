@@ -5,7 +5,7 @@ import com.silviomoser.demo.api.core.ApiException;
 import com.silviomoser.demo.config.PaymentConfiguration;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.ShopItem;
-import com.silviomoser.demo.data.ShopItemPurchase;
+import com.silviomoser.demo.data.ShopOrderSubmission;
 import com.silviomoser.demo.data.ShopTransaction;
 import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
@@ -14,6 +14,9 @@ import com.silviomoser.demo.repository.ShopItemPurchaseRepository;
 import com.silviomoser.demo.repository.ShopItemRepository;
 import com.silviomoser.demo.repository.ShopTransactionRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
+import com.silviomoser.demo.services.ServiceException;
+import com.silviomoser.demo.services.ShopService;
+import com.silviomoser.demo.ui.i18.I18Helper;
 import com.silviomoser.demo.utils.FormatUtils;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -36,13 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by silvio on 14.10.18.
@@ -50,6 +50,9 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 public class ShopApi {
+
+    @Autowired
+    I18Helper i18Helper;
 
     @Autowired
     ShopItemRepository shopItemRepository;
@@ -63,17 +66,24 @@ public class ShopApi {
     @Autowired
     PaymentConfiguration paymentConfiguration;
 
+    @Autowired
+    private ShopService shopService;
+
 
     @ApiOperation(value = "List my purchases")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = ShopTransaction.class),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    @JsonView(Views.Internal.class)
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/api/protected/shop/transactions", method = RequestMethod.GET)
     public List<ShopTransaction> listTransactions() {
-        List<ShopTransaction> myTransactions =  shopTransactionRepository.findByPerson(SecurityUtils.getMe());
-        return myTransactions.stream().filter(shopTransaction -> shopTransaction.getStatus()==ShopOrderStatusType.PAYED||shopTransaction.getStatus()==ShopOrderStatusType.AWAITING_PAYMENT).collect(Collectors.toList());
+        try {
+            return shopService.getMyTransactions(ShopOrderStatusType.PAYED, ShopOrderStatusType.AWAITING_PAYMENT);
+        } catch (ServiceException e) {
+            log.error(e.getMessage(), e);
+            throw new ApiException(i18Helper.getMessage(i18Helper.getMessage("generic_techerror")), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
@@ -85,7 +95,7 @@ public class ShopApi {
     @RequestMapping(value = "/api/public/shop/offering", method = RequestMethod.GET)
     public List<ShopItem> listItems() {
         log.debug("Offering API called");
-        return shopItemRepository.findAll();
+        return shopService.getOffering();
     }
 
     @ApiOperation(value = "Submit shopping cart, place order to initialize payment")
@@ -94,23 +104,14 @@ public class ShopApi {
             @ApiResponse(code = 400, message = "Bad request")
     })
     @RequestMapping(value = "/api/public/shop/submitorder", method = RequestMethod.POST)
-    public long init(@RequestBody OrderSubmission[] order) {
-        final ShopTransaction shopTransaction = new ShopTransaction();
-        final HashSet<ShopItemPurchase> items = new HashSet<>(order.length);
-        Arrays.stream(order).forEach(it -> {
-            final ShopItemPurchase shopItemPurchase = new ShopItemPurchase();
-            shopItemPurchase.setTransaction(shopTransaction);
-            shopItemPurchase.setItem(shopItemRepository.getOne(it.getShopItemId()));
-            shopItemPurchase.setAmount(it.getCount());
-            items.add(shopItemPurchase);
-        });
-        shopTransaction.setShopItemPurchases(items);
-        if (SecurityUtils.getMe() != null) {
-            shopTransaction.setPerson(SecurityUtils.getMe());
+    public long init(@RequestBody ShopOrderSubmission[] order) {
+        try {
+            final ShopTransaction item = shopService.placeOrder(order);
+            return item.getId();
+        } catch (ServiceException e) {
+            log.error(e.getMessage(), e);
+            throw new ApiException(i18Helper.getMessage(i18Helper.getMessage("generic_techerror")), HttpStatus.BAD_REQUEST);
         }
-        final ShopTransaction item = shopTransactionRepository.save(shopTransaction);
-        return item.getId();
-
     }
 
 
