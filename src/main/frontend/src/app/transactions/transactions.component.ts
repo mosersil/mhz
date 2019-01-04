@@ -3,7 +3,7 @@ import {ShopService} from "../shop.service";
 import {environment} from "../../environments/environment";
 import {saveAs} from "file-saver";
 import {HttpClient} from "@angular/common/http";
-import {forEach} from "@angular/router/src/utils/collection";
+import {ShopTransaction} from "../shop-transaction";
 
 @Component({
   selector: 'app-transactions',
@@ -12,7 +12,7 @@ import {forEach} from "@angular/router/src/utils/collection";
 })
 export class TransactionsComponent implements OnInit {
 
-  transactions;
+  transactions: ShopTransaction[];
   paymentpending: string = null;
 
   constructor(private _shopService: ShopService, private _http: HttpClient) {

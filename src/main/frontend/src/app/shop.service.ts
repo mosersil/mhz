@@ -5,6 +5,7 @@ import {environment} from "../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {Router} from "@angular/router";
 import {Subject} from "rxjs";
+import {ShopTransaction} from "./shop-transaction";
 
 @Injectable({
   providedIn: 'root'
@@ -133,7 +134,7 @@ export class ShopService {
   }
 
   getMyTransactions() {
-    return this.http.get(environment.backendUrl + "/api/protected/shop/transactions");
+    return this.http.get<ShopTransaction[]>(environment.backendUrl + "/api/protected/shop/transactions");
   }
 
 

@@ -1,4 +1,4 @@
-package com.silviomoser.demo.api.shop;
+package com.silviomoser.demo.data;
 
 
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class OrderSubmission {
+public class ShopOrderSubmission {
 
     private int count;
     private long shopItemId;
