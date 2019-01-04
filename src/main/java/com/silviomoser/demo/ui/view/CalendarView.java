@@ -25,8 +25,6 @@ public class CalendarView extends AbstractCrudView<CalendarEvent> {
 
     @Override
     public void populateGrid(Grid<CalendarEvent> grid) {
-        grid.setHeight(400, Unit.PIXELS);
-        grid.setWidth(1200, Unit.PIXELS);
         grid.addColumn(CalendarEvent::getId).setCaption("#").setWidth(70);
 
         grid.addColumn(CalendarEvent::getDateStart).setRenderer(new LocalDateTimeRenderer(DateTimeFormatter
@@ -36,6 +34,7 @@ public class CalendarView extends AbstractCrudView<CalendarEvent> {
 
         grid.addColumn(CalendarEvent::isFullDay).setRenderer(booleanToHtmlValueProvider(), new HtmlRenderer()).setCaption("Ganztägig").setWidth(70);
         grid.addColumn(CalendarEvent::getRemarks).setCaption("Bemerkungen").setMaximumWidth(500);
+
     }
 
     @Override
@@ -45,5 +44,12 @@ public class CalendarView extends AbstractCrudView<CalendarEvent> {
                 .dateStart(LocalDateTime.now())
                 .build();
     }
+
+    @Override
+    public boolean applyFilter(CalendarEvent s, String filterString) {
+        return s.getTitle().contains(filterString);
+    }
+
+
 }
 

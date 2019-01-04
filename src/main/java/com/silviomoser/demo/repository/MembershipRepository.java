@@ -16,5 +16,8 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
     @Query("SELECT m FROM Membership m where m.organization = :organization")
     List<Membership> findByOrganization(@Param("organization") Organization organization);
 
+    @Query("SELECT m FROM Membership m where m.organization = :organization and m.leaveDate is null")
+    List<Membership> findActiveMembersByOrganization(@Param("organization") Organization organization);
+
 
 }

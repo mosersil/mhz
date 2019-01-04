@@ -100,6 +100,11 @@
             <version>2.2.10</version>
         </dependency>
         <dependency>
+            <groupId>com.vaadin.addon</groupId>
+            <artifactId>pagination</artifactId>
+            <version>8.0.6</version>
+        </dependency>
+        <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-context-menu</artifactId>
             <version>3.0.0</version>

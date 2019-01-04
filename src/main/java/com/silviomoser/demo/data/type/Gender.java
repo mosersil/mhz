@@ -7,7 +7,8 @@ import com.silviomoser.demo.ui.i18.I18Helper;
  */
 public enum Gender implements HasLabel {
     MALE("tag_male"),
-    FEMALE("tag_female");
+    FEMALE("tag_female"),
+    NA("tag_na");
 
     String tag;
 

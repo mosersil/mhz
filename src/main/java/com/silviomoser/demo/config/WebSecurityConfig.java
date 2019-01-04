@@ -2,10 +2,10 @@ package com.silviomoser.demo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silviomoser.demo.security.AuthenticationResult;
-import com.silviomoser.demo.security.UsernamePasswordFilter;
 import com.silviomoser.demo.security.JwtAuthenticationFilter;
 import com.silviomoser.demo.security.JwtTokenProvider;
 import com.silviomoser.demo.security.SecurityUserDetailsService;
+import com.silviomoser.demo.security.UsernamePasswordFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -129,6 +129,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/vaadinServlet/HEARTBEAT/**").permitAll()
                 .antMatchers("/app/login").permitAll()
                 .antMatchers("/app/**").hasRole("ADMIN")
+                .antMatchers("/app").hasRole("ADMIN")
                 .antMatchers("/internal/api/**").hasRole("USER")
                 .antMatchers("/api/protected/**").hasRole("USER")
                 .and()
@@ -138,7 +139,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/");
 
         http.headers().frameOptions().disable();
-        http.rememberMe().rememberMeServices(rememberMeServices()).key("myAppKey");
+        //http.rememberMe().rememberMeServices(rememberMeServices()).key("myAppKey");
         http.sessionManagement().sessionAuthenticationStrategy(sessionAuthenticationStrategy());
     }
 

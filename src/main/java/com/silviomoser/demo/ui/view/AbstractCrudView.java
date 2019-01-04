@@ -4,9 +4,11 @@ import com.silviomoser.demo.data.AbstractEntity;
 import com.silviomoser.demo.ui.NavigationBar;
 import com.silviomoser.demo.ui.editor.AbstractEditor;
 import com.silviomoser.demo.ui.i18.I18Helper;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
@@ -14,15 +16,18 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * Created by silvio on 26.07.18.
  */
+@Slf4j
 public abstract class AbstractCrudView<T extends AbstractEntity> extends VerticalLayout implements View {
 
     I18Helper i18Helper = new I18Helper(VaadinSession.getCurrent().getLocale());
@@ -47,25 +52,32 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
 
     @PostConstruct
     void init() {
+        this.setId("crudView");
+        //this.setSizeFull();
         // build layout
-        HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
-        VerticalLayout mainLayout = new VerticalLayout(actions, grid);
-
-        addComponent(NavigationBar.buildNavigationBar(this));
-        addComponent(mainLayout);
-
-
-        grid.setHeight(400, Unit.PIXELS);
-        grid.setWidth(1200, Unit.PIXELS);
-
+        final HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
+        actions.setHeight(50, Unit.PIXELS);
+        grid.setHeight(800, Unit.PIXELS);
+        grid.setWidth(100, Unit.PERCENTAGE);
         populateGrid(grid);
+        final VerticalLayout mainLayout = new VerticalLayout(actions, grid);
+        mainLayout.setSizeFull();
+        mainLayout.setId("mainLayout");
 
 
-        filter.setPlaceholder("Nach Titel filtern");
+        addComponents(NavigationBar.buildNavigationBar(this), mainLayout);
+
+
+        filter.setPlaceholder("Einträge Filtern...");
 
         // Replace listing with filtered content when user changes filter
         filter.setValueChangeMode(ValueChangeMode.LAZY);
         filter.addValueChangeListener(e -> listItems(e.getValue()));
+
+        filter.addValueChangeListener(event -> {
+            ListDataProvider<T> dataProvider = (ListDataProvider<T>) grid.getDataProvider();
+            dataProvider.setFilter((SerializablePredicate<T>) t -> applyFilter(t, event.getValue()));
+        });
 
         grid.addItemClickListener(item -> {
             //Check, if it is a double-click event
@@ -119,6 +131,8 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
     }
 
     private void listItems(String filterText) {
+        List<T> allItems = repository.findAll();
+
         if (StringUtils.isEmpty(filterText)) {
             grid.setItems(repository.findAll());
         }
@@ -132,5 +146,7 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         // This view is constructed in the init() method()
     }
+
+    public abstract boolean applyFilter(T s, String filterString);
 
 }

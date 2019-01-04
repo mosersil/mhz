@@ -45,6 +45,11 @@ public class Person extends AbstractEntity {
 
 
     @JsonView({Views.Public.class, Views.Internal.class})
+    @Column(name = "TITLE", length = 20)
+    @Size(min = 2, max = 30)
+    private String title;
+
+    @JsonView({Views.Public.class, Views.Internal.class})
     @NotNull
     @Column(name = "FIRST_NAME", nullable = false, length = 30)
     @Size(min = 2, max = 30)
@@ -57,6 +62,11 @@ public class Person extends AbstractEntity {
     @Size(min = 2, max = 30)
     @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
     private String lastName;
+
+    @JsonView({Views.Public.class, Views.Internal.class})
+    @Column(name = "COMPANY", length = 30)
+    @Size(min = 2, max = 30)
+    private String company;
 
     @JsonView(Views.Internal.class)
     @NotNull
@@ -91,11 +101,15 @@ public class Person extends AbstractEntity {
     private String mobile;
 
     @Email
-    @Column(name = "Email", length = 50, unique = true)
+    @Column(name = "EMAIL", length = 50, unique = true)
     private String email;
 
     @Column(name = "BIRTHDATE")
     private LocalDate birthDate;
+
+
+    @Column(name="REMARKS", length = 500)
+    private String remarks;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "person"
