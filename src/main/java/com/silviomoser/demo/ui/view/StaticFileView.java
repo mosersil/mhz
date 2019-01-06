@@ -14,6 +14,7 @@ public class StaticFileView extends AbstractCrudView<StaticFile> {
     public void populateGrid(Grid<StaticFile> grid) {
         grid.addColumn(StaticFile::getId).setCaption("#").setWidth(70);
         grid.addColumn(StaticFile::getTitle).setCaption(i18Helper.getMessage("files_title"));
+        grid.addColumn(StaticFile::getStaticFileCategory).setCaption(i18Helper.getMessage("files_category"));
         grid.addColumn(StaticFile::getDescription).setCaption(i18Helper.getMessage("files_description"));
         grid.addColumn(StaticFile::getFileType).setCaption(i18Helper.getMessage("files_type"));
     }

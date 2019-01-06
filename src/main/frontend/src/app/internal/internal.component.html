@@ -5,143 +5,249 @@
   </div>
 
 
+  <ul class="nav nav-tabs">
+
+    <li class="nav-item">
+      <a class="nav-link" id="personaldata-tab" href="#personaldata" role="tab" data-toggle="tab">Meine Daten</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" id="documents-tab" href="#documents" role="tab" data-toggle="tab">Dokumente</a>
+    </li>
+
+    <li class="nav-item" *ngIf="person.organizations.includes('Aktivmitglied')">
+      <a class="nav-link" id="practice-tab" href="#practice" role="tab" data-toggle="tab">Übungsmaterial</a>
+    </li>
+  </ul>
+
+  <!-- Content Panel -->
+  <div id="internal-nav-content" class="tab-content">
+    <div role="tabpanel" class="tab-pane fade show active" id="personaldata" aria-labelledby="personaldata-tab">
+      <div class="container mt-3">
+
+        <div class="row">
+          <div class="col-md-8">
+            <dl class="row">
+              <dt class="col-sm-3">
+                Titel
+              </dt>
+              <dd class="col-sm-9">{{person.title}}</dd>
+              <dt class="col-sm-3">
+                Vorname
+              </dt>
+              <dd class="col-sm-9">{{person.firstName}}</dd>
+              <dt class="col-sm-3">
+                Nachname
+              </dt>
+              <dd class="col-sm-9">{{person.lastName}}</dd>
+              <dt class="col-sm-3">
+                Adresse
+              </dt>
+              <dd class="col-sm-9">{{person.address1}}</dd>
+              <dt class="col-sm-3">
+                Adresse Zusatz
+              </dt>
+              <dd class="col-sm-9">{{person.address2}}</dd>
+              <dt class="col-sm-3">
+                Postleitzahl
+              </dt>
+              <dd class="col-sm-9">{{person.zip}}</dd>
+              <dt class="col-sm-3">
+                Ort
+              </dt>
+              <dd class="col-sm-9">{{person.city}}</dd>
+              <dt class="col-sm-3">
+                Tel (Festnetz)
+              </dt>
+              <dd class="col-sm-9">{{person.landline}}</dd>
+              <dt class="col-sm-3">
+                Tel (Mobil)
+              </dt>
+              <dd class="col-sm-9">{{person.mobile}}</dd>
+              <dt class="col-sm-3">
+                Email
+              </dt>
+              <dd class="col-sm-9">{{person.email}}</dd>
+              <dt class="col-sm-3">
+                Aktive Gruppen:
+              </dt>
+              <dd class="col-sm-9">{{person.organizations}}</dd>
+
+            </dl>
+          </div>
+          <div class="col-md-4">
+            Korrektur nötig? In dieser ersten Version können nur Administratoren Daten bearbeiten. Bis es soweit ist und
+            ein self-service möglich ist, bitte das <a href="/contact">Kontakt-Formular</a> verwenden.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="documents" aria-labelledby="documents-tab">
+      <div class="container mt-3">
+        <h3>Jahresprogramm</h3>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col" style="width: 30%">Titel</th>
+            <th scope="col" style="width: 60%">Bemerkungen</th>
+            <th scope="col" style="width: 10%">Downloads</th>
+          </tr>
+          </thead>
+          <tbody>
 
 
-
-  <h2>Jahresprogramm</h2>
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col" style="width: 10%">#</th>
-      <th scope="col" style="width: 20%">Titel</th>
-      <th scope="col" style="width: 60%">Bemerkungen</th>
-      <th scope="col" style="width: 10%">Downloads</th>
-    </tr>
-    </thead>
-    <tbody>
-
-
-    <tr>
-      <th scope="row">1</th>
-      <td>Jahresprogramm {{year_actual}}</td>
-      <td>Alle Termine im Jahr {{year_actual}}</td>
-      <td>
+          <tr>
+            <td>Jahresprogramm {{year_actual}}</td>
+            <td>Alle Termine im Jahr {{year_actual}}</td>
+            <td>
         <span
           (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=PDF', 'application/pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
-        <span
-          (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=XLS', 'application/vnd.ms-excel')"
-          class="fa fa-file-excel-o" aria-hidden="true"></span>
-      </td>
-    </tr>
+              <span
+                (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=XLS', 'application/vnd.ms-excel')"
+                class="fa fa-file-excel-o" aria-hidden="true"></span>
+            </td>
+          </tr>
 
-    <tr>
-      <th scope="row">2</th>
-      <td>Ausblick {{year_next}}</td>
-      <td>Alle Termine im Jahr {{year_next}}</td>
-      <td>
+          <tr>
+            <td>Ausblick {{year_next}}</td>
+            <td>Alle Termine im Jahr {{year_next}}</td>
+            <td>
          <span
            (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=PDF', 'application/pdf')"
            class="fa fa-file-pdf-o"
            aria-hidden="true"></span>&nbsp;
-        <span
-          (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=XLS', 'application/vnd.ms-excel')"
-          class="fa fa-file-excel-o" aria-hidden="true"></span>
-      </td>
-    </tr>
+              <span
+                (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=XLS', 'application/vnd.ms-excel')"
+                class="fa fa-file-excel-o" aria-hidden="true"></span>
+            </td>
+          </tr>
 
 
-    </tbody>
-  </table>
+          </tbody>
+        </table>
 
 
-  <div *ngIf="person.organizations.includes('Aktivmitglied')">
-    <h2>Adresslisten</h2>
-    <table class="table">
-      <thead>
-      <tr>
-        <th scope="col" style="width: 10%">#</th>
-        <th scope="col" style="width: 20%">Titel</th>
-        <th scope="col" style="width: 60%">Bemerkungen</th>
-        <th scope="col" style="width: 10%">Downloads</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Aktivmitglieder</td>
-        <td>Adressliste aller Mitglieder, die aktiv im Verein mitspielen</td>
-        <td>
+        <div *ngIf="person.organizations.includes('Aktivmitglied')|| person.organizations.includes('Passivmitglied')">
+          <h3>Adresslisten</h3>
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col" style="width: 30%">Titel</th>
+              <th scope="col" style="width: 60%">Bemerkungen</th>
+              <th scope="col" style="width: 10%">Downloads</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Aktivmitglieder</td>
+              <td>Adressliste aller Mitglieder, die aktiv im Verein mitspielen</td>
+              <td>
         <span
           (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=PDF', 'application/pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
-          <span
-            (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=XLS', 'application/vnd.ms-excel')"
-            class="fa fa-file-excel-o" aria-hidden="true"></span>
-        </td>
-      </tr>
+                <span
+                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=XLS', 'application/vnd.ms-excel')"
+                  class="fa fa-file-excel-o" aria-hidden="true"></span>
+              </td>
+            </tr>
 
-      <tr>
-        <th scope="row">2</th>
-        <td>Vorstand</td>
-        <td>Adressliste vom MHZ Vorstand</td>
-        <td>
+            <tr>
+              <td>Vorstand</td>
+              <td>Adressliste vom MHZ Vorstand</td>
+              <td>
         <span
           (click)="downloadFile('/api/protected/internal/addresslist?organization=Vorstand&format=PDF', 'application/pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
-          <span
-            (click)="downloadFile('/api/protected/internal/addresslist?organization=Vorstand&format=XLS', 'application/vnd.ms-excel')"
-            class="fa fa-file-excel-o" aria-hidden="true"></span>
-        </td>
-      </tr>
-
-      <tr>
-        <th scope="row">2</th>
-        <td>Passivmitglieder</td>
-        <td>Adressliste mit allen Passivmitgliedern vom MHZ</td>
-        <td>
+                <span
+                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Vorstand&format=XLS', 'application/vnd.ms-excel')"
+                  class="fa fa-file-excel-o" aria-hidden="true"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>Passivmitglieder</td>
+              <td>Adressliste mit allen Passivmitgliedern vom MHZ</td>
+              <td>
         <span
           (click)="downloadFile('/api/protected/internal/addresslist?organization=Passivmitglied&format=PDF', 'application/pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
-          <span
-            (click)="downloadFile('/api/protected/internal/addresslist?organization=Passivmitglied&format=XLS', 'application/vnd.ms-excel')"
-            class="fa fa-file-excel-o" aria-hidden="true"></span>
-        </td>
-      </tr>
+                <span
+                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Passivmitglied&format=XLS', 'application/vnd.ms-excel')"
+                  class="fa fa-file-excel-o" aria-hidden="true"></span>
+              </td>
+            </tr>
 
-      </tbody>
-    </table>
+            </tbody>
+          </table>
+        </div>
+
+
+        <div *ngIf="person.organizations.includes('Aktivmitglied')|| person.organizations.includes('Passivmitglied')">
+          <h3>Sonstige Dokumente</h3>
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col" style="width: 30%">Titel</th>
+              <th scope="col" style="width: 60%">Bemerkungen</th>
+              <th scope="col" style="width: 10%">Downloads</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let staticFile of staticFiles ">
+              <td>{{staticFile.title}}</td>
+              <td>{{staticFile.description}}</td>
+              <td>
+        <span
+          (click)="downloadFile('/api/protected/internal/download?id='+staticFile.id, staticFile.mimeType)"
+          class="fa fa-file-{{staticFile.icon}}-o"
+          aria-hidden="true"></span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="practice" aria-labelledby="practice-tab">
+      <div *ngIf="person.organizations.includes('Aktivmitglied')">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col" style="width: 30%">Titel</th>
+            <th scope="col" style="width: 60%">Bemerkungen</th>
+            <th scope="col" style="width: 10%">Downloads</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let staticFile of practiceFiles ">
+            <td>{{staticFile.title}}</td>
+            <td>{{staticFile.description}}</td>
+            <td>
+        <span
+          (click)="downloadFile('/api/protected/internal/download?id='+staticFile.id, staticFile.mimeType, staticFile.title+staticFile.ending)"
+          class="fa fa-file-{{staticFile.icon}}-o"
+          aria-hidden="true"></span>
+
+              <!--
+              <audio controls>
+                <source src="https://ia902508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3" type="audio/mpeg">
+              </audio>
+              -->
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-
-  <div *ngIf="person.organizations.includes('Aktivmitglied')">
-    <h2>Hörbeispiele</h2>
-    <table class="table">
-      <thead>
-      <tr>
-        <th scope="col" style="width: 10%">#</th>
-        <th scope="col" style="width: 20%">Titel</th>
-        <th scope="col" style="width: 60%">Bemerkungen</th>
-        <th scope="col" style="width: 10%">Downloads</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Test MP3 Datei</td>
-        <td>Nur ein Test ob MP3 Dateien funktionieren. Dies benötigt einen HTML-5 fähigen Browser</td>
-        <td>
-          <audio controls>
-            <source src="https://ia902508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3" type="audio/mpeg">
-          </audio>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
 
 </div>

@@ -1,21 +1,25 @@
 package com.silviomoser.demo.data.type;
 
 public enum FileType {
-    PDF("application/pdf", ".pdf"),
-    DOC("application/msword", ".doc"),
-    DOT("application/msword", ".dot"),
-    DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ".docx"),
-    DOTX("application/vnd.openxmlformats-officedocument.wordprocessingml.template", ".dotx"),
-    XLS("application/vnd.ms-excel", ".xls"),
-    XLSX("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
-    MP3("audio/mpeg", "mp3");
+    PDF("application/pdf", ".pdf", "pdf"),
+    DOC("application/msword", ".doc", "word"),
+    DOT("application/msword", ".dot", "word"),
+    DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ".docx", "word"),
+    DOTX("application/vnd.openxmlformats-officedocument.wordprocessingml.template", ".dotx", "word"),
+    XLS("application/vnd.ms-excel", ".xls", "excel"),
+    XLSX("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx", "excel"),
+    MPEG_AUDIO("audio/mpeg", ".mp3", "audio"),
+    MP3_AUDIO("audio/mp3", ".mp3", "audio");
+
 
     private String mime;
     private String ending;
+    private String icon;
 
-    FileType(String mime, String ending) {
+    FileType(String mime, String ending, String icon) {
         this.mime = mime;
         this.ending = ending;
+        this.icon = icon;
     }
 
     public static FileType byMimeType(String mime) {
@@ -33,5 +37,9 @@ public enum FileType {
 
     public String getEnding() {
         return ending;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }

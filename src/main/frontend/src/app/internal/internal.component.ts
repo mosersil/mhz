@@ -18,12 +18,15 @@ export class InternalComponent implements OnInit {
   errorMessage = null;
   year_actual = new Date().getFullYear();
   year_next = this.year_actual+1;
+  staticFiles;
+  practiceFiles;
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
     this.populateGreeting();
+    this.getAvailableFiles();
   }
 
 
@@ -36,12 +39,25 @@ export class InternalComponent implements OnInit {
     )
   }
 
+  getAvailableFiles() {
+    this.http.get(environment.backendUrl + "/api/protected/internal/staticfiles?staticFileCategory=GENERIC").subscribe(sucess => {
+      this.staticFiles = sucess;
+    }, error1 => {
+      console.error(error1);
+    });
 
-  downloadFile(uri: string, type: string) {
+    this.http.get(environment.backendUrl + "/api/protected/internal/staticfiles?staticFileCategory=PRACTICE").subscribe(sucess => {
+      this.practiceFiles = sucess;
+    }, error1 => {
+      console.error(error1);
+    })
+  }
+
+  downloadFile(uri: string, type: string, filename: string) {
     this.http.get(environment.backendUrl + uri, {
       responseType: 'arraybuffer'
     })
-      .subscribe(response => this.downLoadFile(response, type));
+      .subscribe(response => this.downLoadFile(response, type, filename));
   }
 
   /**
@@ -49,17 +65,11 @@ export class InternalComponent implements OnInit {
    * @param data - Array Buffer data
    * @param type - type of the document.
    */
-  downLoadFile(data: any, type: string) {
+  downLoadFile(data: any, type: string, filename: string) {
     var blob = new Blob([data], {type: type});
+    saveAs(blob, filename);
 
-    switch (type) {
-      case 'application/vnd.ms-excel':
-        saveAs(blob, 'download.xls');
-        break;
-      case 'application/pdf':
-        saveAs(blob, 'download.pdf')
-        break;
-    }
+
     /*
     var url = window.URL.createObjectURL(blob);
     var pwa = window.open(url);

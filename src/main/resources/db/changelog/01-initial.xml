@@ -281,6 +281,9 @@
             <column name="TITLE" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="CATEGORY" type="int">
+                <constraints nullable="false"/>
+            </column>
             <column name="LOCATION" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>

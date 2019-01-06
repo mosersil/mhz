@@ -92,23 +92,27 @@ public class Person extends AbstractEntity {
     @Column(name = "CITY", nullable = false, length = 30)
     private String city;
 
+    @JsonView({Views.Internal.class})
     @Column(name = "LANDLINE", length = 20)
     @Pattern(regexp = "[0-9]+")
     private String landline;
 
+    @JsonView({Views.Internal.class})
     @Column(name = "MOBILE", length = 20)
     @Pattern(regexp = "[0-9]+")
     private String mobile;
 
     @Email
+    @JsonView({Views.Internal.class})
     @Column(name = "EMAIL", length = 50, unique = true)
     private String email;
 
     @Column(name = "BIRTHDATE")
+    @JsonView({Views.Internal.class})
     private LocalDate birthDate;
 
 
-    @Column(name="REMARKS", length = 500)
+    @Column(name = "REMARKS", length = 500)
     private String remarks;
 
     @OneToMany(fetch = FetchType.EAGER,

@@ -57,6 +57,7 @@ public class Article extends AbstractEntity {
     @NotNull
     @JsonView(Views.Public.class)
     @OneToMany(mappedBy = "article")
+    @ToString.Exclude
     private List<CalendarEvent> events;
 
 
