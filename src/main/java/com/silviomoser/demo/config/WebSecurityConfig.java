@@ -125,9 +125,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/vaadinServlet/UIDL/**").permitAll()
                 .antMatchers("/vaadinServlet/HEARTBEAT/**").permitAll()
                 .antMatchers("/app/login").permitAll()
+                .antMatchers("/vaadinServlet/UIDL/**").hasRole("ADMIN")
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/app").hasRole("ADMIN")
                 .antMatchers("/internal/api/**").hasRole("USER")
