@@ -5,6 +5,8 @@ import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Grid;
 
+import java.time.LocalDateTime;
+
 @SpringView(name = StaticFileView.VIEW_NAME)
 public class StaticFileView extends AbstractCrudView<StaticFile> {
 
@@ -21,7 +23,7 @@ public class StaticFileView extends AbstractCrudView<StaticFile> {
 
     @Override
     public StaticFile createNew() {
-        return StaticFile.builder().person(SecurityUtils.getMe()).build();
+        return StaticFile.builder().person(SecurityUtils.getMe()).created(LocalDateTime.now()).build();
     }
 
     @Override

@@ -102,11 +102,11 @@
             <td>Alle Termine im Jahr {{year_actual}}</td>
             <td>
         <span
-          (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=PDF', 'application/pdf')"
+          (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=PDF', 'application/pdf', year_actual+'.pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
               <span
-                (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=XLS', 'application/vnd.ms-excel')"
+                (click)="downloadFile('/api/protected/internal/calendar?year='+year_actual+'&format=XLS', 'application/vnd.ms-excel', year_actual+'.xls')"
                 class="fa fa-file-excel-o" aria-hidden="true"></span>
             </td>
           </tr>
@@ -116,11 +116,11 @@
             <td>Alle Termine im Jahr {{year_next}}</td>
             <td>
          <span
-           (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=PDF', 'application/pdf')"
+           (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=PDF', 'application/pdf', year_next+'.pdf')"
            class="fa fa-file-pdf-o"
            aria-hidden="true"></span>&nbsp;
               <span
-                (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=XLS', 'application/vnd.ms-excel')"
+                (click)="downloadFile('/api/protected/internal/calendar?year='+year_next+'&format=XLS', 'application/vnd.ms-excel', year_next+'.xls')"
                 class="fa fa-file-excel-o" aria-hidden="true"></span>
             </td>
           </tr>
@@ -146,11 +146,11 @@
               <td>Adressliste aller Mitglieder, die aktiv im Verein mitspielen</td>
               <td>
         <span
-          (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=PDF', 'application/pdf')"
+          (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=PDF', 'application/pdf', 'aktivmitglieder.pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
                 <span
-                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=XLS', 'application/vnd.ms-excel')"
+                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=XLS', 'application/vnd.ms-excel', 'aktivmitglieder.xls')"
                   class="fa fa-file-excel-o" aria-hidden="true"></span>
               </td>
             </tr>
@@ -160,11 +160,11 @@
               <td>Adressliste vom MHZ Vorstand</td>
               <td>
         <span
-          (click)="downloadFile('/api/protected/internal/addresslist?organization=Vorstand&format=PDF', 'application/pdf')"
+          (click)="downloadFile('/api/protected/internal/addresslist?organization=Vorstand&format=PDF', 'application/pdf', 'vorstand.pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
                 <span
-                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Vorstand&format=XLS', 'application/vnd.ms-excel')"
+                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Vorstand&format=XLS', 'application/vnd.ms-excel', 'vorstand.xls')"
                   class="fa fa-file-excel-o" aria-hidden="true"></span>
               </td>
             </tr>
@@ -173,15 +173,41 @@
               <td>Adressliste mit allen Passivmitgliedern vom MHZ</td>
               <td>
         <span
-          (click)="downloadFile('/api/protected/internal/addresslist?organization=Passivmitglied&format=PDF', 'application/pdf')"
+          (click)="downloadFile('/api/protected/internal/addresslist?organization=Passivmitglied&format=PDF', 'application/pdf', 'passivmitglieder.pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
                 <span
-                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Passivmitglied&format=XLS', 'application/vnd.ms-excel')"
+                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Passivmitglied&format=XLS', 'application/vnd.ms-excel', 'passivmitglieder.xls')"
                   class="fa fa-file-excel-o" aria-hidden="true"></span>
               </td>
             </tr>
 
+            </tbody>
+          </table>
+        </div>
+
+
+        <div *ngIf="person.organizations.includes('Aktivmitglied')|| person.organizations.includes('Passivmitglied')">
+          <h3>Protokolle</h3>
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col" style="width: 30%">Titel</th>
+              <th scope="col" style="width: 60%">Bemerkungen</th>
+              <th scope="col" style="width: 10%">Downloads</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let staticFile of internalFiles ">
+              <td>{{staticFile.title}}</td>
+              <td>{{staticFile.description}}</td>
+              <td>
+        <span
+          (click)="downloadFile('/api/protected/internal/download?id='+staticFile.id, staticFile.mimeType, staticFile.title+staticFile.ending)"
+          class="fa fa-file-{{staticFile.icon}}-o"
+          aria-hidden="true"></span>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -203,7 +229,7 @@
               <td>{{staticFile.description}}</td>
               <td>
         <span
-          (click)="downloadFile('/api/protected/internal/download?id='+staticFile.id, staticFile.mimeType)"
+          (click)="downloadFile('/api/protected/internal/download?id='+staticFile.id, staticFile.mimeType, staticFile.title+staticFile.ending)"
           class="fa fa-file-{{staticFile.icon}}-o"
           aria-hidden="true"></span>
               </td>

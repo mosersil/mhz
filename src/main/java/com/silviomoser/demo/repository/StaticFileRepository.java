@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface StaticFileRepository extends JpaRepository<StaticFile, Long> {
 
-    List<StaticFile> findByStaticFileCategory(StaticFileCategory staticFileCategory);
+    List<StaticFile> findByStaticFileCategoryOrderByCreatedDesc(StaticFileCategory staticFileCategory);
 }

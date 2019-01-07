@@ -278,6 +278,9 @@
             <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
+            <column name="CREATED" type="datetime">
+                <constraints nullable="false"/>
+            </column>
             <column name="TITLE" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,11 +100,13 @@ public class FileService {
                 .person(SecurityUtils.getMe())
                 .fileType(fileHandle.getFileType())
                 .title(title)
+                .staticFileCategory(StaticFileCategory.GENERIC)
                 .description(description)
                 .role(role)
                 .keywords(keywords)
                 .location(fileHandle.getName())
                 .event(event)
+                .created(LocalDateTime.now())
                 .build();
 
         staticFileRepository.save(staticFile);
@@ -116,6 +119,6 @@ public class FileService {
         if (isBlank(category)) {
             return staticFileRepository.findAll();
         }
-        return staticFileRepository.findByStaticFileCategory(StaticFileCategory.valueOf(category));
+        return staticFileRepository.findByStaticFileCategoryOrderByCreatedDesc(StaticFileCategory.valueOf(category));
     }
 }

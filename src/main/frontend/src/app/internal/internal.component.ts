@@ -19,6 +19,7 @@ export class InternalComponent implements OnInit {
   year_actual = new Date().getFullYear();
   year_next = this.year_actual+1;
   staticFiles;
+  internalFiles;
   practiceFiles;
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
@@ -42,6 +43,12 @@ export class InternalComponent implements OnInit {
   getAvailableFiles() {
     this.http.get(environment.backendUrl + "/api/protected/internal/staticfiles?staticFileCategory=GENERIC").subscribe(sucess => {
       this.staticFiles = sucess;
+    }, error1 => {
+      console.error(error1);
+    });
+
+    this.http.get(environment.backendUrl + "/api/protected/internal/staticfiles?staticFileCategory=INTERNAL_DOC").subscribe(sucess => {
+      this.internalFiles = sucess;
     }, error1 => {
       console.error(error1);
     });
