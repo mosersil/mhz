@@ -25,7 +25,7 @@
 
                   <ng-template ngFor let-file [ngForOf]="event.publicFiles" let-i="index">
                     <dt class="col-sm-1">
-                      <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                      <i class="fa fa-file-pdf-o" aria-hidden="true" (click)="downloadAttachment(file.id, 'application/pdf')"></i>
                     </dt>
 
                     <dd class="col-sm-11" *ngIf="file.fileType=='PDF'"

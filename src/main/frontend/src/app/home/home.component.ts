@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {CalendarService} from "../calendar.service";
 import {environment} from "../../environments/environment";
 import {NewsService} from "../news.service";
-import {Article} from "../article";
 
 @Component({
   selector: 'app-home',
@@ -24,7 +23,7 @@ export class HomeComponent implements OnInit {
   }
 
   getEvents() {
-    this._calendarService.getPublicEvents(5).subscribe(
+    this._calendarService.getPublicEvents(3).subscribe(
       data => {
         this.events = data
       },
