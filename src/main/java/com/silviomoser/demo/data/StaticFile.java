@@ -3,13 +3,22 @@ package com.silviomoser.demo.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.FileType;
-import lombok.*;
+import com.silviomoser.demo.data.type.StaticFileCategory;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity(name = "STATIC_FILE")
 @Getter
@@ -20,10 +29,19 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class StaticFile extends AbstractEntity {
 
+    @NotNull
+    @JsonView(Views.Public.class)
+    @Column(name = "CREATED")
+    private LocalDateTime created;
+
     @JsonView(Views.Public.class)
     @Column(name = "TITLE")
     @Size(max = 50)
     private String title;
+
+    @JsonView(Views.Public.class)
+    @Column(name = "CATEGORY")
+    private StaticFileCategory staticFileCategory;
 
     @JsonView(Views.Public.class)
     @Column(name = "DESCRIPTION")
@@ -56,4 +74,22 @@ public class StaticFile extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "EVENT_ID")
     private CalendarEvent event;
+
+    @Transient
+    @JsonView(Views.Public.class)
+    public String getMimeType() {
+        return fileType.getMime();
+    }
+
+    @Transient
+    @JsonView(Views.Public.class)
+    public String getEnding() {
+        return fileType.getEnding();
+    }
+
+    @Transient
+    @JsonView(Views.Public.class)
+    public String getIcon() {
+        return fileType.getIcon();
+    }
 }

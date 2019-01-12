@@ -11,7 +11,9 @@ public interface ApiController {
     String URL_AUTH_REDEEMTOKEN = "/auth/redeemToken";
 
     String URL_INTERNAL_ADDRESSLIST = "/api/protected/internal/addresslist";
+    String URL_INTERNAL_DOWNLOAD = "/api/protected/internal/download";
     String URL_INTERNAL_CALENDAR = "/api/protected/internal/calendar";
+    String URL_INTERNAL_FILES = "/api/protected/internal/staticfiles";
 
     String URL_PUBLIC_IMAGES = "/api/public/images";
     String URL_PUBLIC_IMAGE = "/api/public/image";

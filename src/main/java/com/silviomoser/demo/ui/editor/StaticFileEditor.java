@@ -3,15 +3,25 @@ package com.silviomoser.demo.ui.editor;
 import com.silviomoser.demo.data.Role;
 import com.silviomoser.demo.data.StaticFile;
 import com.silviomoser.demo.data.type.FileType;
+import com.silviomoser.demo.data.type.StaticFileCategory;
 import com.silviomoser.demo.repository.RoleRepository;
 import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.services.FileHandle;
 import com.silviomoser.demo.services.FileService;
 import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.*;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.ItemCaptionGenerator;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.RadioButtonGroup;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.Upload;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.FileOutputStream;
@@ -20,9 +30,10 @@ import java.io.OutputStream;
 @SpringComponent
 @UIScope
 public class StaticFileEditor extends AbstractEditor<StaticFile> {
-    final TextField title = new TextField(i18Helper.getMessage("file_title"));
-    final TextArea description = new TextArea(i18Helper.getMessage("file_description"));
-    final ComboBox<Role> role = new ComboBox<>(i18Helper.getMessage("file_authorization"));
+    private final TextField title = new TextField(i18Helper.getMessage("file_title"));
+    private final TextArea description = new TextArea(i18Helper.getMessage("file_description"));
+    private final ComboBox<Role> role = new ComboBox<>(i18Helper.getMessage("file_authorization"));
+    private final RadioButtonGroup<StaticFileCategory> categoryRadioButtonGroup = new RadioButtonGroup<>("Kategorie", DataProvider.ofItems(StaticFileCategory.values()));
 
     @Autowired
     RoleRepository roleRepository;
@@ -49,7 +60,7 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
         role.setItems(roleRepository.findAll());
         role.setItemCaptionGenerator((ItemCaptionGenerator<Role>) role -> role.getType().getLabel());
 
-        layout.addComponents(title, description, role, upload);
+        layout.addComponents(title, categoryRadioButtonGroup, description, role, upload);
         return layout;
     }
 
@@ -59,6 +70,10 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
         Binder<StaticFile> binder = new Binder<>(StaticFile.class);
         binder.forField(role)
                 .bind(StaticFile::getRole, StaticFile::setRole);
+
+        binder.forField(categoryRadioButtonGroup)
+                .asRequired("Bitte Kategorie wählen")
+                .bind(StaticFile::getStaticFileCategory, StaticFile::setStaticFileCategory);
 
         binder.bindInstanceFields(this);
         return binder;
