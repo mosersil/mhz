@@ -7,6 +7,7 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
@@ -33,6 +34,7 @@ public class PersonEditor extends AbstractEditor<Person> {
     final TextField landline = new TextField(i18Helper.getMessage("person_landline"));
     final TextField mobile = new TextField(i18Helper.getMessage("person_mobile"));
     final DateField birthDate = new DateField("Geburtsdatum");
+    final Button initializeAccount = new Button("Account zurücksetzen");
     private final TextArea remarks = new TextArea(i18Helper.getMessage("person_remarks"));
 
 
@@ -47,7 +49,13 @@ public class PersonEditor extends AbstractEditor<Person> {
         firstName.setSizeFull();
         lastName.setSizeFull();
         remarks.setSizeFull();
-        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, birthDate, remarks);
+
+        initializeAccount.addClickListener(event -> {
+
+
+        });
+
+        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, birthDate, remarks, initializeAccount);
         return layout;
     }
 
