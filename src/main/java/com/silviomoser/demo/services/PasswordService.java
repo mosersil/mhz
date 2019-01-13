@@ -1,6 +1,8 @@
 package com.silviomoser.demo.services;
 
 import com.silviomoser.demo.config.PwResetConfiguration;
+import com.silviomoser.demo.data.Person;
+import com.silviomoser.demo.data.Role;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.repository.UserRepository;
 import com.silviomoser.demo.security.utils.PasswordUtils;
@@ -9,15 +11,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static com.silviomoser.demo.security.utils.PasswordUtils.generateToken;
 import static com.silviomoser.demo.security.utils.PasswordUtils.isValidPassword;
+import static com.silviomoser.demo.utils.FormatUtils.toFirstLastName;
 import static com.silviomoser.demo.utils.StringUtils.isBlank;
 
 @Service
 @Slf4j
-public class PasswordResetService {
+public class PasswordService {
 
     @Autowired
     public EmailSenderService emailSenderService;
@@ -26,7 +31,7 @@ public class PasswordResetService {
     @Autowired
     UserRepository userRepository;
 
-    public void startPwReset(String username, String forward) throws ServiceException {
+    public void startPwResetSelfService(String username, String forward) throws ServiceException {
         final Optional<User> optionalUser = userRepository.findByUsername(username);
 
         if (optionalUser.isPresent()) {
@@ -65,7 +70,37 @@ public class PasswordResetService {
     }
 
     private String renderEmailText(User user, String forward) {
-        return String.format("Hallo %s,\n\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", FormatUtils.toFirstLastName(user.getPerson()), String.format("%s?token=%s&forward=%s", pwResetConfiguration.getLandingPage(), user.getResetToken(), forward));
+        return String.format("Hallo %s,\n\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", toFirstLastName(user.getPerson()), String.format("%s?token=%s&forward=%s", pwResetConfiguration.getLandingPage(), user.getResetToken(), forward));
+    }
+
+    public void createAccount(Person person, Role... roles) throws ServiceException {
+        if (isBlank(person.getEmail())) {
+            throw new ServiceException("Email Address is mandatory");
+        }
+        if (person.getUser()==null) {
+            final User user = new User();
+            user.setPerson(person);
+            final String passwordClearText = PasswordUtils.generateToken(8,false);
+            user.setPassword(PasswordUtils.hashPassword(passwordClearText));
+            user.setCreatedDate(LocalDateTime.now());
+            user.setUsername(person.getEmail());
+            if (roles!=null && roles.length>0) {
+                user.setRoles(Arrays.asList(roles));
+            }
+            userRepository.save(user);
+            final String subject = String.format("Neuer Account für %s", user.getPerson().getFirstName());
+
+            emailSenderService.sendSimpleMail(pwResetConfiguration.getEmailFrom(), user.getPerson().getEmail(), subject, renderWelcomeEmailText(user, passwordClearText));
+
+        } else {
+            log.warn(String.format("%s already has an account", toFirstLastName(person)));
+            throw new ServiceException(String.format("%s already has an account", toFirstLastName(person)));
+        }
+
+    }
+
+    private String renderWelcomeEmailText(User user, String passwordClearText) {
+        return String.format("Hallo %s,\n\nDein Account auf www.mv-oberstrass.ch wurde erstellt.\n\nBenutzername: %s\nPasswort: %s\n\nZur Sicherheit empfehlen wir, das Passwort baldmöglichst duch ein selbst gewähltes zu ersetzen.\n\nVielen Dank & liebe Grüsse!", toFirstLastName(user.getPerson()), user.getUsername(), passwordClearText);
     }
 
 

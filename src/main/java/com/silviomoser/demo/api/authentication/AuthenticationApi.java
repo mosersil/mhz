@@ -7,7 +7,7 @@ import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.security.utils.SecurityUtils;
-import com.silviomoser.demo.services.PasswordResetService;
+import com.silviomoser.demo.services.PasswordService;
 import com.silviomoser.demo.services.ServiceException;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class AuthenticationApi implements ApiController {
 
 
     @Autowired
-    PasswordResetService passwordResetService;
+    PasswordService passwordService;
 
     @Autowired
     I18Helper i18Helper;
@@ -61,7 +61,7 @@ public class AuthenticationApi implements ApiController {
     public void initPwReset(Locale locale, @RequestBody ResetPasswordForm resetPasswordForm) {
         log.debug("enter initPwReset: " + resetPasswordForm);
         try {
-            passwordResetService.startPwReset(resetPasswordForm.getEmail(), resetPasswordForm.getForward());
+            passwordService.startPwResetSelfService(resetPasswordForm.getEmail(), resetPasswordForm.getForward());
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
             throw new ApiException(i18Helper.getMessage(i18Helper.getMessage("generic_techerror")), HttpStatus.BAD_REQUEST);
@@ -76,7 +76,7 @@ public class AuthenticationApi implements ApiController {
     @RequestMapping(value = URL_AUTH_REDEEMTOKEN, method = RequestMethod.POST)
     public void redeemToken(@RequestBody RedeemTokenForm redeemTokenForm) {
         try {
-            User user = passwordResetService.redeemToken(redeemTokenForm.getToken(), redeemTokenForm.getPassword(), redeemTokenForm.getPassword_confirmation());
+            User user = passwordService.redeemToken(redeemTokenForm.getToken(), redeemTokenForm.getPassword(), redeemTokenForm.getPassword_confirmation());
             log.info("User {} has successfully updated password", user.getUsername());
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
