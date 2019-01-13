@@ -76,4 +76,5 @@ public class PasswordUtils {
         final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.encode(input);
     }
+
 }
