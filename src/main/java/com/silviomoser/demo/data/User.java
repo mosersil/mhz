@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -50,14 +51,12 @@ public class User extends AbstractEntity {
     private String password;
 
     @CreatedDate
-    @Type(type = "java.sql.Timestamp")
     @Column(name = "CREATED_DATE", updatable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @CreatedDate
-    @Type(type = "java.sql.Timestamp")
     @Column(name = "LAST_MODIFIED_DATE", updatable = false)
-    private Date lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     @JsonView(Views.Public.class)
     @JoinTable(name = "USER_ROLE", joinColumns = {
