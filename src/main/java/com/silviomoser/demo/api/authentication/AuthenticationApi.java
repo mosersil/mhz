@@ -76,7 +76,7 @@ public class AuthenticationApi implements ApiController {
     @RequestMapping(value = URL_AUTH_REDEEMTOKEN, method = RequestMethod.POST)
     public void redeemToken(@RequestBody RedeemTokenForm redeemTokenForm) {
         try {
-            User user = passwordService.redeemToken(redeemTokenForm.getToken(), redeemTokenForm.getPassword(), redeemTokenForm.getPassword_confirmation());
+            final User user = passwordService.redeemToken(redeemTokenForm.getToken(), redeemTokenForm.getPassword(), redeemTokenForm.getPassword_confirmation());
             log.info("User {} has successfully updated password", user.getUsername());
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);

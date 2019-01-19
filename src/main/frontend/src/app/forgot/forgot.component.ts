@@ -12,6 +12,7 @@ export class ForgotComponent implements OnInit {
   model: any = {};
   infomessage: string;
   errormessage: string;
+  processing: boolean = false;
 
   constructor(private http: HttpClient) {
   }
@@ -20,6 +21,7 @@ export class ForgotComponent implements OnInit {
   }
 
   onSubmit() {
+    this.processing = true;
     var data = {
       email: this.model.email,
       username: this.model.email,
