@@ -26,7 +26,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -273,7 +272,7 @@ public class Person extends AbstractEntity {
 
             if (isNotBlank(password) && isNotBlank(email)) {
                 final User user = new User();
-                user.setCreatedDate(new Date());
+                user.setCreatedDate(LocalDateTime.now());
                 user.setPerson(person);
                 user.setUsername(email);
                 List<Role> roleList = new ArrayList<>();

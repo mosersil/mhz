@@ -4,9 +4,10 @@ import com.silviomoser.demo.config.PwResetConfiguration;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.Role;
 import com.silviomoser.demo.data.User;
+import com.silviomoser.demo.data.type.RoleType;
+import com.silviomoser.demo.repository.RoleRepository;
 import com.silviomoser.demo.repository.UserRepository;
 import com.silviomoser.demo.security.utils.PasswordUtils;
-import com.silviomoser.demo.utils.FormatUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,9 @@ public class PasswordService {
     @Autowired
     public PwResetConfiguration pwResetConfiguration;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     public void startPwResetSelfService(String username, String forward) throws ServiceException {
         final Optional<User> optionalUser = userRepository.findByUsername(username);
@@ -73,6 +76,35 @@ public class PasswordService {
         return String.format("Hallo %s,\n\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", toFirstLastName(user.getPerson()), String.format("%s?token=%s&forward=%s", pwResetConfiguration.getLandingPage(), user.getResetToken(), forward));
     }
 
+
+    public void createAccount(Person person) throws ServiceException {
+        Optional<Role> optionalRole = roleRepository.findByType(RoleType.USER);
+        if (!optionalRole.isPresent()) {
+            throw new ServiceException("Default role USER not available");
+        }
+        createAccount(person, optionalRole.get());
+    }
+
+
+    public void resetAccount(Person person) throws ServiceException {
+        final User user = person.getUser();
+        if (user!=null) {
+
+            final String passwordClearText = PasswordUtils.generateToken(8,false);
+            user.setPassword(PasswordUtils.hashPassword(passwordClearText));
+            user.setLastModifiedDate(LocalDateTime.now());
+            userRepository.save(user);
+            final String subject = String.format("Passwort reset für %s", user.getPerson().getFirstName());
+
+            emailSenderService.sendSimpleMail(pwResetConfiguration.getEmailFrom(), user.getPerson().getEmail(), subject, renderPwResetEmailText(user, passwordClearText));
+
+        } else {
+            log.warn(String.format("%s already has an account", toFirstLastName(person)));
+            throw new ServiceException(String.format("%s already has an account", toFirstLastName(person)));
+        }
+    }
+
+
     public void createAccount(Person person, Role... roles) throws ServiceException {
         if (isBlank(person.getEmail())) {
             throw new ServiceException("Email Address is mandatory");
@@ -96,11 +128,14 @@ public class PasswordService {
             log.warn(String.format("%s already has an account", toFirstLastName(person)));
             throw new ServiceException(String.format("%s already has an account", toFirstLastName(person)));
         }
-
     }
 
     private String renderWelcomeEmailText(User user, String passwordClearText) {
         return String.format("Hallo %s,\n\nDein Account auf www.mv-oberstrass.ch wurde erstellt.\n\nBenutzername: %s\nPasswort: %s\n\nZur Sicherheit empfehlen wir, das Passwort baldmöglichst duch ein selbst gewähltes zu ersetzen.\n\nVielen Dank & liebe Grüsse!", toFirstLastName(user.getPerson()), user.getUsername(), passwordClearText);
+    }
+
+    private String renderPwResetEmailText(User user, String passwordClearText) {
+        return String.format("Hallo %s,\n\nDein Account auf www.mv-oberstrass.ch wurde zurückgesetzt.\n\nBenutzername: %s\nPasswort: %s\n\nZur Sicherheit empfehlen wir, das Passwort baldmöglichst duch ein selbst gewähltes zu ersetzen.\n\nVielen Dank & liebe Grüsse!", toFirstLastName(user.getPerson()), user.getUsername(), passwordClearText);
     }
 
 

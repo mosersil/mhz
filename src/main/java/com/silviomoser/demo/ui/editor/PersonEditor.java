@@ -2,6 +2,8 @@ package com.silviomoser.demo.ui.editor;
 
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.type.Gender;
+import com.silviomoser.demo.services.PasswordService;
+import com.silviomoser.demo.services.ServiceException;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.validator.RegexpValidator;
@@ -14,13 +16,19 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by silvio on 29.08.18.
  */
 @SpringComponent
 @UIScope
+@Slf4j
 public class PersonEditor extends AbstractEditor<Person> {
+
+    @Autowired
+    PasswordService passwordService;
 
 
     final TextField title = new TextField(i18Helper.getMessage("person_title"));
@@ -34,7 +42,8 @@ public class PersonEditor extends AbstractEditor<Person> {
     final TextField landline = new TextField(i18Helper.getMessage("person_landline"));
     final TextField mobile = new TextField(i18Helper.getMessage("person_mobile"));
     final DateField birthDate = new DateField("Geburtsdatum");
-    final Button initializeAccount = new Button("Account zurücksetzen");
+    final Button initializeAccount = new Button("Account erstellen");
+    final Button resetAccount = new Button("Account zurücksetzen");
     private final TextArea remarks = new TextArea(i18Helper.getMessage("person_remarks"));
 
 
@@ -50,12 +59,33 @@ public class PersonEditor extends AbstractEditor<Person> {
         lastName.setSizeFull();
         remarks.setSizeFull();
 
+        if (actualEntity!=null) {
+            if (actualEntity.getUser() == null) {
+                resetAccount.setEnabled(false);
+            } else {
+                resetAccount.setEnabled(true);
+            }
+
+            initializeAccount.setEnabled(!resetAccount.isEnabled());
+        }
+
         initializeAccount.addClickListener(event -> {
-
-
+            try {
+                passwordService.createAccount(actualEntity);
+            } catch (ServiceException e) {
+                log.warn(e.getMessage(), e);
+            }
         });
 
-        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, birthDate, remarks, initializeAccount);
+        resetAccount.addClickListener(event -> {
+            try {
+                passwordService.resetAccount(actualEntity);
+            } catch (ServiceException e) {
+                log.warn(e.getMessage(), e);
+            }
+        });
+
+        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, birthDate, remarks, initializeAccount, resetAccount);
         return layout;
     }
 

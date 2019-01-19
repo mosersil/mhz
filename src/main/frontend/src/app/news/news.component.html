@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-12">
         <h3>{{hotarticle?.title}}</h3>
-        <p>{{hotarticle?.text}}</p>
+        <div [innerHTML]="hotarticle?.text"></div>
 
 
         <div *ngIf="hotarticle.events.length>0" class="row card-group">

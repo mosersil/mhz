@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  backendUrl: 'https://www.silviomoser.com',
+  backendUrl: 'https://www.mv-oberstrass.org',
   envName: 'prod'
 };

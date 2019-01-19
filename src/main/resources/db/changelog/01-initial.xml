@@ -198,7 +198,7 @@
             <column name="TITLE" type="varchar(60)">
                 <constraints nullable="false"/>
             </column>
-            <column name="TEASER" type="varchar(150)">
+            <column name="TEASER" type="varchar(400)">
                 <constraints nullable="false"/>
             </column>
             <column name="TEXT" type="varchar(5000)">
