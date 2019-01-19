@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
   events;
   main_background: string = "url('" + environment.backendUrl + "/public/api/background')";
   hotArticle: any;
+  now = new Date();
+  years_since = (this.now.getFullYear()-1899)
 
   constructor(private _calendarService: CalendarService, private _newsService: NewsService) {
   }
