@@ -6,6 +6,7 @@ import com.silviomoser.demo.services.PasswordService;
 import com.silviomoser.demo.services.ServiceException;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -41,6 +42,7 @@ public class PersonEditor extends AbstractEditor<Person> {
     final TextField city = new TextField(i18Helper.getMessage("person_city"));
     final TextField landline = new TextField(i18Helper.getMessage("person_landline"));
     final TextField mobile = new TextField(i18Helper.getMessage("person_mobile"));
+    final TextField email = new TextField("Email");
     final DateField birthDate = new DateField("Geburtsdatum");
     final Button initializeAccount = new Button("Account erstellen");
     final Button resetAccount = new Button("Account zurücksetzen");
@@ -85,7 +87,7 @@ public class PersonEditor extends AbstractEditor<Person> {
             }
         });
 
-        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, birthDate, remarks, initializeAccount, resetAccount);
+        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, email, birthDate, remarks, initializeAccount, resetAccount);
         return layout;
     }
 
@@ -96,6 +98,7 @@ public class PersonEditor extends AbstractEditor<Person> {
 
         binder.forField(firstName).asRequired();
         binder.forField(lastName).asRequired();
+        binder.forField(email).withValidator(new EmailValidator("Bitte gültige E-Mail Adresse eingeben"));
         binder.forField(landline).withValidator(new RegexpValidator("Telefonnummer darf nur aus Ziffern bestehen","[0-9]+"));
 
         /*
