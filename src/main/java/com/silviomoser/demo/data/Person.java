@@ -93,12 +93,12 @@ public class Person extends AbstractEntity {
 
     @JsonView({Views.Internal.class})
     @Column(name = "LANDLINE", length = 20)
-    @Pattern(regexp = "[0-9]+")
+    @Pattern(regexp = "[0-9\\s]+")
     private String landline;
 
     @JsonView({Views.Internal.class})
     @Column(name = "MOBILE", length = 20)
-    @Pattern(regexp = "[0-9]+")
+    @Pattern(regexp = "[0-9\\s]+")
     private String mobile;
 
     @Email

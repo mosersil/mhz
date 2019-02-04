@@ -11,6 +11,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -92,15 +93,28 @@ public abstract class AbstractEditor<T extends AbstractEntity> extends Window {
             ConfirmDialog.show(getUI(), i18Helper.getMessage("confirm_areyousure"),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
-                            repository.delete(actualEntity);
+
+                            if (isDeleteable(actualEntity)) {
+                                repository.delete(actualEntity);
+                            }
+                            else {
+                                Notification.show("Eintrag kann nicht gelöscht werden",
+                                        "",
+                                        Notification.Type.HUMANIZED_MESSAGE);
+                            }
                             close();
                         } else {
                             close();
                         }
                     });
         });
+        delete.setEnabled(isDeleteable(actualEntity));
         cancel.addClickListener(e -> close());
         postInit();
+    }
+
+    protected boolean isDeleteable(T actualEntity) {
+        return true;
     }
 
 

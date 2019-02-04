@@ -31,6 +31,7 @@ public class NavigationBar {
         navigationBarItems.addComponent(createNavigationButton(layout, "Kalender", CalendarView.VIEW_NAME));
         navigationBarItems.addComponent(createNavigationButton(layout, "Personen", PersonView.VIEW_NAME));
         navigationBarItems.addComponent(createNavigationButton(layout, "Gruppen", MembershipView.VIEW_NAME));
+        //navigationBarItems.addComponent(createNavigationButton(layout, "Accounts", AccountView.VIEW_NAME));
         navigationBarItems.addComponent(createNavigationButton(layout, "Downloads", StaticFileView.VIEW_NAME));
 
         final HorizontalLayout navigationBar = new HorizontalLayout();

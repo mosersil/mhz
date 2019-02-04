@@ -182,6 +182,21 @@
               </td>
             </tr>
 
+            <tr>
+              <td>Ehrenmitglieder</td>
+              <td>Adressliste mit allen Ehrenmitgliedern vom MHZ</td>
+              <td>
+        <span
+          (click)="downloadFile('/api/protected/internal/addresslist?organization=Ehrenmitglied&format=PDF', 'application/pdf', 'ehrenmitglieder.pdf')"
+          class="fa fa-file-pdf-o"
+          aria-hidden="true"></span>&nbsp;
+                <span
+                  (click)="downloadFile('/api/protected/internal/addresslist?organization=Ehrenmitglied&format=XLS', 'application/vnd.ms-excel', 'ehrenmitglieder.xls')"
+                  class="fa fa-file-excel-o" aria-hidden="true"></span>
+              </td>
+            </tr>
+
+
             </tbody>
           </table>
         </div>

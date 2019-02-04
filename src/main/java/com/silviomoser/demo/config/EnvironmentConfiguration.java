@@ -1,5 +1,6 @@
 package com.silviomoser.demo.config;
 
+import com.silviomoser.demo.security.utils.PasswordUtils;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +56,15 @@ public class EnvironmentConfiguration {
         imageServiceConfiguration.setBaseUrl(environment.getProperty("image.baseurl", "http://localhost:8085"));
         imageServiceConfiguration.setStoragePath(environment.getProperty("image.storagePath", "/opt/mhz/images/"));
         return imageServiceConfiguration;
+    }
+
+    @Bean
+    public JwtTokenConfiguration jwtTokenConfiguration() {
+        final JwtTokenConfiguration jwtTokenConfiguration = new JwtTokenConfiguration();
+        jwtTokenConfiguration.setJwtSecret(environment.getProperty("jwt.secret", PasswordUtils.generateToken(10, false)));
+        final String expirationInSecString = environment.getProperty("jwt.expirationInSecs", "3600");
+        jwtTokenConfiguration.setJwtExpirationSecs(Integer.parseInt(expirationInSecString));
+        return jwtTokenConfiguration;
     }
 
     @Bean
