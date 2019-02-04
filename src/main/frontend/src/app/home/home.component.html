@@ -18,7 +18,7 @@
     </div>
 
 
-    <div class="row">
+    <div *ngIf="hotArticle != null" class="row">
 
       <div class="col-md-4">
         <div class="card h-100">
@@ -57,6 +57,37 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="hotArticle == null" class="row">
+
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Lust zum mitspielen?</h5>
+            <p class="card-text">Sie spielen ein Instrument und möchten Ihr Hobby in einem motivierten und geselligen Verein ausüben? Vielleicht wären wir ja etwas für Sie.</p><p>Hier finden Sie weitere Informationen zu unserem Verein, dem Probebetrieb und wie Sie einmal unverbindlich bei einer Probe vorbeischauen können.</p>
+            <a class="btn btn-primary" routerLink="/about_us">Mehr</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Unsere nächsten Auftritte</h5>
+            <dl *ngFor="let event of events">
+              <dt>{{event.title}}</dt>
+              <dd *ngIf="!event.fullDay">{{event.dateStart | date : "EEEE, dd.MM.yyyy"}}<br/>
+                {{event.dateStart | date : "HH:mm"}} Uhr <br>
+                {{event.location}}</dd>
+              <dd *ngIf="event.fullDay">{{event.dateStart | date : "EEEE, dd.MM.yyyy"}}<br/>
+                {{event.location}}</dd>
+            </dl>
+            <a class="btn btn-primary" routerLink="/calendar">Alle unsere Auftritte</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 
   </div>

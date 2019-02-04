@@ -4,6 +4,7 @@ import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.type.Gender;
 import com.silviomoser.demo.services.PasswordService;
 import com.silviomoser.demo.services.ServiceException;
+import com.silviomoser.demo.utils.PersonUtils;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.validator.EmailValidator;
@@ -100,6 +101,7 @@ public class PersonEditor extends AbstractEditor<Person> {
         binder.forField(lastName).asRequired();
         binder.forField(email).withValidator(new EmailValidator("Bitte gültige E-Mail Adresse eingeben"));
         binder.forField(landline).withValidator(new RegexpValidator("Telefonnummer darf nur aus Ziffern bestehen","[0-9]+"));
+        binder.forField(mobile).withValidator(new RegexpValidator("Mobile-Nummer darf nur aus Ziffern bestehen","[0-9]+"));
 
         /*
         binder.bind(username, (ValueProvider<Person, String>) person -> person.getUser().getUsername(),
@@ -117,5 +119,19 @@ public class PersonEditor extends AbstractEditor<Person> {
 
 
         return binder;
+    }
+
+    @Override
+    public void populateFields() {
+        if (isDeleteable(actualEntity)) {
+            delete.setEnabled(true);
+        }
+        else {
+            delete.setEnabled(false);
+        }
+    }
+
+    protected boolean isDeleteable(Person person) {
+        return PersonUtils.isDeletable(person);
     }
 }

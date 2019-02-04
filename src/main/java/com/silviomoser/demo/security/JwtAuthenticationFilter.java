@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String jwt = getJwtFromRequest(request);
 
                 if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                    log.debug("found a JWT");
+                    log.debug("found a JWT, good until " + tokenProvider.getTtl(jwt));
                     String userId = tokenProvider.getUserIdFromJWT(jwt);
 
                     UserDetails userDetails = customUserDetailsService.loadUserByUsername(userId);
@@ -47,10 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.error("Could not set user authentication in security context", ex);
             }
         }
-        else {
-            log.debug("No bearer token found");
-        }
-
         filterChain.doFilter(request, response);
     }
 

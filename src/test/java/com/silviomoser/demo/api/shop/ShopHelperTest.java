@@ -4,7 +4,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.testng.Assert.*;
 
 public class ShopHelperTest {
 
@@ -14,7 +13,7 @@ public class ShopHelperTest {
                 {1000l, "CHF", "10.00 CHF"},
                 {1055l, "CHF", "10.55 CHF"},
                 {10055l, "CHF", "100.55 CHF"},
-                {100055l, "CHF", "1,000.55 CHF"},
+                {100055l, "CHF", "1'000.55 CHF"},
                 {0l, "CHF", "0.00 CHF"},
                 {1000l, null, "10.00"}
         };
