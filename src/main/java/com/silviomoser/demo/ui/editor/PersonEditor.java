@@ -3,7 +3,7 @@ package com.silviomoser.demo.ui.editor;
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.type.Gender;
 import com.silviomoser.demo.services.PasswordService;
-import com.silviomoser.demo.services.ServiceException;
+import com.silviomoser.demo.ui.validator.NoEmptyStringValidator;
 import com.silviomoser.demo.utils.PersonUtils;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
@@ -11,7 +11,6 @@ import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
@@ -45,8 +44,8 @@ public class PersonEditor extends AbstractEditor<Person> {
     final TextField mobile = new TextField(i18Helper.getMessage("person_mobile"));
     final TextField email = new TextField("Email");
     final DateField birthDate = new DateField("Geburtsdatum");
-    final Button initializeAccount = new Button("Account erstellen");
-    final Button resetAccount = new Button("Account zurücksetzen");
+    //final Button initializeAccount = new Button("Account erstellen");
+    //final Button resetAccount = new Button("Account zurücksetzen");
     private final TextArea remarks = new TextArea(i18Helper.getMessage("person_remarks"));
 
 
@@ -62,6 +61,7 @@ public class PersonEditor extends AbstractEditor<Person> {
         lastName.setSizeFull();
         remarks.setSizeFull();
 
+        /*
         if (actualEntity!=null) {
             if (actualEntity.getUser() == null) {
                 resetAccount.setEnabled(false);
@@ -87,8 +87,9 @@ public class PersonEditor extends AbstractEditor<Person> {
                 log.warn(e.getMessage(), e);
             }
         });
+        */
 
-        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, email, birthDate, remarks, initializeAccount, resetAccount);
+        layout.addComponents(title, genderRadioButtonGroup, firstName, lastName, company, address1, zip, city, landline, mobile, email, birthDate, remarks);
         return layout;
     }
 
@@ -97,11 +98,15 @@ public class PersonEditor extends AbstractEditor<Person> {
     public Binder initBinder() {
         Binder<Person> binder = new Binder<>(Person.class);
 
-        binder.forField(firstName).asRequired();
-        binder.forField(lastName).asRequired();
-        binder.forField(email).withValidator(new EmailValidator("Bitte gültige E-Mail Adresse eingeben"));
-        binder.forField(landline).withValidator(new RegexpValidator("Telefonnummer darf nur aus Ziffern bestehen","[0-9]+"));
-        binder.forField(mobile).withValidator(new RegexpValidator("Mobile-Nummer darf nur aus Ziffern bestehen","[0-9]+"));
+        binder.forField(firstName).asRequired("Bitte Vorname eingeben").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).bind(Person::getFirstName, Person::setFirstName);
+        binder.forField(lastName).asRequired("Bitte Nachname eingeben").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).bind(Person::getLastName, Person::setLastName);
+        binder.forField(company).withNullRepresentation("").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).bind(Person::getCompany, Person::setCompany);
+        binder.forField(address1).asRequired("Bitte Adresse eingeben").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).bind(Person::getAddress1, Person::setAddress1);
+        binder.forField(zip).asRequired("Bitte PLZ eingeben").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).withValidator(new RegexpValidator("Bitte ausschliesslich Ziffern eingeben", "[0-9]+" )).bind(Person::getZip, Person::setZip);
+        binder.forField(city).asRequired("Bitte Ort eingeben").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).bind(Person::getCity, Person::setCity);
+        binder.forField(email).withNullRepresentation("").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).withValidator(new EmailValidator("Bitte gültige E-Mail Adresse eingeben")).bind(Person::getEmail, Person::setEmail);
+        binder.forField(landline).withNullRepresentation("").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).withValidator(new RegexpValidator("Telefonnummer darf nur aus Ziffern bestehen","[0-9]+")).bind(Person::getLandline, Person::setLandline);
+        binder.forField(mobile).withNullRepresentation("").withValidator(new NoEmptyStringValidator("Keine Leerschläge zu Begin/Ende erlaubt")).withValidator(new RegexpValidator("Mobile-Nummer darf nur aus Ziffern bestehen","[0-9]+")).bind(Person::getMobile, Person::setMobile);
 
         /*
         binder.bind(username, (ValueProvider<Person, String>) person -> person.getUser().getUsername(),
