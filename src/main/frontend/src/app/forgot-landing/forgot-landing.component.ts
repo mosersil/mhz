@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -41,7 +41,7 @@ export class ForgotLandingComponent implements OnInit {
     };
 
     this.http.post(environment.backendUrl + '/auth/redeemToken', data).subscribe(success => {
-      this.infomessage = "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können Sich nun einloggen";
+      this.infomessage = "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich nun einloggen";
     }, error1 => {
       this.errormessage = error1.error.message;
     })

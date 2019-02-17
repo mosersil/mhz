@@ -25,6 +25,7 @@ public class SecurityUserDetails extends User implements UserDetails {
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setRoles(user.getRoles());
         this.setPerson(user.getPerson());
+        this.setActive(user.isActive());
     }
 
     @Override
@@ -64,6 +65,6 @@ public class SecurityUserDetails extends User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive();
     }
 }

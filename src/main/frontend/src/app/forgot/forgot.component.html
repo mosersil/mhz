@@ -6,12 +6,11 @@
   </div>
   <div class="alert alert-info" *ngIf="infomessage!=null">
     {{infomessage}}
-    <button (click)="goBack()">Weiter</button>
   </div>
 
   <div class="col-md-6 offset-md-3">
     <h1>Passwort vergessen?</h1>
-    <p>Kein problem. Wie lautet Ihre E-Mail Adresse?</p>
+    <p>Kein Problem. Wie lautet Ihre E-Mail Adresse?</p>
 
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
       <div class="form-group">

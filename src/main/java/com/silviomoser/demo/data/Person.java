@@ -275,6 +275,7 @@ public class Person extends AbstractEntity {
                 user.setCreatedDate(LocalDateTime.now());
                 user.setPerson(person);
                 user.setUsername(email);
+                user.setActive(true);
                 List<Role> roleList = new ArrayList<>();
                 if (roles != null && roles.length > 0) {
                     Arrays.stream(roles).forEach(it -> {
