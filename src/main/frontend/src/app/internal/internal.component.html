@@ -18,6 +18,10 @@
     <li class="nav-item" *ngIf="person.organizations.includes('Aktivmitglied')">
       <a class="nav-link" id="practice-tab" href="#practice" role="tab" data-toggle="tab">Übungsmaterial</a>
     </li>
+
+    <li class="nav-item">
+      <a class="nav-link" id="settings-tab" href="#settings" role="tab" data-toggle="tab">Einstellungen</a>
+    </li>
   </ul>
 
   <!-- Content Panel -->
@@ -252,8 +256,6 @@
             </tbody>
           </table>
         </div>
-
-
       </div>
     </div>
 
@@ -288,6 +290,54 @@
         </table>
       </div>
     </div>
+
+
+    <div role="tabpanel" class="tab-pane fade" id="settings" aria-labelledby="settings-tab">
+      <div class="spacing">&nbsp;</div>
+      <div class="alert alert-info" *ngIf="changePasswordSuccess">
+        {{passwordchange_feedback}}
+      </div>
+
+      <div class="card">
+        <div class="card-header">Passwort ändern</div>
+        <div class="card-body">
+          <form name="form" (ngSubmit)="f.form.valid && onPWChangeSubmit()" #f="ngForm" novalidate>
+            <div class="form-group">
+              <label for="currentPassword">Aktuelles Passwort:</label>
+              <input id="currentPassword" type="password" class="form-control" name="currentPassword" [(ngModel)]="model.currentPassword" #currentPassword="ngModel"
+                     [ngClass]="{ 'is-invalid': f.submitted && (currentPassword.invalid || error_currentpassword) }" required [disabled]="processing || changePasswordSuccess"/>
+              <div *ngIf="f.submitted && (currentPassword.invalid || error_currentpassword)" class="invalid-feedback">
+                <div *ngIf="currentPassword.invalid && currentPassword.errors.required">Bitte aktuelles Passwort eingeben</div>
+                <div *ngIf="error_currentpassword">{{error_currentpassword_msg}}</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Neues Passwort:</label>
+              <input id="newPassword" type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #newPassword="ngModel"
+                     [ngClass]="{ 'is-invalid': f.submitted && (newPassword.invalid || error_newpassword)}" required [disabled]="processing || changePasswordSuccess"/>
+              <div *ngIf="f.submitted && (newPassword.invalid || error_newpassword)" class="invalid-feedback">
+                <div *ngIf="newPassword.invalid && newPassword.errors.required">Bitte neues Passwort eingeben</div>
+                <div *ngIf="error_newpassword">{{error_newpassword_msg}}</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Neues Passwort (Bestätigung):</label>
+              <input id="confirmPassword" type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel"
+                     [ngClass]="{ 'is-invalid': f.submitted && confirmPassword.invalid || error_confirmpassword }" required [disabled]="processing || changePasswordSuccess"/>
+              <div *ngIf="f.submitted && (confirmPassword.invalid || error_confirmpassword)" class="invalid-feedback">
+                <div *ngIf="confirmPassword.invalid && confirmPassword.errors.required">Bitte neues Passwort bestätigen</div>
+                <div *ngIf="error_confirmpassword">{{error_confirmpassword_msg}}</div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+              <button class="btn btn-primary" [disabled]="processing || changePasswordSuccess">Senden</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
 

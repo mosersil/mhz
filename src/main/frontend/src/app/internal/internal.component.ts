@@ -4,6 +4,7 @@ import {AuthenticationService} from "../authentication.service";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {saveAs} from "file-saver";
+import {ChangePasswordResponse} from "../change-password-response";
 
 
 @Component({
@@ -17,10 +18,21 @@ export class InternalComponent implements OnInit {
   person: Person = new Person();
   errorMessage = null;
   year_actual = new Date().getFullYear();
-  year_next = this.year_actual+1;
+  year_next = this.year_actual + 1;
   staticFiles;
   internalFiles;
   practiceFiles;
+  model: any = {};
+  processing: boolean = false;
+  passwordchange_feedback: string;
+  changePasswordSuccess: boolean;
+  error_currentpassword: boolean;
+  error_currentpassword_msg: string;
+  error_newpassword: boolean;
+  error_newpassword_msg: string;
+  error_confirmpassword: boolean;
+  error_confirmpassword_msg: string;
+
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
   }
@@ -75,14 +87,50 @@ export class InternalComponent implements OnInit {
   downLoadFile(data: any, type: string, filename: string) {
     var blob = new Blob([data], {type: type});
     saveAs(blob, filename);
-
-
-    /*
-    var url = window.URL.createObjectURL(blob);
-    var pwa = window.open(url);
-    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-      alert('Bitte popup-blocker in Ihrem browser deaktivieren.');
-    }
-    */
   }
+
+
+  onPWChangeSubmit() {
+    this.processing = true;
+
+    var data = {
+      currentPassword: this.model.currentPassword,
+      newPassword: this.model.newPassword,
+      confirmPassword: this.model.confirmPassword,
+    };
+    this.http.post<ChangePasswordResponse>(environment.backendUrl + '/api/protected/auth/changepassword', data).subscribe(success => {
+      console.log(success);
+      this.error_newpassword = false;
+      this.error_confirmpassword = false;
+      this.error_currentpassword = false;
+      if (success===null || success.errors.length<1) {
+        this.passwordchange_feedback = "Das neue Passwort ist ab sofort aktiv.";
+        this.changePasswordSuccess = true;
+      }
+      else {
+        success.errors.forEach( it => {
+          if (it.errorContext==="currentPassword") {
+            this.error_currentpassword = true;
+            this.error_currentpassword_msg = it.errorMessage;
+          }
+          if (it.errorContext==="newPassword") {
+            this.error_newpassword = true;
+            this.error_newpassword_msg = it.errorMessage;
+          }
+          if (it.errorContext==="confirmPassword") {
+            this.error_confirmpassword = true;
+            this.error_confirmpassword_msg = it.errorMessage;
+          }
+        })
+      };
+
+      this.processing = false;
+
+    }, error1 => {
+      console.log(error1);
+    });
+
+
+  }
+
 }

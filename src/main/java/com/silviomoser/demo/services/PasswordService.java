@@ -8,22 +8,40 @@ import com.silviomoser.demo.data.type.RoleType;
 import com.silviomoser.demo.repository.RoleRepository;
 import com.silviomoser.demo.repository.UserRepository;
 import com.silviomoser.demo.security.utils.PasswordUtils;
+import com.silviomoser.demo.security.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-import static com.silviomoser.demo.security.utils.PasswordUtils.generateToken;
-import static com.silviomoser.demo.security.utils.PasswordUtils.isValidPassword;
+import static com.silviomoser.demo.security.utils.PasswordUtils.*;
 import static com.silviomoser.demo.utils.FormatUtils.toFirstLastName;
+import static com.silviomoser.demo.utils.FormatUtils.welcomingInformal;
 import static com.silviomoser.demo.utils.StringUtils.isBlank;
+import static java.text.MessageFormat.format;
+import static java.time.LocalDateTime.now;
 
 @Service
 @Slf4j
 public class PasswordService {
+
+    private static final String RESOURCE_BUNDLE_NAME = "email_resources";
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
+
+    private static final String LABEL_SELFRESET_SUBJECT = "self_reset_subject";
+    private static final String LABEL_SELFRESET_TEXT = "self_reset_text";
+
+    private static final String LABEL_FORCERESET_SUBJECT = "force_reset_subject";
+    private static final String LABEL_FORCERESET_TEXT = "force_reset_text";
+
+    private static final String LABEL_FORGOT_SUBJECT = "forgot_password_subject";
+    private static final String LABEL_FORGOT_TEXT = "forgot_password_text";
+
+    private static final String LABEL_WELCOME_SUBJECT = "welcome_subject";
+    private static final String LABEL_WELCOME_TEXT = "welcome_text";
 
     @Autowired
     public EmailSenderService emailSenderService;
@@ -34,6 +52,8 @@ public class PasswordService {
     @Autowired
     private RoleRepository roleRepository;
 
+
+
     public void startPwResetSelfService(String username, String forward) throws ServiceException {
         final Optional<User> optionalUser = userRepository.findByUsername(username);
 
@@ -42,12 +62,13 @@ public class PasswordService {
             user.setResetToken(generateToken(50, false));
             userRepository.save(user);
 
-            final String subject = String.format("%s hat sein Passwort vergessen?", user.getPerson().getFirstName());
+            final String subject = getMessage(LABEL_FORGOT_SUBJECT, null);
+            final String text = getMessage(LABEL_FORGOT_TEXT, welcomingInformal(user.getPerson()), assembleResetLink(user, forward));
 
-            emailSenderService.sendSimpleMail(pwResetConfiguration.getEmailFrom(), user.getPerson().getEmail(), subject, renderEmailText(user, forward));
+            sendEmailConfirmation(user.getPerson(), subject, text);
 
         } else {
-            log.warn("User {} does not exist");
+            log.warn("User {} does not exist", username);
             throw new ServiceException("Invalid userId");
         }
     }
@@ -67,14 +88,23 @@ public class PasswordService {
             throw new ServiceException("Invalid password");
         }
         final User user = optionalUser.get();
-        user.setPassword(PasswordUtils.hashPassword(newPassword));
+        user.setPassword(hashPassword(newPassword));
+        if (user.getCreatedDate()==null) {
+            user.setLastModifiedDate(now());
+        }
+        user.setLastModifiedDate(now());
         user.setResetToken(null);
-        return userRepository.save(user);
+        final User updatedUser = userRepository.save(user);
+
+        final String subject = getMessage(LABEL_SELFRESET_SUBJECT);
+        final String text = getMessage(LABEL_SELFRESET_TEXT, welcomingInformal(user.getPerson()), pwResetConfiguration.getBaseUrl());
+
+        sendEmailConfirmation(user.getPerson(), subject, text);
+
+        return updatedUser;
     }
 
-    private String renderEmailText(User user, String forward) {
-        return String.format("Hallo %s,\n\nDu hast dein Passwort vergessen? Nicht so schlimm, hier kannst du dir ein neues Passwort setzen: %s", toFirstLastName(user.getPerson()), String.format("%s?token=%s&forward=%s", pwResetConfiguration.getLandingPage(), user.getResetToken(), forward));
-    }
+
 
 
     public void createAccount(Person person) throws ServiceException {
@@ -86,43 +116,58 @@ public class PasswordService {
     }
 
 
+    /**
+     * Force account reset. Account must exist already
+     * @param person
+     * @throws ServiceException
+     */
     public void resetAccount(Person person) throws ServiceException {
         final User user = person.getUser();
         if (user!=null) {
 
-            final String passwordClearText = PasswordUtils.generateToken(8,false);
-            user.setPassword(PasswordUtils.hashPassword(passwordClearText));
-            user.setLastModifiedDate(LocalDateTime.now());
+            final String passwordClearText = generateToken(8,false);
+            user.setPassword(hashPassword(passwordClearText));
+            user.setLastModifiedDate(now());
             userRepository.save(user);
-            final String subject = String.format("Passwort reset für %s", user.getPerson().getFirstName());
+            final String subject = getMessage(LABEL_FORCERESET_SUBJECT);
+            final String text = getMessage(LABEL_FORCERESET_TEXT, welcomingInformal(user.getPerson()), pwResetConfiguration.getBaseUrl(), user.getUsername(), passwordClearText);
 
-            emailSenderService.sendSimpleMail(pwResetConfiguration.getEmailFrom(), user.getPerson().getEmail(), subject, renderPwResetEmailText(user, passwordClearText));
+            sendEmailConfirmation(person, subject, text);
 
         } else {
-            log.warn(String.format("%s already has an account", toFirstLastName(person)));
-            throw new ServiceException(String.format("%s already has an account", toFirstLastName(person)));
+            log.warn(String.format("%s does not have an account", toFirstLastName(person)));
+            throw new ServiceException(String.format("Account does not exist for user %s", toFirstLastName(person)));
         }
     }
 
 
+    /**
+     * Create a new account. Requires the person does not have an account yet.
+     * @param person
+     * @param roles
+     * @throws ServiceException
+     */
     public void createAccount(Person person, Role... roles) throws ServiceException {
         if (isBlank(person.getEmail())) {
-            throw new ServiceException("Email Address is mandatory");
+            throw new ServiceException("exception_email_mandatory");
         }
         if (person.getUser()==null) {
             final User user = new User();
             user.setPerson(person);
-            final String passwordClearText = PasswordUtils.generateToken(8,false);
-            user.setPassword(PasswordUtils.hashPassword(passwordClearText));
-            user.setCreatedDate(LocalDateTime.now());
+            final String passwordClearText = generateToken(8,false);
+            user.setPassword(hashPassword(passwordClearText));
+            user.setCreatedDate(now());
             user.setUsername(person.getEmail());
+            User persistedUser = userRepository.save(user);
             if (roles!=null && roles.length>0) {
-                user.setRoles(Arrays.asList(roles));
+                Arrays.stream(roles).forEach(role -> persistedUser.addRole(role));
             }
-            userRepository.save(user);
-            final String subject = String.format("Neuer Account für %s", user.getPerson().getFirstName());
+            persistedUser.setActive(true);
+            userRepository.save(persistedUser);
+            final String subject = getMessage(LABEL_WELCOME_SUBJECT);
+            final String text = getMessage(LABEL_WELCOME_TEXT, welcomingInformal(person), pwResetConfiguration.getBaseUrl(), user.getUsername(), passwordClearText);
 
-            emailSenderService.sendSimpleMail(pwResetConfiguration.getEmailFrom(), user.getPerson().getEmail(), subject, renderWelcomeEmailText(user, passwordClearText));
+            sendEmailConfirmation(person, subject, text);
 
         } else {
             log.warn(String.format("%s already has an account", toFirstLastName(person)));
@@ -130,13 +175,52 @@ public class PasswordService {
         }
     }
 
-    private String renderWelcomeEmailText(User user, String passwordClearText) {
-        return String.format("Hallo %s,\n\nDein Account auf www.mv-oberstrass.ch wurde erstellt.\n\nBenutzername: %s\nPasswort: %s\n\nZur Sicherheit empfehlen wir, das Passwort baldmöglichst duch ein selbst gewähltes zu ersetzen.\n\nVielen Dank & liebe Grüsse!", toFirstLastName(user.getPerson()), user.getUsername(), passwordClearText);
+
+    /**
+     * Change password
+     * @param currentPassword
+     * @param newPassword
+     * @param confirmPassword
+     * @throws ServiceException
+     */
+    public void changePassword(String currentPassword, String newPassword, String confirmPassword) throws ServiceException {
+        final User user = userRepository.findById(SecurityUtils.getMe().getUser().getId()).get();
+        if (!PasswordUtils.matches(currentPassword, user.getPassword())) {
+            throw new ChangePasswordException("currentPassword", "exception_pwchange_currentpwincorrect");
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            throw new ChangePasswordException("confirmPassword", "exception_pwchange_confirmationdoesnotmatch");
+        }
+
+        if (!isValidPassword(newPassword)) {
+            throw new ChangePasswordException("newPassword", "exception_pwchange_policyviolation");
+        }
+        user.setPassword(hashPassword(newPassword));
+        user.setLastModifiedDate(now());
+        userRepository.save(user);
+        userRepository.flush();
+        final String subject = getMessage(LABEL_SELFRESET_SUBJECT);
+        final String text = getMessage(LABEL_SELFRESET_TEXT, welcomingInformal(user.getPerson()), pwResetConfiguration.getBaseUrl());
+        sendEmailConfirmation(user.getPerson(), subject, text);
     }
 
-    private String renderPwResetEmailText(User user, String passwordClearText) {
-        return String.format("Hallo %s,\n\nDein Account auf www.mv-oberstrass.ch wurde zurückgesetzt.\n\nBenutzername: %s\nPasswort: %s\n\nZur Sicherheit empfehlen wir, das Passwort baldmöglichst duch ein selbst gewähltes zu ersetzen.\n\nVielen Dank & liebe Grüsse!", toFirstLastName(user.getPerson()), user.getUsername(), passwordClearText);
+    private void sendEmailConfirmation(Person person, String subject, String text) throws ServiceException {
+        emailSenderService.sendSimpleMail(pwResetConfiguration.getEmailFrom(), person.getEmail(), subject, text);
     }
 
+    private String assembleResetLink(User user, String forward) throws ServiceException {
+        if (user==null || isBlank(forward)) {
+            throw new ServiceException("Could not assemble personalized link. Please check your configuration");
+        }
 
+        if (isBlank(user.getResetToken())) {
+            throw new ServiceException("No reset token found for this user");
+        }
+        return String.format("%s?token=%s&forward=%s", pwResetConfiguration.getLandingPage(), user.getResetToken(), forward);
+    }
+
+    private String getMessage(String key, String... params) {
+        return format(RESOURCE_BUNDLE.getString(key), params);
+    }
 }

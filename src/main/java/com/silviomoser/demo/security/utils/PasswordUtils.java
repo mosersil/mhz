@@ -1,6 +1,13 @@
 package com.silviomoser.demo.security.utils;
 
-import org.passay.*;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.LengthRule;
+import org.passay.PasswordData;
+import org.passay.PasswordGenerator;
+import org.passay.PasswordValidator;
+import org.passay.RuleResult;
+import org.passay.WhitespaceRule;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
@@ -75,6 +82,11 @@ public class PasswordUtils {
     public static String hashPassword(String input) {
         final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.encode(input);
+    }
+
+    public static boolean matches(CharSequence rawPassword, String encodedPassword) {
+        final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
 }

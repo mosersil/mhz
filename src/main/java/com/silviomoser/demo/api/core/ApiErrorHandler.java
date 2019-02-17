@@ -29,7 +29,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         final List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(error -> error.getField() + ": " + error.getDefaultMessage()).collect(Collectors.toList());
         ex.getBindingResult().getGlobalErrors().stream().map(error -> error.getObjectName() + ": " + error.getDefaultMessage()).forEach(errors::add);
 
-        final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
+        final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return handleExceptionInternal(ex, apiError, headers, apiError.getStatus(), request);
     }
 
@@ -39,7 +39,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
             HttpStatus status, WebRequest request) {
         final String error = ex.getParameterName() + " parameter is missing";
 
-        final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), error);
+        final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -47,9 +47,12 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Object> handleApiException(ApiException ex, WebRequest request) {
         final HttpStatus httpStatus = ex.getHttpStatus() == null ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getHttpStatus();
-        final ApiError apiError = new ApiError(httpStatus, ex.getLocalizedMessage(), ex.getMessage());
-        return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+        final ApiError apiError = new ApiError(httpStatus, ex.getMessage(), ex.getErrors());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json; charset=utf-8");;
+        return new ResponseEntity<Object>(apiError, responseHeaders, apiError.getStatus());
     }
+
 }
 
 

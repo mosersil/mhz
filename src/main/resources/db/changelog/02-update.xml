@@ -4,7 +4,11 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="changelog/01-initial.xml" relativeToChangelogFile="true"/>
-    <include file="changelog/02-update.xml" relativeToChangelogFile="true"/>
-
+    <changeSet id="01" author="silvio">
+        <addColumn tableName="USER">
+            <column name="ACTIVE" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

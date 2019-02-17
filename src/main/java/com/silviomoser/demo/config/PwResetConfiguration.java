@@ -14,5 +14,7 @@ public class PwResetConfiguration {
     private String emailFrom;
     @NotBlank
     private String landingPage;
+    @NotBlank
+    private String baseUrl;
 
 }

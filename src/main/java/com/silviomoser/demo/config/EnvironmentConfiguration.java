@@ -40,6 +40,7 @@ public class EnvironmentConfiguration {
         PwResetConfiguration pwResetConfiguration = new PwResetConfiguration();
         pwResetConfiguration.setEmailFrom(environment.getProperty("pwreset.email.from"));
         pwResetConfiguration.setLandingPage(environment.getProperty("pwreset.landingpage"));
+        pwResetConfiguration.setBaseUrl(environment.getProperty("pwreset.baseurl", "http://localhost:8085"));
         return pwResetConfiguration;
     }
 

@@ -5,7 +5,6 @@ import com.silviomoser.demo.utils.FormatUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -21,7 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -55,7 +54,7 @@ public class User extends AbstractEntity {
     private LocalDateTime createdDate;
 
     @CreatedDate
-    @Column(name = "LAST_MODIFIED_DATE", updatable = false)
+    @Column(name = "LAST_MODIFIED_DATE")
     private LocalDateTime lastModifiedDate;
 
     @JsonView(Views.Public.class)
@@ -70,10 +69,12 @@ public class User extends AbstractEntity {
     @JoinColumn(name = "PERSON_ID")
     private Person person;
 
-
     @Column(name = "RESETTOKEN")
     @Size(max = 50)
     private String resetToken;
+
+    @Column(name = "ACTIVE")
+    private boolean active;
 
     @Override
     public String toString() {
@@ -86,6 +87,11 @@ public class User extends AbstractEntity {
                 '}';
     }
 
-
+    public void addRole(Role role) {
+        if (getRoles()==null) {
+            setRoles(new ArrayList<>(1));
+        }
+        getRoles().add(role);
+    }
 
 }

@@ -2,6 +2,8 @@ package com.silviomoser.demo.utils;
 
 import com.silviomoser.demo.data.Person;
 
+import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
+
 /**
  * Created by silvio on 13.10.18.
  */
@@ -15,6 +17,21 @@ public class FormatUtils {
         }
         return person.getFirstName() + " " + person.getLastName();
     }
+
+    public static final String welcomingInformal(Person person) {
+        if (person == null) {
+            return "";
+        }
+
+        StringBuilder welcoming = new StringBuilder("Hallo");
+
+        if (isNotBlank(person.getFirstName())) {
+            welcoming.append(" " + person.getFirstName());
+        }
+
+        return welcoming.toString();
+    }
+
 
     public static final String fullAddress(Person person) {
         if (person == null) {

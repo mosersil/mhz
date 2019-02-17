@@ -5,14 +5,21 @@ import org.springframework.http.HttpStatus;
 public class ApiException extends RuntimeException {
 
     private HttpStatus httpStatus;
+    private ApiErrorDetail[] errors;
 
     public ApiException(String message) {
         super(message);
     }
 
-    public ApiException(String message, HttpStatus httpStatus) {
+    public ApiException(String message, ApiErrorDetail... errors) {
+        super(message);
+        this.errors = errors;
+    }
+
+    public ApiException(String message, HttpStatus httpStatus, ApiErrorDetail... errors) {
         super(message);
         this.httpStatus = httpStatus;
+        this.errors = errors;
     }
 
     public ApiException(String message, Throwable cause) {
@@ -26,5 +33,9 @@ public class ApiException extends RuntimeException {
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
+    }
+
+    public ApiErrorDetail[] getErrors() {
+        return errors;
     }
 }

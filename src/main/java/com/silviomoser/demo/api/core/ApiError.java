@@ -15,10 +15,10 @@ import java.util.List;
 public class ApiError {
     private HttpStatus status;
     private String message;
-    private List<String> errors;
+    private List<ApiErrorDetail> errors;
 
 
-    public ApiError(HttpStatus status, String message, @NotNull String error) {
+    public ApiError(HttpStatus status, String message, @NotNull ApiErrorDetail... error) {
         this.status = status;
         this.message = message;
         errors = Arrays.asList(error);

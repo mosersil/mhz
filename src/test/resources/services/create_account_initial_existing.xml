@@ -1,0 +1,5 @@
+<dataset>
+    <PERSON ID="1" FIRST_NAME="Max" LAST_NAME="Muster" GENDER="0" ADDRESS1="Fake Street" ADDRESS2="Mailbox" ZIP="5555" CITY="Lyton" EMAIL="max_muster@localhost.com"/>
+    <ROLE ROLE_TYPE="USER"></ROLE>
+    <USER USERNAME="max_muster@localhost.com" PASSWORD="asdf" PERSON_ID="1"></USER>
+</dataset>
