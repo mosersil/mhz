@@ -1,31 +1,56 @@
 package com.silviomoser.demo.ui.editor;
 
+import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.User;
+import com.silviomoser.demo.repository.PersonRepository;
+import com.silviomoser.demo.security.utils.PasswordUtils;
+import com.silviomoser.demo.utils.FormatUtils;
 import com.vaadin.data.Binder;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.DateTimeField;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @UIScope
 public class AccountEditor extends AbstractEditor<User> {
 
-    private TextField username = new TextField("Username");
-    private DateTimeField createdDate = new DateTimeField("Kreiert am");
-    private DateTimeField lastModifiedDate = new DateTimeField("Letzte Änderung am");
+    private final TextField username = new TextField("Username");
+    private final ComboBox<Person> person = new ComboBox<>("Person");
+    private final CheckBox generatePassword = new CheckBox("Generiere Passwort");
+    private final CheckBox active = new CheckBox("Aktiv");
 
+
+    @Autowired
+    PersonRepository personRepository;
 
     @Override
     public Layout initLayout() {
-        FormLayout layout = new FormLayout();
+        final FormLayout layout = new FormLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
         setWidth(1000);
 
-        layout.addComponents(username, createdDate, lastModifiedDate);
+        person.setDataProvider( new ListDataProvider<Person>(personRepository.findWithEmailAddressSet()));
+        person.setItemCaptionGenerator(it -> FormatUtils.toFirstLastName(it) + " ("+it.getId()+")");
+
+        person.addValueChangeListener(event -> {
+            if (event.getValue()!=null && event.getValue().getEmail()!=null) {
+                username.setValue(event.getValue().getEmail());
+            }
+        });
+        layout.addComponents(person, username, active, generatePassword);
+
+        save.addClickListener(e -> {
+            if (generatePassword.getValue()) {
+                actualEntity.setPassword(PasswordUtils.hashPassword(PasswordUtils.generateToken(12, false)));
+            }
+        });
 
         return layout;
     }
@@ -34,10 +59,22 @@ public class AccountEditor extends AbstractEditor<User> {
     public Binder initBinder() {
         Binder<User> binder = new Binder<>(User.class);
 
-        //binder.forField(firstName).asRequired();
+        binder.forField(person).asRequired("Bitte Person wählen").bind(User::getPerson, User::setPerson);
+        binder.forField(username).asRequired("Bitte Benutzername wählen").bind(User::getUsername, User::setUsername);
+        binder.forField(active).bind(User::isActive, User::setActive);
 
         binder.bindInstanceFields(this);
         return binder;
+
+    }
+
+    public void populateFields() {
+        if (actualEntity.getPerson()!=null) {
+            person.setEnabled(false);
+        }
+        else {
+            person.setEnabled(true);
+        }
 
     }
 }
