@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -76,8 +78,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResult result = new AuthenticationResult();
         try {
-            result.setMessage(e.getMessage());
-            result.setErrorCode(1);
+            if (e instanceof BadCredentialsException) {
+                result.setMessage("Falscher Benutzername oder falches Passwort");
+                result.setErrorCode(1);
+            }
+            else if (e instanceof DisabledException) {
+                result.setMessage("Zugang wurde deaktiviert");
+                result.setErrorCode(2);
+            }
+            else {
+                result.setMessage("Unbekannter Login-Fehler");
+                result.setErrorCode(3);
+                log.error("Caught unexpected exception: " + e.getClass(), e);
+            }
+
             httpServletResponse.getWriter().write(mapper.writeValueAsString(result));
         } catch (IOException ioe) {
             ioe.printStackTrace();
