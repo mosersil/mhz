@@ -1,7 +1,6 @@
 package com.silviomoser.demo.ui.view;
 
 import com.silviomoser.demo.data.AbstractEntity;
-import com.silviomoser.demo.ui.NavigationBar;
 import com.silviomoser.demo.ui.editor.AbstractEditor;
 import com.silviomoser.demo.ui.i18.I18Helper;
 import com.vaadin.data.provider.ListDataProvider;
@@ -12,6 +11,7 @@ import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -38,6 +38,7 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
 
     private final TextField filter = new TextField();
 
+    private VerticalLayout mainLayout;
 
     @Autowired
     private JpaRepository<T, Long> repository;
@@ -60,12 +61,12 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
         grid.setHeight(800, Unit.PIXELS);
         grid.setWidth(100, Unit.PERCENTAGE);
         populateGrid(grid);
-        final VerticalLayout mainLayout = new VerticalLayout(actions, grid);
+        mainLayout = new VerticalLayout(actions, grid);
         mainLayout.setSizeFull();
         mainLayout.setId("mainLayout");
 
 
-        addComponents(NavigationBar.buildNavigationBar(this), mainLayout);
+        //addComponents(NavigationBar.buildNavigationBar(this), mainLayout);
 
 
         filter.setPlaceholder("Einträge Filtern...");
@@ -85,7 +86,7 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
                 //get the item which has been clicked
                 T article = item.getItem();
                 //open the item in a window
-                getUI().addWindow(abstractEditor);
+                mainLayout.getUI().addWindow(abstractEditor);
                 abstractEditor.editItem(article);
                 //window.setVisible(true);
 
@@ -108,11 +109,11 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
         // Instantiate and edit new Customer the new button is clicked
         addNewBtn.addClickListener(e -> {
             abstractEditor.editItem(createNew());
-            getUI().addWindow(abstractEditor);
+            mainLayout.getUI().addWindow(abstractEditor);
             //add a listener, which will be executed when the window will be closed
             abstractEditor.addCloseListener(closeEvent -> {
                 listItems(null); //refresh grid to show any changes
-                getUI().removeWindow(abstractEditor);
+                mainLayout.getUI().removeWindow(abstractEditor);
                 listItems(null);
             });
         });
@@ -140,6 +141,10 @@ public abstract class AbstractCrudView<T extends AbstractEntity> extends Vertica
             grid.setItems(repository.findAll());
         }
 
+    }
+
+    public Component getViewComponent() {
+        return mainLayout;
     }
 
     @Override

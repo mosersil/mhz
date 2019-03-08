@@ -4,11 +4,10 @@ import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.repository.CalendarEventRepository;
-import com.silviomoser.demo.utils.PdfBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,6 +19,7 @@ import java.util.stream.Collectors;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
 @Service
+@Slf4j
 public class CalendarService {
 
     @Autowired
@@ -65,4 +65,24 @@ public class CalendarService {
         final ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
     }
+
+    public CalendarEvent addOrUpdate(CalendarEvent calendarEvent) throws ServiceException {
+        final CalendarEvent calendarEvent1 = calendarEventRepository.save(calendarEvent);
+        log.info("Saved article {}", calendarEvent1.getId());
+        return calendarEvent1;
+    }
+
+    public void delete(CalendarEvent calendarEvent) throws ServiceException {
+        calendarEventRepository.delete(calendarEvent);
+        log.info("Deleted calendarEvent {} " + calendarEvent.getTitle());
+    }
+
+    public List<CalendarEvent> findByTitleLike(String title) throws ServiceException {
+        return calendarEventRepository.findByTitleContains(title);
+    }
+
+    public int countByTitleLike(String title) throws ServiceException {
+        return calendarEventRepository.countByTitleLike(title);
+    }
+
 }

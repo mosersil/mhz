@@ -87,6 +87,7 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     @Column(name="DRESS_CODE")
     @PdfReport(header = "Tenue")
     @XlsReport(header = "Tenue")
+    @NotNull
     private DressCode dressCode;
 
     @ToString.Exclude
