@@ -58,7 +58,7 @@ public class PersonRegistrationApiTest extends AbstractTestNGSpringContextTests 
                 {buildPersonRegistrationDataSubmission("male", "Max", "Muster", "Street1", "Mailbox", "8000", "Zurich", "test@test.com",STRONG_PASSWORD, STRONG_PASSWORD)},
                 {buildPersonRegistrationDataSubmission("female", "Max", "Muster", "Street1", "Mailbox", "8000", "Zurich", "test@test.com",STRONG_PASSWORD, STRONG_PASSWORD)},
                 {buildPersonRegistrationDataSubmission("female", "Max", "Muster", "Street1", null, "8000", "Zurich", "test@test.com",STRONG_PASSWORD, STRONG_PASSWORD)},
-                {buildPersonRegistrationDataSubmission("female", "Max", "Muster", "Street1", " ", " ", " ", "test@test.com",STRONG_PASSWORD, STRONG_PASSWORD)}
+                {buildPersonRegistrationDataSubmission("female", "Max", "Muster", "Street1", " ", "8000", "Zurich", "test@test.com",STRONG_PASSWORD, STRONG_PASSWORD)}
         };
     }
 
