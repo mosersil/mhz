@@ -20,8 +20,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -62,7 +62,7 @@ public class User extends AbstractEntity {
             @JoinColumn(name = "USER_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Role> roles;
+    private Set<Role> roles;
 
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -89,7 +89,7 @@ public class User extends AbstractEntity {
 
     public void addRole(Role role) {
         if (getRoles()==null) {
-            setRoles(new ArrayList<>(1));
+            setRoles(new HashSet<>(1));
         }
         getRoles().add(role);
     }

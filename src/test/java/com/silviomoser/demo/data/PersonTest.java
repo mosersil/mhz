@@ -28,7 +28,7 @@ public class PersonTest {
         Person person = new Person();
 
         Set<ConstraintViolation<Person>> violations = validator.validate(person);
-        assertThat(violations).hasSize(4);
+        assertThat(violations).hasSize(6);
     }
 
     @DataProvider(name = "testValidFirstNameDp")

@@ -7,7 +7,10 @@ public enum RoleType implements HasLabel{
 
     USER("role_user"),
     ADMIN("role_admin"),
-    DATAVIEWER("role_dataviewer");
+    DATAVIEWER("role_dataviewer"),
+    PERSMGR("role_persmgr"),
+    CONTMGR("role_contmgr"),
+    USRMGR("role_usrmgr");
 
     String tag;
 

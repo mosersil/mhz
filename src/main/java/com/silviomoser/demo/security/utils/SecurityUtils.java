@@ -1,6 +1,7 @@
 package com.silviomoser.demo.security.utils;
 
 import com.silviomoser.demo.data.Person;
+import com.silviomoser.demo.data.type.RoleType;
 import com.silviomoser.demo.security.SecurityUserDetails;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -61,5 +62,17 @@ public class SecurityUtils {
 
         }
         return groups;
+    }
+
+    public static boolean hasRole(RoleType roleType) {
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (!(auth instanceof AnonymousAuthenticationToken)) {
+                SecurityUserDetails userDetails = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                return userDetails.getRoles().stream().anyMatch(it -> it.getType()==roleType);
+            }
+
+        }
+        return false;
     }
 }

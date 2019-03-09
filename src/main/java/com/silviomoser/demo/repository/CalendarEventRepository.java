@@ -15,4 +15,8 @@ public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Lo
 
     @Query("SELECT e FROM CalendarEvent e WHERE e.dateStart > :start and e.dateStart < :until ")
     List<CalendarEvent> findCalendarEventsBetween(@Param("start") LocalDateTime start, @Param("until") LocalDateTime until);
+
+    List<CalendarEvent> findByTitleContains(String title);
+
+    int countByTitleLike(String title);
 }

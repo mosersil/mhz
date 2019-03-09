@@ -10,11 +10,12 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by silvio on 23.07.18.
@@ -35,6 +36,7 @@ public class Article extends AbstractEntity {
     @JsonView(Views.Public.class)
     private String title;
 
+    @NotNull
     @Column(name = "TEASER")
     @JsonView(Views.Public.class)
     private String teaser;
@@ -54,11 +56,9 @@ public class Article extends AbstractEntity {
     @JsonView(Views.Public.class)
     private LocalDateTime endDate;
 
-    @NotNull
     @JsonView(Views.Public.class)
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
     @ToString.Exclude
-    private List<CalendarEvent> events;
-
+    private Set<CalendarEvent> events;
 
 }

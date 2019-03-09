@@ -16,4 +16,8 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findWithEmailAddressSet();
 
     Optional<Person> findByEmail(String email);
+
+    List<Person> findByLastNameContains(String lastName);
+
+    int countByLastNameLike(String lastName);
 }

@@ -24,9 +24,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.silviomoser.demo.utils.StringUtils.capitalizeFirstCharacter;
@@ -42,35 +41,38 @@ import static com.silviomoser.demo.utils.StringUtils.isNotBlank;
 @Table(name = "PERSON")
 public class Person extends AbstractEntity {
 
+    private static final String MSG_VALIDCHARACTERS = "Bitte nur gültige Zeichen verwenden oder Feld komplett leer lassen";
+    private static final String REGEXP_VALID_NAME = "^[\\p{L}][-\\&\\s\\p{L}]+[\\p{L}]";
+
+    @JsonView(Views.Internal.class)
+    @NotNull
+    @Column(name = "GENDER", nullable = false)
+    private Gender gender;
 
     @JsonView({Views.Public.class, Views.Internal.class})
-    @Column(name = "TITLE", length = 20)
-    @Size(min = 2, max = 30)
+    @Column(name = "TITLE", length = 30)
+    @Size(max = 30)
     private String title;
 
     @JsonView({Views.Public.class, Views.Internal.class})
     @NotNull
     @Column(name = "FIRST_NAME", nullable = false, length = 30)
     @Size(min = 2, max = 30)
-    @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
+    @Pattern(regexp = REGEXP_VALID_NAME, message = MSG_VALIDCHARACTERS)
     private String firstName;
 
     @JsonView({Views.Public.class, Views.Internal.class})
     @NotNull
     @Column(name = "LAST_NAME", nullable = false, length = 30)
     @Size(min = 2, max = 30)
-    @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
+    @Pattern(regexp = REGEXP_VALID_NAME, message = MSG_VALIDCHARACTERS)
     private String lastName;
 
     @JsonView({Views.Public.class, Views.Internal.class})
     @Column(name = "COMPANY", length = 30)
-    @Size(min = 2, max = 30)
+    @Size(max = 30)
+    @Pattern(regexp = REGEXP_VALID_NAME, message = MSG_VALIDCHARACTERS)
     private String company;
-
-    @JsonView(Views.Internal.class)
-    @NotNull
-    @Column(name = "GENDER", nullable = false)
-    private Gender gender;
 
     @JsonView(Views.Internal.class)
     @NotNull
@@ -81,11 +83,13 @@ public class Person extends AbstractEntity {
     @Column(name = "ADDRESS2", length = 50)
     private String address2;
 
+    @NotNull
     @JsonView(Views.Internal.class)
     @Pattern(regexp = "[0-9]+")
     @Column(name = "ZIP", nullable = false, length = 10)
     private String zip;
 
+    @NotNull
     @JsonView({Views.Internal.class})
     @Pattern(regexp = "^[\\p{L}][-\\s\\p{L}]+[\\p{L}]")
     @Column(name = "CITY", nullable = false, length = 30)
@@ -129,7 +133,7 @@ public class Person extends AbstractEntity {
 
     @JsonView({Views.Public.class, Views.Internal.class})
     @Transient
-    public List<String> getOrganizations() {
+    public Set<String> getOrganizations() {
         return OrganizationUtils.getActiveOrganizations(this);
     }
 
@@ -276,20 +280,20 @@ public class Person extends AbstractEntity {
                 user.setPerson(person);
                 user.setUsername(email);
                 user.setActive(true);
-                List<Role> roleList = new ArrayList<>();
+                Set<Role> roleSet = new HashSet<>();
                 if (roles != null && roles.length > 0) {
                     Arrays.stream(roles).forEach(it -> {
                         try {
                             Role role = new Role();
                             role.setType(RoleType.valueOf(it.trim().toUpperCase()));
-                            roleList.add(role);
+                            roleSet.add(role);
                         } catch (IllegalArgumentException iae) {
                             //LOGGER.error("Illegal value for RoleType: " + iae.getMessage(), iae);
                         }
                     });
                 }
-                if (roleList.size() > 0) {
-                    user.setRoles(roleList);
+                if (roleSet.size() > 0) {
+                    user.setRoles(roleSet);
                 }
 
                 final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
