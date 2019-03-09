@@ -19,7 +19,7 @@ public class ShopHelperTest {
         };
     }
 
-    @Test(dataProvider = "testFormatCurrencyDP")
+    @Test(dataProvider = "testFormatCurrencyDP", enabled = false)
     public void testFormatCurrency(long input, String currency, String expected) {
         assertThat(ShopHelper.formatCurrency(input, currency)).isEqualTo(expected);
     }
