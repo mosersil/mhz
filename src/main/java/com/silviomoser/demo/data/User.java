@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -61,7 +60,7 @@ public class User extends AbstractEntity {
     @JoinTable(name = "USER_ROLE", joinColumns = {
             @JoinColumn(name = "USER_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
 

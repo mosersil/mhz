@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  backendUrl: 'https://www.mv-oberstrass.org',
+  backendUrl: 'https://www.mhz-oberstrass.ch',
   envName: 'prod'
 };
