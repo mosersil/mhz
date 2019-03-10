@@ -29,7 +29,7 @@ public class Role extends AbstractEntity {
     @Column(name="ROLE_TYPE", nullable = false, unique = true)
     private RoleType type;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER )
     private Set<User> users;
 
 
