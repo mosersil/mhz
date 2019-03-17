@@ -7,4 +7,5 @@ public class ImageServiceConfiguration {
 
     private String baseUrl;
     private String storagePath;
+    private String accessKey;
 }

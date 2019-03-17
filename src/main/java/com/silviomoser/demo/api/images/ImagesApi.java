@@ -3,7 +3,6 @@ package com.silviomoser.demo.api.images;
 
 import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
-import com.silviomoser.demo.data.Image;
 import com.silviomoser.demo.services.ImageService;
 import com.silviomoser.demo.services.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static com.silviomoser.demo.utils.StringUtils.isBlank;
 
 @RestController
 @Slf4j
@@ -34,7 +32,13 @@ public class ImagesApi implements ApiController {
     @RequestMapping(value = URL_PUBLIC_IMAGES, method = RequestMethod.GET)
     public @ResponseBody
     List<ImageDescriptor> getImageWithMediaType() {
-        return imageService.getImages();
+        try {
+            final List<ImageDescriptor> imageDescriptors = imageService.getImages();
+            Collections.shuffle(imageDescriptors);
+            return imageDescriptors;
+        } catch (ServiceException se) {
+            throw new ApiException("Unexpected error: " + se.getMessage(), se);
+        }
     }
 
 
@@ -43,14 +47,12 @@ public class ImagesApi implements ApiController {
         log.debug("enter getImageAsByteArray: " + name);
         InputStream in = null;
         try {
-            in = imageService.getImage(name);
+            in = new ByteArrayInputStream(imageService.getImage(name));
         } catch (ServiceException e) {
             throw new ApiException(e.getMessage(), e);
         }
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         IOUtils.copy(in, response.getOutputStream());
     }
-
-
 
 }
