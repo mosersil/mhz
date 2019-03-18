@@ -9,7 +9,7 @@
            maxElementsInMemory="100"
            eternal="false"
            overflowToDisk="false"
-           timeToLiveSeconds="300"
+           timeToLiveSeconds="86400"
            timeToIdleSeconds="0"
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
@@ -25,6 +25,34 @@
            transactionalMode="off">
     </cache>
 
+    <cache name="memberlist"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToLiveSeconds="3600"
+           timeToIdleSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+    </cache>
 
+    <cache name="icalCalendar"
+           maxElementsInMemory="1"
+           eternal="false"
+           overflowToDisk="false"
+           timeToLiveSeconds="86400"
+           timeToIdleSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+    </cache>
+
+    <cache name="eventsPerYear"
+           maxElementsInMemory="4"
+           eternal="false"
+           overflowToDisk="false"
+           timeToLiveSeconds="3600"
+           timeToIdleSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+    </cache>
 
 </ehcache>
