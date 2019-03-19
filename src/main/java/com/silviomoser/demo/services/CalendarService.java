@@ -6,6 +6,7 @@ import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.repository.CalendarEventRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,7 +26,11 @@ public class CalendarService {
     @Autowired
     private CalendarEventRepository calendarEventRepository;
 
+    @Autowired
+    private CacheManagerService cacheManagerService;
 
+
+    @Cacheable("icalCalendar")
     public ICalendar getIcalCalendar(boolean publicOnly) {
         final LocalDateTime localDate = LocalDateTime.now().minusYears(1);
         List<CalendarEvent> calendarEventList = calendarEventRepository.findCalendarEventsFromStartDate(localDate);
@@ -53,6 +58,7 @@ public class CalendarService {
         return ical;
     }
 
+    @Cacheable("eventsPerYear")
     public List<CalendarEvent> getAllEventsForCurrentYear(int year) {
         final LocalDate now = LocalDate.now();
         final LocalDate from = LocalDate.of(year, 1, 1);
@@ -68,7 +74,7 @@ public class CalendarService {
 
     public CalendarEvent addOrUpdate(CalendarEvent calendarEvent) throws ServiceException {
         final CalendarEvent calendarEvent1 = calendarEventRepository.save(calendarEvent);
-        log.info("Saved article {}", calendarEvent1.getId());
+        log.info("Saved item {}", calendarEvent1.getId());
         return calendarEvent1;
     }
 

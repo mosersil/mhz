@@ -3,7 +3,6 @@ package com.silviomoser.demo.ui.view;
 import com.silviomoser.demo.data.Article;
 import com.silviomoser.demo.data.CalendarEvent;
 import com.silviomoser.demo.data.type.DressCode;
-import com.silviomoser.demo.repository.RoleRepository;
 import com.silviomoser.demo.services.ArticleService;
 import com.silviomoser.demo.services.CalendarService;
 import com.silviomoser.demo.services.ServiceException;
@@ -46,8 +45,8 @@ public class CalendarCrud implements View {
     private final static String[] PREVIEW_PROPERTIES = new String[]{"id", "title", "dateStart","fullDay", "location", "publicEvent"};
     private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"#", "Titel", "Beginn", "Ganztägig", "Ort", "Öffentlich"};
 
-    private final static String[] EDITABLE_PROPERTIES = new String[]{"title", "dateStart", "dateEnd","location", "dressCode", "fullDay", "remarks", "article"};
-    private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Titel", "Beginn", "Ende", "Ort", "Dresscode", "ganztägig", "Bemerkungen", "News-Artikel"};
+    private final static String[] EDITABLE_PROPERTIES = new String[]{"title", "dateStart", "dateEnd","location", "dressCode", "fullDay", "publicEvent", "remarks", "article"};
+    private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Titel", "Beginn", "Ende", "Ort", "Dresscode", "ganztägig", "öffentlich", "Bemerkungen", "News-Artikel"};
 
 
     private I18Helper i18Helper = new I18Helper(VaadinSession.getCurrent().getLocale());
@@ -69,8 +68,6 @@ public class CalendarCrud implements View {
     @Autowired
     private ArticleService articleService;
 
-    @Autowired
-    private RoleRepository roleRepository;
 
     @PostConstruct
     public void init() {

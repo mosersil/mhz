@@ -39,7 +39,7 @@
         </root>
 
         <!-- LOG "com.silviomoser*" at TRACE level -->
-        <logger name="com.silviomoser" level="trace" additivity="false">
+        <logger name="com.silviomoser" level="warn" additivity="false">
             <appender-ref ref="RollingFile"/>
             <appender-ref ref="Console"/>
         </logger>

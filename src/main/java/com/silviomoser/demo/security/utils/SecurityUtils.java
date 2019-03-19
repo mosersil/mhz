@@ -18,7 +18,7 @@ public class SecurityUtils {
     public static final String ANONYMOUS = "Anonymous";
 
 
-    public static Person getMe() {
+    public static Person  getMe() {
         SecurityUserDetails securityUserDetails = null;
         if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
             final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
