@@ -29,8 +29,7 @@ export class HomeComponent implements OnInit {
       data => {
         this.events = data
       },
-      err => console.error(err),
-      () => console.log('done loading events: ' + this.events)
+      err => console.error(err)
     );
   }
 

@@ -55,4 +55,16 @@
            transactionalMode="off">
     </cache>
 
+    <cache name="loadUserByUsername"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToLiveSeconds="60"
+           timeToIdleSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+    </cache>
+
+
+
 </ehcache>

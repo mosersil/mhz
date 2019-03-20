@@ -1,5 +1,6 @@
 package com.silviomoser.demo.security;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
@@ -7,9 +8,9 @@ import lombok.ToString;
  * Created by silvio on 31.07.18.
  */
 @Data
+@Builder
 @ToString
 public class AuthenticationResult {
-    private int errorCode;
-    private String message;
     private String jwt;
+    private AuthUser authUser;
 }

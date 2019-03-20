@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../environments/environment";
-import {Person} from "./person";
 import {LoginForm} from "./login-form";
-import {Observable, Subject} from "rxjs";
-import {LoginResponse} from "./login-response";
+import {BehaviorSubject, Observable} from "rxjs";
 import * as jwt_decode from 'jwt-decode';
-import {isUndefined} from "util";
+import {LoginResponse} from "./auth/login-response";
+import {map} from "rxjs/operators";
+import {AuthUser} from "./auth/auth-user";
 
 
 @Injectable({
@@ -14,60 +14,20 @@ import {isUndefined} from "util";
 })
 export class AuthenticationService {
 
-
-  me: Person;
-  authenticated: boolean;
-  administrator: boolean = false;
-  me_change: Subject<Person> = new Subject<Person>();
-  authenticated_change: Subject<boolean> = new Subject<boolean>();
-  administrator_change: Subject<boolean> = new Subject<boolean>();
-
-  constructor(private http: HttpClient) {
-    this.me_change.subscribe(value => {
-      this.me = value;
-    });
-
-    this.authenticated_change.subscribe(value => {
-      this.authenticated = value;
-    });
-
-    this.administrator_change.subscribe(value => {
-      this.administrator = value;
-    });
-
-    if (this.authenticated == undefined) {
-      this.getMe();
-    }
-  }
+  private currentUserSubject: BehaviorSubject<AuthUser>;
+  public currentUser: Observable<AuthUser>;
 
 
   public getMe() {
-    if (isUndefined(this.me)) {
-      this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
-          this.me_change.next(success);
-          this.authenticated_change.next(true);
-
-          if (success) {
-            success.user.roles.forEach(role => {
-              if (role.type == 'ADMIN') {
-                this.administrator_change.next(true);
-              }
-            });
-          } else {
-            this.administrator_change.next(false);
-          }
-        }, error1 => {
-          //console.log("error: " + error1.error.message);
-          this.me_change.next(null);
-          this.authenticated_change.next(false);
-          this.administrator_change.next(false);
-        }
-      )
-    }
+    var loginResponse = new LoginResponse();
+    loginResponse = JSON.parse(localStorage.getItem('auth'));
+    return loginResponse.authUser;
   }
 
   public getToken(): string {
-    return localStorage.getItem('jwt');
+    if (localStorage.getItem('auth')==null) {return null};
+    var retrievedObject = JSON.parse(localStorage.getItem('auth'));
+    return (<LoginResponse>retrievedObject).jwt
   }
 
   public isAuthenticated(): boolean {
@@ -75,7 +35,19 @@ export class AuthenticationService {
     const token = this.getToken();
     // return a boolean reflecting
     // whether or not the token is expired
-    return !this.isTokenExpired(token);
+    return token!=null && !this.isTokenExpired(token);
+  }
+
+  public isAdmin(): boolean {
+    // get the token
+    var retrievedObject = JSON.parse(localStorage.getItem('auth'));
+    var authUser = (<LoginResponse>retrievedObject).authUser;
+    if (authUser.authRoles.some(it => {
+      return it.name==='ADMIN';
+    })) {
+      return true;
+    }
+    return false;
   }
 
   getTokenExpirationDate(token: string): Date {
@@ -98,14 +70,35 @@ export class AuthenticationService {
   }
 
 
+
+  constructor(private http: HttpClient) {
+    this.currentUserSubject = new BehaviorSubject<AuthUser>(JSON.parse(localStorage.getItem('me')));
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  public get currentUserValue(): AuthUser {
+    return this.currentUserSubject.value;
+  }
+
+
   login(login_form: LoginForm): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(environment.backendUrl + '/login', login_form)
+      .pipe(map(response => {
+        // login successful if there's a jwt token in the response
+        if (response && response.jwt) {
+          // store user details and jwt token in local storage to keep user logged in between page refreshes
+          localStorage.setItem('auth', JSON.stringify(response));
+          this.currentUserSubject.next(response.authUser);
+        }
+
+        return response;
+      }));
+
+
   }
 
   logout() {
-    localStorage.removeItem("jwt");
-    this.authenticated = false;
-    this.administrator_change.next(false);
+    localStorage.removeItem("auth");
     return this.http.get(environment.backendUrl + '/logout');
   }
 }

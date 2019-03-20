@@ -66,6 +66,13 @@ public class VaadinUI extends UI {
             menu.addComponents(accountsCrud, downloadsCrud);
         }
 
+        Button logoutButton = new Button("Logout", e -> {
+            getUI().getSession().close();
+            getUI().getPage().setLocation("/logout");
+        });
+        logoutButton.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
+        menu.addComponent(logoutButton);
+
         menu.setSizeFull();
         menu.addStyleName(ValoTheme.MENU_ROOT);
 
