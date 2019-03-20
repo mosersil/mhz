@@ -1,9 +1,12 @@
 package com.silviomoser.demo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.silviomoser.demo.security.AuthRole;
+import com.silviomoser.demo.security.AuthUser;
 import com.silviomoser.demo.security.AuthenticationResult;
 import com.silviomoser.demo.security.JwtAuthenticationFilter;
 import com.silviomoser.demo.security.JwtTokenProvider;
+import com.silviomoser.demo.security.SecurityUserDetails;
 import com.silviomoser.demo.security.SecurityUserDetailsService;
 import com.silviomoser.demo.security.UsernamePasswordFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by silvio on 10.05.18.
@@ -75,24 +80,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     private void loginFailureHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) {
-        ObjectMapper mapper = new ObjectMapper();
-        AuthenticationResult result = new AuthenticationResult();
         try {
             if (e instanceof BadCredentialsException) {
-                result.setMessage("Falscher Benutzername oder falches Passwort");
-                result.setErrorCode(1);
+                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Falscher Benutzername oder falsches Passwort");
             }
             else if (e instanceof DisabledException) {
-                result.setMessage("Zugang wurde deaktiviert");
-                result.setErrorCode(2);
+                httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Zugang wurde deaktiviert");
             }
             else {
-                result.setMessage("Unbekannter Login-Fehler");
-                result.setErrorCode(3);
+                httpServletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unbekannter Login-Fehler");
                 log.error("Caught unexpected exception: " + e.getClass(), e);
             }
-
-            httpServletResponse.getWriter().write(mapper.writeValueAsString(result));
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -100,12 +98,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private void loginSuccessHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
         log.info("Login Success: " + httpServletRequest);
-        ObjectMapper mapper = new ObjectMapper();
-        AuthenticationResult result = new AuthenticationResult();
-        String jwtToken = jwtTokenProvider.generateToken(authentication);
+        final ObjectMapper mapper = new ObjectMapper();
+        final String jwtToken = jwtTokenProvider.generateToken(authentication);
         try {
-            result.setErrorCode(0);
-            result.setJwt(jwtToken);
+            final SecurityUserDetails securityUserDetails = (SecurityUserDetails) authentication.getPrincipal();
+            final AuthUser authUser = new AuthUser();
+            authUser.setFirstName(securityUserDetails.getPerson().getFirstName());
+            authUser.setLastName(securityUserDetails.getPerson().getLastName());
+
+            final List<AuthRole> roleList = securityUserDetails.getRoles().stream().map(it -> {
+                AuthRole authRole = new AuthRole();
+                authRole.setName(it.getType().name());
+                return authRole;
+            }).collect(Collectors.toList());
+
+            authUser.setAuthRoles(roleList.toArray(new AuthRole[roleList.size()]));
+            final AuthenticationResult result = AuthenticationResult.builder()
+                    .jwt(jwtToken)
+                    .authUser(authUser)
+                    .build();
+            result.setAuthUser(authUser);
             httpServletResponse.getWriter().write(mapper.writeValueAsString(result));
         } catch (IOException e) {
             log.error("caught error during login: " + e.getMessage(), e);

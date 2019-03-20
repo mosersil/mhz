@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../authentication.service";
 import {ActivatedRoute, Router} from '@angular/router';
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'app-login',
@@ -16,18 +17,11 @@ export class LoginComponent implements OnInit {
   constructor(private _authenticationService: AuthenticationService, private route: ActivatedRoute, public router: Router) {
   }
 
-  async onSubmit() {
-    await this._authenticationService.login(this.model).subscribe(data => {
-      if (data.errorCode === 0) {
-        localStorage.setItem("jwt", data.jwt);
-        this._authenticationService.authenticated_change.next(true);
-        this.router.navigateByUrl(this.returnUrl);
-        return
-      } else {
-        this.error = data.message;
-      }
-    }, error1 => {
-      this.error = "Etwas lief nun total schief... bitte versuchen Sie es später noch einmal"
+  onSubmit() {
+    this._authenticationService.login(this.model).pipe(first()).subscribe(data => {
+      this.router.navigateByUrl(this.returnUrl);
+    }, error => {
+      this.error = error.error.message;
     });
   }
 
@@ -36,5 +30,4 @@ export class LoginComponent implements OnInit {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
-
 }

@@ -4,6 +4,7 @@ import com.silviomoser.demo.data.User;
 import com.silviomoser.demo.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
+    @Cacheable("loadUserByUsername")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug(String.format("enter loadUserbyUsername(). Username='%s'", username));
         final Optional<User> user = userRepository.findByUsername(username);
