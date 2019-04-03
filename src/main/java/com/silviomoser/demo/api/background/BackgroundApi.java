@@ -3,7 +3,11 @@ package com.silviomoser.demo.api.background;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +15,7 @@ import java.io.InputStream;
 @RestController
 public class BackgroundApi {
 
-    private static final int NUMBER_AVAILABLE_IMAGES = 3;
+    private static final int NUMBER_AVAILABLE_IMAGES = 4;
 
     @RequestMapping(value = "/public/api/background", produces = MediaType.IMAGE_JPEG_VALUE, method = RequestMethod.GET)
     public @ResponseBody
