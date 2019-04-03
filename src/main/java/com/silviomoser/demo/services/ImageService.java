@@ -1,94 +1,97 @@
 package com.silviomoser.demo.services;
 
-import com.dropbox.core.DbxRequestConfig;
+
 import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.images.ImageDescriptor;
 import com.silviomoser.demo.config.ImageServiceConfiguration;
-import com.silviomoser.demo.data.Image;
-import com.silviomoser.demo.repository.ImageRepository;
+import io.minio.MinioClient;
+import io.minio.Result;
+import io.minio.errors.MinioException;
+import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
+import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
+import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
+@Scope(WebApplicationContext.SCOPE_APPLICATION)
 @Slf4j
 public class ImageService {
 
-    private static Pattern VALID_NAME = Pattern.compile("[A-Za-z0-9_-]+.jpg");
-    private final DbxRequestConfig config = DbxRequestConfig.newBuilder("images-folder").build();
+    private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.jpg");
+
 
     @Autowired
     private ImageServiceConfiguration imageServiceConfiguration;
 
-    @Autowired
-    private ImageRepository imageRepository;
+    private static final String BUCKET_IMAGES = "images";
 
-    /*
-    public List<ImageDescriptor> getImages2() throws ServiceException {
-        final DbxClientV2 client = new DbxClientV2(config, imageServiceConfiguration.getAccessKey());
-        final List<ImageDescriptor> images = new ArrayList<>();
-        try {
+    private MinioClient minioClient  = new MinioClient(imageServiceConfiguration.getEndpoint(), imageServiceConfiguration.getAccessKey(), imageServiceConfiguration.getSecretKey());;
 
-            ListFolderResult result = client.files().listFolder("/images");
-            while (true) {
-                for (Metadata metadata : result.getEntries()) {
-                    images.add(ImageDescriptor.builder()
-                            .src(imageServiceConfiguration.getBaseUrl() + ApiController.URL_PUBLIC_IMAGE + "?name=" + metadata.getName())
-                            .thumb(imageServiceConfiguration.getBaseUrl() + ApiController.URL_PUBLIC_IMAGE + "?name=" + metadata.getName())
-                            .build());
-                }
-
-                if (!result.getHasMore()) {
-                    break;
-                }
-
-                result = client.files().listFolderContinue(result.getCursor());
-            }
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
-        return images;
+    @PostConstruct
+    public void init() {
+        minioClient =
     }
 
-
-    @Cacheable("images")
-    public byte[] getImage2(String name) throws ServiceException {
-        final DbxClientV2 client = new DbxClientV2(config, imageServiceConfiguration.getAccessKey());
-        final Matcher matcher = VALID_NAME.matcher(name);
-        if (!matcher.matches()) {
-            throw new ServiceException("Invalid resource name");
-        }
-        byte[] imageBytes = null;
-        try {
-            DbxDownloader downloader = client.files().download("/images/" + name);
-            imageBytes = IOUtils.toByteArray(downloader.getInputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return imageBytes;
+    @Cacheable("backgroundImage")
+    public byte[] getBackgroundImage(String index) throws ServiceException {
+        final InputStream in = getClass().getResourceAsStream("/background/" + index + ".jpg");
+        return IOUtils.toByteArray(in);
     }
-    */
 
     @Cacheable("imageDescriptors")
     public List<ImageDescriptor> getImages() throws ServiceException {
-        List<Image> images = imageRepository.findAll();
-        return images.stream().map(it ->
-                ImageDescriptor.builder()
-                        .src(imageServiceConfiguration.getBaseUrl()+ApiController.URL_PUBLIC_IMAGE+"?name="+it.getRaw())
-                        .thumb(imageServiceConfiguration.getBaseUrl()+ApiController.URL_PUBLIC_IMAGE+"?name="+it.getThumbnail())
-                        .build())
-                .collect(Collectors.toList());
+        final List<ImageDescriptor> images = new ArrayList<>();
+
+        try {
+            /* play.minio.io for test and development. */
+            final MinioClient minioClient = new MinioClient(imageServiceConfiguration.getEndpoint(), imageServiceConfiguration.getAccessKey(), imageServiceConfiguration.getSecretKey());
+
+
+            // Check whether 'my-bucketname' exist or not.
+            boolean found = minioClient.bucketExists(BUCKET_IMAGES);
+            if (found) {
+                // List objects from 'my-bucketname'
+                Iterable<Result<Item>> myObjects = minioClient.listObjects(BUCKET_IMAGES);
+                for (Result<Item> result : myObjects) {
+                    Item item = result.get();
+                    System.out.println(item.lastModified() + ", " + item.size() + ", " + item.objectName());
+                    ImageDescriptor imageDescriptor = ImageDescriptor.builder()
+                            .src(imageServiceConfiguration.getBaseUrl() + ApiController.URL_PUBLIC_IMAGE + "?name=" + item.objectName())
+                            .thumb(imageServiceConfiguration.getBaseUrl() + ApiController.URL_PUBLIC_IMAGE + "?name=" + item.objectName())
+                            .build();
+                    images.add(imageDescriptor);
+                }
+            } else {
+                System.out.println("testbucket does not exist");
+            }
+        } catch (MinioException e) {
+            System.out.println("Error occurred: " + e);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return images;
     }
 
 
@@ -98,14 +101,19 @@ public class ImageService {
         if (!matcher.matches()) {
             throw new ServiceException("Invalid resource name");
         }
-        File initialFile = new File(imageServiceConfiguration.getStoragePath()+name);
+
         byte[] returnBytes;
         try {
-            returnBytes = IOUtils.toByteArray(FileUtils.openInputStream(initialFile));
-        } catch (IOException e) {
+            final MinioClient minioClient = new MinioClient(imageServiceConfiguration.getEndpoint(), imageServiceConfiguration.getAccessKey(),
+                    imageServiceConfiguration.getSecretKey());
+
+            InputStream inputStream = minioClient.getObject(BUCKET_IMAGES, name);
+            returnBytes = IOUtils.toByteArray(inputStream);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ServiceException(e.getMessage(), e);
         }
+
         return returnBytes;
     }
 

@@ -57,6 +57,8 @@ public class EnvironmentConfiguration {
         imageServiceConfiguration.setBaseUrl(environment.getProperty("image.baseurl", "http://localhost:8085"));
         imageServiceConfiguration.setStoragePath(environment.getProperty("image.storagePath", "/opt/mhz/images/"));
         imageServiceConfiguration.setAccessKey(environment.getProperty("image.accesskey"));
+        imageServiceConfiguration.setEndpoint(environment.getProperty("image.endpoint", "http://127.0.0.1:9000"));
+        imageServiceConfiguration.setSecretKey(environment.getProperty("image.secretkey"));
         return imageServiceConfiguration;
     }
 
