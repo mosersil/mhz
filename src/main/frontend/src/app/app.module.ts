@@ -35,6 +35,9 @@ import {BotDetectCaptchaModule} from "angular-captcha";
 import {NgxSpinnerModule} from "ngx-spinner";
 import {ContentsModule} from "angular-contents";
 import {registerLocaleData} from "@angular/common";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {MyDatePickerModule} from 'mydatepicker';
+import {InternationalPhoneNumberModule} from "ngx-international-phone-number";
 
 
 registerLocaleData(localeDe, 'de');
@@ -59,7 +62,10 @@ registerLocaleData(localeDe, 'de');
       }
     ),
     NgxSpinnerModule,
-    ContentsModule
+    ContentsModule,
+    NgbModule,
+    MyDatePickerModule,
+    InternationalPhoneNumberModule
   ],
   declarations: [
     AppComponent,

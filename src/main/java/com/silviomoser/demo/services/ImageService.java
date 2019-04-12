@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 import org.xmlpull.v1.XmlPullParserException;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
@@ -40,17 +39,16 @@ public class ImageService {
 
     private static final String BUCKET_IMAGES = "images";
 
-    private MinioClient minioClient  = new MinioClient(imageServiceConfiguration.getEndpoint(), imageServiceConfiguration.getAccessKey(), imageServiceConfiguration.getSecretKey());;
-
-    @PostConstruct
-    public void init() {
-        minioClient =
-    }
-
     @Cacheable("backgroundImage")
     public byte[] getBackgroundImage(String index) throws ServiceException {
         final InputStream in = getClass().getResourceAsStream("/background/" + index + ".jpg");
-        return IOUtils.toByteArray(in);
+        byte[] background = null;
+        try {
+            background = IOUtils.toByteArray(in);
+        } catch (IOException ioe) {
+            throw new ServiceException(ioe.getMessage(), ioe);
+        }
+        return background;
     }
 
     @Cacheable("imageDescriptors")

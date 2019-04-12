@@ -35,7 +35,12 @@ public class PersonService {
     }
 
     public Person update(Person person) throws ServiceException {
-        personRepository.save(person);
+
+        try {
+            personRepository.save(person);
+        } catch (Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
         log.info("Added/updated person {}", FormatUtils.toFirstLastName(person));
         return person;
     }
