@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Long> {
 
-    @Query("SELECT e FROM CalendarEvent e WHERE e.dateStart > :startFrom ")
+    @Query("SELECT e FROM CalendarEvent e WHERE e.dateStart > :startFrom order by e.dateStart asc")
     List<CalendarEvent> findCalendarEventsFromStartDate(@Param("startFrom") LocalDateTime startFrom);
 
-    @Query("SELECT e FROM CalendarEvent e WHERE e.dateStart > :start and e.dateStart < :until ")
+    @Query("SELECT e FROM CalendarEvent e WHERE e.dateStart > :start and e.dateStart < :until order by e.dateStart asc ")
     List<CalendarEvent> findCalendarEventsBetween(@Param("start") LocalDateTime start, @Param("until") LocalDateTime until);
 
     List<CalendarEvent> findByTitleContains(String title);

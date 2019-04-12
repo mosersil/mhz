@@ -59,7 +59,9 @@ public class InternalApi implements ApiController {
         try {
             int currentYear = Integer.parseInt(year);
             log.debug("Assemble calendar for year {} in format {}", year, format);
-            return new ModelAndView(format.name(), "entries", calendarService.getAllEventsForCurrentYear(currentYear));
+            ModelAndView modelAndView = new ModelAndView(format.name(), "entries", calendarService.getAllEventsForCurrentYear(currentYear));
+            modelAndView.addObject("title", "Jahresprogramm " + year);
+            return modelAndView;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ApiException(e.getMessage());

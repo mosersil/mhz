@@ -72,16 +72,15 @@ public class CalendarEvent extends AbstractEntity implements Comparable<Calendar
     private boolean advertise;
 
     @JsonView(Views.Public.class)
-    @PdfReport(header = "Bemerkungen")
-    @XlsReport(header = "Bemerkungen")
-    @Column(name = "REMARKS")
-    private String remarks;
-
-    @JsonView(Views.Public.class)
     @PdfReport(header = "Ort")
     @XlsReport(header = "Ort")
     @Column(name = "LOCATION")
     private String location;
+
+    @JsonView(Views.Public.class)
+    @XlsReport(header = "Bemerkungen")
+    @Column(name = "REMARKS")
+    private String remarks;
 
     @JsonView(Views.Public.class)
     @Column(name="DRESS_CODE")
