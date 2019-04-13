@@ -3,12 +3,15 @@ package com.silviomoser.demo.api.internal;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.api.core.ApiController;
 import com.silviomoser.demo.api.core.ApiException;
+import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.StaticFile;
 import com.silviomoser.demo.data.Views;
 import com.silviomoser.demo.data.type.AddressListFormat;
+import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.services.AddresslistService;
 import com.silviomoser.demo.services.CalendarService;
 import com.silviomoser.demo.services.FileService;
+import com.silviomoser.demo.services.PersonService;
 import com.silviomoser.demo.services.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
+
+import static com.silviomoser.demo.utils.StringUtils.isBlank;
 
 /**
  * Created by silvio on 29.07.18.
@@ -42,6 +48,9 @@ public class InternalApi implements ApiController {
 
     @Autowired
     private AddresslistService addresslistService;
+
+    @Autowired
+    private PersonService personService;
 
     @PreAuthorize("hasAuthority('ROLE_DATAVIEWER')")
     @RequestMapping(value = URL_INTERNAL_CALENDAR, method = RequestMethod.GET)
@@ -82,6 +91,39 @@ public class InternalApi implements ApiController {
             log.error(e.getMessage(), e);
             throw new ApiException(e.getMessage());
         }
+    }
+
+
+
+    @RequestMapping(value = URL_INTERNAL_ADDRESS, method = RequestMethod.POST)
+    public void postAddress(@RequestBody PostAddressForm postAddressForm) throws ServiceException {
+        final Person person = SecurityUtils.getMe();
+        person.setGender(postAddressForm.getGender());
+        person.setTitle(isBlank(postAddressForm.getTitle()) ? null : postAddressForm.getTitle());
+        person.setFirstName(isBlank(postAddressForm.getFirstName())? null : postAddressForm.getFirstName());
+        person.setLastName(isBlank(postAddressForm.getLastName())? null : postAddressForm.getLastName());
+        person.setAddress1(isBlank(postAddressForm.getAddress1())? null : postAddressForm.getAddress1());
+        person.setAddress2(isBlank(postAddressForm.getAddress2())? null : postAddressForm.getAddress2());
+        person.setZip(isBlank(postAddressForm.getZip())? null : postAddressForm.getZip());
+        person.setCity(isBlank(postAddressForm.getCity())? null : postAddressForm.getCity());
+        personService.update(person);
+    }
+
+
+    @RequestMapping(value = URL_INTERNAL_CONTACTDETAILS, method = RequestMethod.POST)
+    public void postAddress(@RequestBody PostContactForm postAddressForm) throws ServiceException {
+        final Person person = SecurityUtils.getMe();
+        person.setEmail(isBlank(postAddressForm.getEmail()) ? null : postAddressForm.getEmail());
+        person.setMobile(isBlank(postAddressForm.getMobile()) ? null : postAddressForm.getMobile());
+        person.getUser().setUsername(isBlank(postAddressForm.getEmail()) ? null : postAddressForm.getEmail());
+        personService.update(person);
+    }
+
+    @RequestMapping(value = URL_INTERNAL_BIRTHDAY, method = RequestMethod.POST)
+    public void postBirthDay(@RequestBody BirthdayForm birthdayForm) throws ServiceException {
+        final Person person = SecurityUtils.getMe();
+        person.setBirthDate(birthdayForm.getDate());
+        personService.update(person);
     }
 
 

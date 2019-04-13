@@ -1,9 +1,12 @@
 <div class="container bg-white rounded shadow p-4">
 
-  <div class="alert alert-info">
-    <strong>Herzlich willkommen</strong><br/> {{person.firstName}} {{person.lastName}}
+  <div class="alert alert-info" *ngIf="infoMessage">
+    {{infoMessage}}
   </div>
 
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{errorMessage}}
+  </div>
 
   <ul class="nav nav-tabs">
 
@@ -27,64 +30,148 @@
   <!-- Content Panel -->
   <div id="internal-nav-content" class="tab-content">
     <div role="tabpanel" class="tab-pane fade show active" id="personaldata" aria-labelledby="personaldata-tab">
-      <div class="container mt-3">
+      <div class="spacing">&nbsp;</div>
+      <form name="form" (ngSubmit)="f_adr_data.form.valid && onAddressDataChangeSubmit()" #f_adr_data="ngForm"
+            novalidate>
+        <div class="card">
+          <div class="card-header">Name/Adresse</div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="gender_female" name="gender" class="custom-control-input" value="FEMALE"
+                         [(ngModel)]="model.person.gender">
+                  <label class="custom-control-label" for="gender_female">Frau</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="gender_male" name="gender" class="custom-control-input" value="MALE"
+                         [(ngModel)]="model.person.gender">
+                  <label class="custom-control-label" for="gender_male">Herr</label>
+                </div>
+              </div>
 
-        <div class="row">
-          <div class="col-md-8">
-            <dl class="row">
-              <dt class="col-sm-3">
-                Titel
-              </dt>
-              <dd class="col-sm-9">{{person.title}}</dd>
-              <dt class="col-sm-3">
-                Vorname
-              </dt>
-              <dd class="col-sm-9">{{person.firstName}}</dd>
-              <dt class="col-sm-3">
-                Nachname
-              </dt>
-              <dd class="col-sm-9">{{person.lastName}}</dd>
-              <dt class="col-sm-3">
-                Adresse
-              </dt>
-              <dd class="col-sm-9">{{person.address1}}</dd>
-              <dt class="col-sm-3">
-                Adresse Zusatz
-              </dt>
-              <dd class="col-sm-9">{{person.address2}}</dd>
-              <dt class="col-sm-3">
-                Postleitzahl
-              </dt>
-              <dd class="col-sm-9">{{person.zip}}</dd>
-              <dt class="col-sm-3">
-                Ort
-              </dt>
-              <dd class="col-sm-9">{{person.city}}</dd>
-              <dt class="col-sm-3">
-                Tel (Festnetz)
-              </dt>
-              <dd class="col-sm-9">{{person.landline}}</dd>
-              <dt class="col-sm-3">
-                Tel (Mobil)
-              </dt>
-              <dd class="col-sm-9">{{person.mobile}}</dd>
-              <dt class="col-sm-3">
-                Email
-              </dt>
-              <dd class="col-sm-9">{{person.email}}</dd>
-              <dt class="col-sm-3">
-                Aktive Gruppen:
-              </dt>
-              <dd class="col-sm-9">{{person.organizations}}</dd>
+              <div class="form-group col-md-1">
+                <input id="title" type="text" class="form-control" name="title" placeholder="Titel"
+                       [(ngModel)]="model.person.title" #title="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && title.invalid }"/>
+              </div>
+              <div class="form-group col-md-4">
+                <input id="firstName" type="text" class="form-control" name="firstName"
+                       [(ngModel)]="model.person.firstName"
+                       #firstName="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && firstName.invalid }" required/>
+                <div *ngIf="f_adr_data.submitted && firstName.invalid" class="invalid-feedback">
+                  <div *ngIf="firstName.errors.required">Bitte Vorname eingeben</div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <input id="lastName" type="text" class="form-control" name="lastName" placeholder="Nachname"
+                       [(ngModel)]="model.person.lastName" #lastName="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && lastName.invalid }" required/>
+                <div *ngIf="f_adr_data.submitted && lastName.invalid" class="invalid-feedback">
+                  <div *ngIf="lastName.errors.required">Bitte Nachnamen eingeben</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <input id="address1" type="text" class="form-control" name="address1" placeholder="Adresse"
+                       [(ngModel)]="model.person.address1" #address1="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && address1.invalid }" required/>
+                <div *ngIf="f_adr_data.submitted && address1.invalid" class="invalid-feedback">
+                  <div *ngIf="address1.errors.required">Bitte Adresse eingeben</div>
+                </div>
+              </div>
 
-            </dl>
-          </div>
-          <div class="col-md-4">
-            Korrektur nötig? In dieser ersten Version können nur Administratoren Daten bearbeiten. Bis es soweit ist und
-            ein self-service möglich ist, bitte das <a href="/contact">Kontakt-Formular</a> verwenden.
+              <div class="form-group col-md-6">
+                <input id="address2" type="text" class="form-control" name="address2"
+                       placeholder="Adresse (Zusatzfeld)"
+                       [(ngModel)]="model.person.address2" #address2="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && address2.invalid }"/>
+                <div *ngIf="f_adr_data.submitted && address2.invalid" class="invalid-feedback">
+                  <div *ngIf="address2.errors.invalid">Bitte korrekten Adresszusatz eingeben</div>
+                </div>
+              </div>
+
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-2">
+                <input id="zip" type="text" class="form-control" name="zip" placeholder="PLZ"
+                       [(ngModel)]="model.person.zip" #zip="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && zip.invalid }" pattern="[0-9]*" required/>
+                <div *ngIf="f_adr_data.submitted && zip.invalid" class="invalid-feedback">
+                  <div *ngIf="zip.errors.invalid">Bitte korrekte PLZ eingeben</div>
+                </div>
+                <div *ngIf="f_adr_data.submitted && city.invalid" class="invalid-feedback">
+                  <div *ngIf="zip.errors.required">Bitte PLZ eingeben</div>
+                </div>
+              </div>
+              <div class="form-group col-md-10">
+                <input id="city" type="text" class="form-control" name="city" placeholder="Ort"
+                       [(ngModel)]="model.person.city" #city="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && city.invalid }" required/>
+                <div *ngIf="f_adr_data.submitted && city.invalid" class="invalid-feedback">
+                  <div *ngIf="city.errors.required">Bitte Ort eingeben</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i> Änderungen
+                speichern
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
+      <form name="formContactData" (ngSubmit)="f_cont_data.form.valid && onContactDataChangeSubmit()" #f_cont_data="ngForm" novalidate>
+        <div class="spacing">&nbsp;</div>
+        <div class="card">
+          <div class="card-header">Kontaktdaten</div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <input id="email" type="email" class="form-control" name="email" placeholder="Email"
+                       [(ngModel)]="model.person.email" #email="ngModel" email
+                       [ngClass]="{ 'is-invalid': f_cont_data.submitted && email.invalid }" required disabled/>
+                <div *ngIf="f_cont_data.submitted && email.invalid" class="invalid-feedback">
+                  <div *ngIf="email.errors.required">Bitte gültige E-Mail Adresse eingeben</div>
+                </div>
+              </div>
+              <div class="form-group col-md-12">
+                <international-phone-number [(ngModel)]="model.person.mobile" placeholder="Mobiltelefon" [maxlength]="20"
+                                            [defaultCountry]="'ch'" [required]="true" #mobile="ngModel" name="mobile" [allowDropdown]="true"
+                                            [ngClass]="{ 'is-invalid': f_cont_data.submitted && mobile.invalid }"></international-phone-number>
+                <div *ngIf="f_cont_data.submitted && mobile.invalid" >
+                  <div class="warning">
+                    Bitte gültige Telfonnummer eingeben im int. Format: z.b. +41 79xxxxxxx
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+              <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i> Änderungen
+                speichern
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form (ngSubmit)="onBirthdayChangeSubmit()" #myForm="ngForm" novalidate>
+        <div class="spacing">&nbsp;</div>
+        <div class="card">
+          <div class="card-header">Geburtsdatum</div>
+          <div class="card-body">
+            <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                            [(ngModel)]="modelBirthDate"></my-date-picker>
+            <div class="form-group" style="margin-top: 10px;">
+              <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i> Änderungen
+                speichern
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
 
     <div role="tabpanel" class="tab-pane fade" id="documents" aria-labelledby="documents-tab">
@@ -304,17 +391,23 @@
           <form name="form" (ngSubmit)="f.form.valid && onPWChangeSubmit()" #f="ngForm" novalidate>
             <div class="form-group">
               <label for="currentPassword">Aktuelles Passwort:</label>
-              <input id="currentPassword" type="password" class="form-control" name="currentPassword" [(ngModel)]="model.currentPassword" #currentPassword="ngModel"
-                     [ngClass]="{ 'is-invalid': f.submitted && (currentPassword.invalid || error_currentpassword) }" required [disabled]="processing || changePasswordSuccess"/>
+              <input id="currentPassword" type="password" class="form-control" name="currentPassword"
+                     [(ngModel)]="model.currentPassword" #currentPassword="ngModel"
+                     [ngClass]="{ 'is-invalid': f.submitted && (currentPassword.invalid || error_currentpassword) }"
+                     required [disabled]="processing || changePasswordSuccess"/>
               <div *ngIf="f.submitted && (currentPassword.invalid || error_currentpassword)" class="invalid-feedback">
-                <div *ngIf="currentPassword.invalid && currentPassword.errors.required">Bitte aktuelles Passwort eingeben</div>
+                <div *ngIf="currentPassword.invalid && currentPassword.errors.required">Bitte aktuelles Passwort
+                  eingeben
+                </div>
                 <div *ngIf="error_currentpassword">{{error_currentpassword_msg}}</div>
               </div>
             </div>
             <div class="form-group">
               <label for="newPassword">Neues Passwort:</label>
-              <input id="newPassword" type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #newPassword="ngModel"
-                     [ngClass]="{ 'is-invalid': f.submitted && (newPassword.invalid || error_newpassword)}" required [disabled]="processing || changePasswordSuccess"/>
+              <input id="newPassword" type="password" class="form-control" name="newPassword"
+                     [(ngModel)]="model.newPassword" #newPassword="ngModel"
+                     [ngClass]="{ 'is-invalid': f.submitted && (newPassword.invalid || error_newpassword)}" required
+                     [disabled]="processing || changePasswordSuccess"/>
               <div *ngIf="f.submitted && (newPassword.invalid || error_newpassword)" class="invalid-feedback">
                 <div *ngIf="newPassword.invalid && newPassword.errors.required">Bitte neues Passwort eingeben</div>
                 <div *ngIf="error_newpassword">{{error_newpassword_msg}}</div>
@@ -322,10 +415,14 @@
             </div>
             <div class="form-group">
               <label for="confirmPassword">Neues Passwort (Bestätigung):</label>
-              <input id="confirmPassword" type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel"
-                     [ngClass]="{ 'is-invalid': f.submitted && confirmPassword.invalid || error_confirmpassword }" required [disabled]="processing || changePasswordSuccess"/>
+              <input id="confirmPassword" type="password" class="form-control" name="confirmPassword"
+                     [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel"
+                     [ngClass]="{ 'is-invalid': f.submitted && confirmPassword.invalid || error_confirmpassword }"
+                     required [disabled]="processing || changePasswordSuccess"/>
               <div *ngIf="f.submitted && (confirmPassword.invalid || error_confirmpassword)" class="invalid-feedback">
-                <div *ngIf="confirmPassword.invalid && confirmPassword.errors.required">Bitte neues Passwort bestätigen</div>
+                <div *ngIf="confirmPassword.invalid && confirmPassword.errors.required">Bitte neues Passwort
+                  bestätigen
+                </div>
                 <div *ngIf="error_confirmpassword">{{error_confirmpassword_msg}}</div>
               </div>
             </div>

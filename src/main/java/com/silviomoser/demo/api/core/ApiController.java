@@ -15,6 +15,9 @@ public interface ApiController {
     String URL_INTERNAL_DOWNLOAD = "/api/protected/internal/download";
     String URL_INTERNAL_CALENDAR = "/api/protected/internal/calendar";
     String URL_INTERNAL_FILES = "/api/protected/internal/staticfiles";
+    String URL_INTERNAL_ADDRESS = "/api/protected/internal/address";
+    String URL_INTERNAL_CONTACTDETAILS = "/api/protected/internal/contactdetails";
+    String URL_INTERNAL_BIRTHDAY = "/api/protected/internal/birthday";
 
     String URL_PUBLIC_IMAGES = "/api/public/images";
     String URL_PUBLIC_IMAGE = "/api/public/image";

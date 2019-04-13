@@ -2,7 +2,7 @@ import {User} from "./user";
 
 export class Person {
 
-  //gender: string
+  gender: string
   title: string;
   firstName: string;
   lastName: string;
@@ -13,6 +13,7 @@ export class Person {
   landline: string;
   mobile: string;
   email: string;
+  birthDate: Date;
   organizations: string[];
   user: User
 }

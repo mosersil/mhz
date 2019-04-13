@@ -5,6 +5,7 @@ import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {saveAs} from "file-saver";
 import {ChangePasswordResponse} from "../change-password-response";
+import {IMyDpOptions} from 'mydatepicker';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class InternalComponent implements OnInit {
 
   backendUrl: string = environment.backendUrl;
   person: Person = new Person();
+  infoMessage = null;
   errorMessage = null;
   year_actual = new Date().getFullYear();
   year_next = this.year_actual + 1;
@@ -23,6 +25,7 @@ export class InternalComponent implements OnInit {
   internalFiles;
   practiceFiles;
   model: any = {};
+  modelBirthDate:  any = {};
   processing: boolean = false;
   passwordchange_feedback: string;
   changePasswordSuccess: boolean;
@@ -32,6 +35,7 @@ export class InternalComponent implements OnInit {
   error_newpassword_msg: string;
   error_confirmpassword: boolean;
   error_confirmpassword_msg: string;
+  today = new Date();
 
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
@@ -46,11 +50,29 @@ export class InternalComponent implements OnInit {
   populateGreeting() {
     this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
         this.person = success;
+        this.model.person = this.person;
+        this.setDate(new Date(this.person.birthDate));
       }, error1 => {
         console.log("error: " + error1.error.message);
       }
     )
   }
+
+  public myDatePickerOptions: IMyDpOptions = {
+    alignSelectorRight: true,
+    showInputField: true,
+    disableHeaderButtons: false,
+    editableDateField: false,
+    dateFormat: "dd.mm.yyyy",
+    disableSince: {year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1}
+  };
+
+
+  setDate(theDate: Date): void {
+    // for example set date: 09.10.2018, value of year, month and day must be number
+    this.modelBirthDate = {date: {year: theDate.getFullYear(), month: theDate.getMonth()+1, day: theDate.getDate()}};
+  }
+
 
   getAvailableFiles() {
     this.http.get(environment.backendUrl + "/api/protected/internal/staticfiles?staticFileCategory=GENERIC").subscribe(sucess => {
@@ -89,9 +111,75 @@ export class InternalComponent implements OnInit {
     saveAs(blob, filename);
   }
 
+  onAddressDataChangeSubmit() {
+    this.processing = true;
+
+    var data = {
+      gender: this.model.person.gender,
+      title: this.model.person.title,
+      firstName: this.model.person.firstName,
+      lastName: this.model.person.lastName,
+      address1: this.model.person.address1,
+      address2: this.model.person.address2,
+      zip: this.model.person.zip,
+      city: this.model.person.city
+    };
+
+    this.http.post(environment.backendUrl + '/api/protected/internal/address', data).subscribe(success => {
+      this.infoMessage = "Ihre Adressdaten wurden erfolgreich geändert";
+    }, error1 => {
+      this.errorMessage = error1.error.message;
+    })
+
+    this.processing = false;
+  }
+
+  onContactDataChangeSubmit() {
+    this.processing = true;
+
+    var data = {
+      mobile: this.model.person.mobile,
+      email: this.model.person.email,
+    };
+
+    this.http.post(environment.backendUrl + '/api/protected/internal/contactdetails', data).subscribe(success => {
+      this.infoMessage = "Ihre Kontaktdaten wurden erfolgreich geändert";
+    }, error1 => {
+      this.errorMessage = error1.error.message;
+    })
+
+    this.processing = false;
+  }
+
+
+  onBirthdayChangeSubmit() {
+    this.processing = true;
+
+    if (this.modelBirthDate!=null) {
+      var data = {
+        year: this.modelBirthDate.date.year,
+        month: this.modelBirthDate.date.month,
+        day: this.modelBirthDate.date.day
+      };
+
+      this.http.post(environment.backendUrl + '/api/protected/internal/birthday', data).subscribe(success => {
+        this.infoMessage = "Ihr Geburtsdatum wurde erfolgreich geändert";
+      }, error1 => {
+        this.errorMessage = error1.error.message;
+      })
+    }
+    this.processing = false;
+  }
+
+
 
   onPWChangeSubmit() {
     this.processing = true;
+    var data = {
+      currentPassword: this.model.currentPassword,
+      newPassword: this.model.newPassword,
+      confirmPassword: this.model.confirmPassword,
+    };
 
     var data = {
       currentPassword: this.model.currentPassword,
@@ -103,26 +191,27 @@ export class InternalComponent implements OnInit {
       this.error_newpassword = false;
       this.error_confirmpassword = false;
       this.error_currentpassword = false;
-      if (success===null || success.errors.length<1) {
+      if (success === null || success.errors.length < 1) {
         this.passwordchange_feedback = "Das neue Passwort ist ab sofort aktiv.";
         this.changePasswordSuccess = true;
       }
       else {
-        success.errors.forEach( it => {
-          if (it.errorContext==="currentPassword") {
+        success.errors.forEach(it => {
+          if (it.errorContext === "currentPassword") {
             this.error_currentpassword = true;
             this.error_currentpassword_msg = it.errorMessage;
           }
-          if (it.errorContext==="newPassword") {
+          if (it.errorContext === "newPassword") {
             this.error_newpassword = true;
             this.error_newpassword_msg = it.errorMessage;
           }
-          if (it.errorContext==="confirmPassword") {
+          if (it.errorContext === "confirmPassword") {
             this.error_confirmpassword = true;
             this.error_confirmpassword_msg = it.errorMessage;
           }
         })
-      };
+      }
+      ;
 
       this.processing = false;
 

@@ -43,6 +43,7 @@ public class Person extends AbstractEntity {
 
     private static final String MSG_VALIDCHARACTERS = "Bitte nur gültige Zeichen verwenden oder Feld komplett leer lassen";
     private static final String REGEXP_VALID_NAME = "^[\\p{L}][-\\&\\s\\p{L}]+[\\p{L}]";
+    private static final String REGEXP_VALID_INT_PHONE = "\\+(9[976]\\d|8[987530]\\d|6[987]\\d|5[90]\\d|42\\d|3[875]\\d|2[98654321]\\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\\d{1,14}$";
 
     @JsonView(Views.Internal.class)
     @NotNull
@@ -97,12 +98,12 @@ public class Person extends AbstractEntity {
 
     @JsonView({Views.Internal.class})
     @Column(name = "LANDLINE", length = 20)
-    @Pattern(regexp = "[0-9\\s]+")
+    @Pattern(regexp = REGEXP_VALID_INT_PHONE, message = "Internationales Format, z.B. +4179xxxxxx")
     private String landline;
 
     @JsonView({Views.Internal.class})
     @Column(name = "MOBILE", length = 20)
-    @Pattern(regexp = "[0-9\\s]+")
+    @Pattern(regexp = REGEXP_VALID_INT_PHONE, message = "Internationales Format, z.B. +4179xxxxxx")
     private String mobile;
 
     @Email
