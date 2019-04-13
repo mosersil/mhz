@@ -5,20 +5,24 @@ import com.silviomoser.demo.ui.i18.I18Helper;
 /**
  * Created by silvio on 22.05.18.
  */
-public enum DressCode implements HasLabel {
-    CASUAL("dresscode_casual"),
-    UNIFORM("dresscode_uniform"),
-    COSTUME("dresscode_costume");
+public enum DressCode implements HasLabel, HasShortCode {
+    CASUAL("dresscode_casual", "Z"),
+    UNIFORM("dresscode_uniform", "U"),
+    COSTUME("dresscode_costume", "K");
 
     String tag;
+    String shortCode;
 
-    DressCode(String tag) {
+    DressCode(String tag, String shortCode) {
         this.tag=tag;
+        this.shortCode=shortCode;
     }
 
     public String getTag() {
         return tag;
     }
+
+    public String getShortCode() { return shortCode; }
 
     @Override
     public String getLabel() {

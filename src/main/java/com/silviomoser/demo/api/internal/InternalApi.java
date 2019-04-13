@@ -59,7 +59,9 @@ public class InternalApi implements ApiController {
         try {
             int currentYear = Integer.parseInt(year);
             log.debug("Assemble calendar for year {} in format {}", year, format);
-            return new ModelAndView(format.name(), "entries", calendarService.getAllEventsForCurrentYear(currentYear));
+            ModelAndView modelAndView = new ModelAndView(format.name(), "entries", calendarService.getAllEventsForCurrentYear(currentYear));
+            modelAndView.addObject("title", "Jahresprogramm " + year);
+            return modelAndView;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ApiException(e.getMessage());
@@ -72,7 +74,9 @@ public class InternalApi implements ApiController {
                                        @RequestParam(name = "format") AddressListFormat format) {
         try {
             log.debug("Assemble document {} in format {}", organization, format);
-            return new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organization));
+            ModelAndView modelAndView =  new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organization));
+            modelAndView.addObject("title", "Adressliste " + organization);
+            return modelAndView;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ApiException(e.getMessage());

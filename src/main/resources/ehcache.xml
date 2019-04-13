@@ -46,7 +46,7 @@
     </cache>
 
     <cache name="eventsPerYear"
-           maxElementsInMemory="4"
+           maxElementsInMemory="50"
            eternal="false"
            overflowToDisk="false"
            timeToLiveSeconds="3600"
@@ -56,7 +56,7 @@
     </cache>
 
     <cache name="loadUserByUsername"
-           maxElementsInMemory="50"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToLiveSeconds="60"

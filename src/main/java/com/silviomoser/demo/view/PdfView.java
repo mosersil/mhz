@@ -1,6 +1,14 @@
 package com.silviomoser.demo.view;
 
-import com.itextpdf.text.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.CMYKColor;
 import com.itextpdf.text.pdf.ColumnText;
@@ -13,12 +21,12 @@ import com.silviomoser.demo.data.AbstractEntity;
 import com.silviomoser.demo.data.ShopItemPurchase;
 import com.silviomoser.demo.data.ShopTransaction;
 import com.silviomoser.demo.data.type.HasLabel;
+import com.silviomoser.demo.data.type.HasShortCode;
 import com.silviomoser.demo.data.type.ShopItemType;
 import com.silviomoser.demo.data.type.ShopOrderStatusType;
 import com.silviomoser.demo.utils.FormatUtils;
 import com.silviomoser.demo.utils.PdfReport;
 import org.apache.commons.beanutils.PropertyUtils;
-
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,15 +50,16 @@ public class PdfView extends AbstractITextPdfView {
 
     private static CMYKColor MHZ_BLUE = new CMYKColor(0.59f, 0.32f, 0.f, 0.62f);
 
-    private static Font HEAD_FONT = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-    private static Font BODY_FONT = FontFactory.getFont(FontFactory.HELVETICA);
+    private static Font HEAD_FONT = FontFactory.getFont(FontFactory.HELVETICA_BOLD, FontFactory.defaultEncoding, false, 11);
+    private static Font BODY_FONT = FontFactory.getFont(FontFactory.HELVETICA, FontFactory.defaultEncoding, false, 10);
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String title = (String) model.get("title");
         if (model.containsKey("entries")) {
             List<AbstractEntity> items = (List<AbstractEntity>) model.get("entries");
             Class type = items.get(0).getClass();
-            generatePdfListReport(items, type, document);
+            generatePdfListReport(items, type, document, response, title);
         }
         if (model.containsKey("transaction")) {
             ShopTransaction transaction = (ShopTransaction) model.get("transaction");
@@ -184,11 +193,11 @@ public class PdfView extends AbstractITextPdfView {
 
     }
 
-    public static <T> void generatePdfListReport(List<T> items, Class<T> tClass, Document document) {
-
+    public static <T> void generatePdfListReport(List<T> items, Class<T> tClass, Document document, HttpServletResponse response, String title) {
 
         final List<String> pdfHeaders = new ArrayList<>(0);
         final List<String[]> pdfItems = new ArrayList<>(items.size());
+
 
         for (Field f : tClass.getDeclaredFields()) {
             Annotation[] annotations = f.getDeclaredAnnotations();
@@ -221,7 +230,9 @@ public class PdfView extends AbstractITextPdfView {
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                                 out = ((LocalDateTime) object).format(formatter);
                             } else {
-                                if (object instanceof HasLabel) {
+                                if (object instanceof HasShortCode) {
+                                    out = ((HasShortCode) object).getShortCode();
+                                } else if (object instanceof HasLabel) {
                                     out = ((HasLabel) object).getLabel();
                                 } else {
                                     out = object.toString();
@@ -245,8 +256,15 @@ public class PdfView extends AbstractITextPdfView {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         try {
+            PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+            Image logo = Image.getInstance("classpath:logo/logo.jpg");
+            logo.scaleToFit(100, 100);
+
+            document.open();
+            placeAbsoluteText(writer, title, 200, 750);
 
             PdfPTable table = new PdfPTable(pdfHeaders.size());
+            table.setSpacingBefore(10);
             table.setWidthPercentage(100);
             //table.setWidths(new int[]{1, 3, 3});
 
@@ -257,13 +275,17 @@ public class PdfView extends AbstractITextPdfView {
 
             pdfItems.forEach(it -> addRow(table, it));
 
-
+            document.add(logo);
             document.add(table);
 
 
         } catch (DocumentException ex) {
 
             ex.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
