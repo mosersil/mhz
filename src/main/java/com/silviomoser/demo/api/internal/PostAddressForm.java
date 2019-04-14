@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class PostAddressForm {
     private Gender gender;
+    private String company;
     private String title;
     private String firstName;
     private String lastName;

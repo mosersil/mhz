@@ -3,6 +3,7 @@ import {User} from "./user";
 export class Person {
 
   gender: string
+  company: string;
   title: string;
   firstName: string;
   lastName: string;

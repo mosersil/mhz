@@ -31,13 +31,19 @@
   <div id="internal-nav-content" class="tab-content">
     <div role="tabpanel" class="tab-pane fade show active" id="personaldata" aria-labelledby="personaldata-tab">
       <div class="spacing">&nbsp;</div>
-      <form name="form" (ngSubmit)="f_adr_data.form.valid && onAddressDataChangeSubmit()" #f_adr_data="ngForm"
-            novalidate>
-        <div class="card">
-          <div class="card-header">Name/Adresse</div>
-          <div class="card-body">
+
+      <ng-template #content_adr_data let-modal>
+        <form name="form" (ngSubmit)="f_adr_data.form.valid && onAddressDataChangeSubmit()" #f_adr_data="ngForm"
+              novalidate>
+          <div class="modal-header col-md-12">
+            <h4 class="modal-title" id="modal-address-title">Adressdaten bearbeiten</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
             <div class="form-row">
-              <div class="form-group col-md-3">
+              <div class="form-group col-md-12">
                 <div class="custom-control custom-radio custom-control-inline">
                   <input type="radio" id="gender_female" name="gender" class="custom-control-input" value="FEMALE"
                          [(ngModel)]="model.person.gender">
@@ -48,14 +54,27 @@
                          [(ngModel)]="model.person.gender">
                   <label class="custom-control-label" for="gender_male">Herr</label>
                 </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="gender_na" name="gender" class="custom-control-input" value="NA"
+                         [(ngModel)]="model.person.gender">
+                  <label class="custom-control-label" for="gender_na">(keine Anrede)</label>
+                </div>
               </div>
-
-              <div class="form-group col-md-1">
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <input id="company" type="text" class="form-control" name="company" placeholder="Firma"
+                       [(ngModel)]="model.person.company" #company="ngModel"
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && company.invalid }"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-2">
                 <input id="title" type="text" class="form-control" name="title" placeholder="Titel"
                        [(ngModel)]="model.person.title" #title="ngModel"
                        [ngClass]="{ 'is-invalid': f_adr_data.submitted && title.invalid }"/>
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-5">
                 <input id="firstName" type="text" class="form-control" name="firstName"
                        [(ngModel)]="model.person.firstName"
                        #firstName="ngModel"
@@ -64,7 +83,7 @@
                   <div *ngIf="firstName.errors.required">Bitte Vorname eingeben</div>
                 </div>
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-5">
                 <input id="lastName" type="text" class="form-control" name="lastName" placeholder="Nachname"
                        [(ngModel)]="model.person.lastName" #lastName="ngModel"
                        [ngClass]="{ 'is-invalid': f_adr_data.submitted && lastName.invalid }" required/>
@@ -75,7 +94,8 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-12">
-                <input id="address1" type="text" class="form-control" name="address1" placeholder="Strasse/Nr" title="Strasse/Hausnummer"
+                <input id="address1" type="text" class="form-control" name="address1" placeholder="Strasse/Nr"
+                       title="Strasse/Hausnummer"
                        [(ngModel)]="model.person.address1" #address1="ngModel"
                        [ngClass]="{ 'is-invalid': f_adr_data.submitted && address1.invalid }" required/>
                 <div *ngIf="f_adr_data.submitted && address1.invalid" class="invalid-feedback">
@@ -118,20 +138,65 @@
             </div>
 
             <div class="form-group" style="margin-top: 10px;">
-              <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i> Änderungen
+
+
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary pull-right" [disabled]="processing"
+                      (click)="onAddressDataChangeSubmit() && modal.close('Save click')"><i class="fa fa-save"></i>
+                Änderungen
                 speichern
               </button>
             </div>
           </div>
+        </form>
+      </ng-template>
+
+      <div class="card">
+        <div class="card-header">Name/Adresse</div>
+        <div class="card-body">
+          <div *ngIf="model.person.gender==='MALE'">
+            Herr
+          </div>
+          <div *ngIf="model.person.gender==='FEMALE'">
+            Frau
+          </div>
+          <div *ngIf="model.person.gender==='N/A'">
+            &nbsp;
+          </div>
+          <div>
+            {{model.person.company}}
+          </div>
+          <div>
+            {{model.person.title}}{{model.person.firstName}} {{model.person.lastName}}<br/>
+            {{model.person.address1}}<br/>
+          </div>
+          <div *ngIf="model.person.address2!=null">
+            {{model.person.address2}}<br/>
+          </div>
+          <div>
+            {{model.person.zip}} {{model.person.city}}
+          </div>
+          <button class="btn btn-primary pull-right" (click)="open(content_adr_data)">Bearbeiten</button>
         </div>
-      </form>
-      <form name="formContactData" (ngSubmit)="f_cont_data.form.valid && onContactDataChangeSubmit()" #f_cont_data="ngForm" novalidate>
-        <div class="spacing">&nbsp;</div>
-        <div class="card">
-          <div class="card-header">Kontaktdaten</div>
-          <div class="card-body">
+      </div>
+
+
+      <ng-template #content_cont_data let-modal>
+        <div class="modal-header col-md-12">
+          <h4 class="modal-title" id="modal-basic-title">Kontakt bearbeiten</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body col-md-12">
+
+          <form name="formContactData" (ngSubmit)="f_cont_data.form.valid && onContactDataChangeSubmit()"
+                #f_cont_data="ngForm" novalidate>
+
             <div class="form-row">
               <div class="form-group col-md-12">
+                <label for="email">E-Mail</label>
                 <input id="email" type="email" class="form-control" name="email" placeholder="Email"
                        [(ngModel)]="model.person.email" #email="ngModel" email
                        [ngClass]="{ 'is-invalid': f_cont_data.submitted && email.invalid }" required disabled/>
@@ -140,39 +205,90 @@
                 </div>
               </div>
               <div class="form-group col-md-12">
-                <international-phone-number [(ngModel)]="model.person.mobile" placeholder="Mobiltelefon" [maxlength]="20"
-                                            [defaultCountry]="'ch'" [required]="true" #mobile="ngModel" name="mobile" [allowDropdown]="true"
+                <label for="mobile">Mobiltelefon</label>
+                <international-phone-number id="mobile" [(ngModel)]="model.person.mobile" placeholder="Mobiltelefon"
+                                            [maxlength]="20"
+                                            [defaultCountry]="'ch'" [required]="true" #mobile="ngModel"
+                                            name="mobile"
+                                            [allowDropdown]="true"
                                             [ngClass]="{ 'is-invalid': f_cont_data.submitted && mobile.invalid }"></international-phone-number>
-                <div *ngIf="f_cont_data.submitted && mobile.invalid" >
+                <div *ngIf="f_cont_data.submitted && mobile.invalid">
                   <div class="warning">
                     Bitte gültige Telfonnummer eingeben im int. Format: z.b. +41 79xxxxxxx
                   </div>
                 </div>
               </div>
+              <div class="form-group col-md-12">
+                <label for="landline">Festnetz</label>
+                <international-phone-number id="landline" [(ngModel)]="model.person.landline" placeholder="Festnetz"
+                                            [maxlength]="20"
+                                            [defaultCountry]="'ch'" [required]="false" #landline="ngModel"
+                                            name="landline"
+                                            [allowDropdown]="true"
+                                            [ngClass]="{ 'is-invalid': f_cont_data.submitted && landline.invalid }"></international-phone-number>
+                <div *ngIf="f_cont_data.submitted && landline.invalid">
+                  <div class="warning">
+                    Bitte gültige Telfonnummer eingeben im int. Format: z.b. +41 43xxxxxxx
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="form-group" style="margin-top: 10px;">
-              <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i> Änderungen
-                speichern
-              </button>
-            </div>
-          </div>
+            <button class="btn btn-primary pull-right" [disabled]="processing"
+                    (click)="validate() && onContactDataChangeSubmit() && modal.close('Save click')"><i
+              class="fa fa-save"></i>
+              Änderungen
+              speichern
+            </button>
+          </form>
         </div>
-      </form>
-      <form (ngSubmit)="onBirthdayChangeSubmit()" #myForm="ngForm" novalidate>
-        <div class="spacing">&nbsp;</div>
-        <div class="card">
-          <div class="card-header">Geburtsdatum</div>
-          <div class="card-body">
+      </ng-template>
+      <div class="spacing">&nbsp;</div>
+      <div class="card">
+        <div class="card-header">Kontaktdaten</div>
+        <div class="card-body">
+
+          <dl>
+            <dt>Mobiltelefon</dt>
+            <dd>{{model.person.mobile}}</dd>
+            <dt *ngIf="model.person.landline!=null">Festnetz</dt>
+            <dd *ngIf="model.person.landline!=null">{{model.person.landline}}</dd>
+            <dt>Email</dt>
+            <dd>{{model.person.email}}</dd>
+          </dl>
+          <button class="btn btn-primary pull-right" (click)="open(content_cont_data)">Bearbeiten</button>
+        </div>
+      </div>
+
+
+      <ng-template #content_bd_data let-modal>
+        <div class="modal-header col-md-12">
+          <h4 class="modal-title" id="modal-bd-title">Geburtsdatum bearbeiten</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body col-md-12">
+          <form (ngSubmit)="onBirthdayChangeSubmit()" #myForm="ngForm" novalidate>
             <my-date-picker name="mydate" [options]="myDatePickerOptions"
                             [(ngModel)]="modelBirthDate"></my-date-picker>
             <div class="form-group" style="margin-top: 10px;">
-              <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i> Änderungen
+              <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i>
+                Änderungen
                 speichern
               </button>
             </div>
-          </div>
+          </form>
         </div>
-      </form>
+      </ng-template>
+      <div class="spacing">&nbsp;</div>
+      <div class="card">
+        <div class="card-header">Geburtsdatum</div>
+        <div class="card-body">
+          {{model.person.birthDate | date : "EEEE, dd.MM.yyyy"}}
+          <button class="btn btn-primary pull-right" (click)="open(content_bd_data)">Bearbeiten</button>
+        </div>
+      </div>
+
     </div>
 
     <div role="tabpanel" class="tab-pane fade" id="documents" aria-labelledby="documents-tab">

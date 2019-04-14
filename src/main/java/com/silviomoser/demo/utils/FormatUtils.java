@@ -51,4 +51,5 @@ public class FormatUtils {
                 .append(person.getCity());
         return stringBuilder.toString();
     }
+
 }

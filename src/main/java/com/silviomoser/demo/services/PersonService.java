@@ -35,7 +35,6 @@ public class PersonService {
     }
 
     public Person update(Person person) throws ServiceException {
-
         try {
             personRepository.save(person);
         } catch (Exception e) {

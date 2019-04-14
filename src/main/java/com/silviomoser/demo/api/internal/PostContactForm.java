@@ -11,6 +11,9 @@ public class PostContactForm {
     @Pattern(regexp = "[0-9\\s]+")
     private String mobile;
 
+    @Pattern(regexp = "[0-9\\s]+")
+    private String landline;
+
     @Email
     private String email;
 }

@@ -6,6 +6,7 @@ import {HttpClient} from "@angular/common/http";
 import {saveAs} from "file-saver";
 import {ChangePasswordResponse} from "../change-password-response";
 import {IMyDpOptions} from 'mydatepicker';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -38,12 +39,30 @@ export class InternalComponent implements OnInit {
   today = new Date();
 
 
-  constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
+  constructor(private http: HttpClient, private _authenticationService: AuthenticationService, private modalService: NgbModal) {
   }
 
   ngOnInit() {
     this.populateGreeting();
     this.getAvailableFiles();
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      //this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      //this.errorMessage = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
   }
 
 
@@ -116,6 +135,7 @@ export class InternalComponent implements OnInit {
 
     var data = {
       gender: this.model.person.gender,
+      company: this.model.person.company,
       title: this.model.person.title,
       firstName: this.model.person.firstName,
       lastName: this.model.person.lastName,
@@ -132,6 +152,7 @@ export class InternalComponent implements OnInit {
     })
 
     this.processing = false;
+    this.modalService.dismissAll();
   }
 
   onContactDataChangeSubmit() {
@@ -139,6 +160,7 @@ export class InternalComponent implements OnInit {
 
     var data = {
       mobile: this.model.person.mobile,
+      landline: this.model.person.landline,
       email: this.model.person.email,
     };
 
@@ -149,6 +171,7 @@ export class InternalComponent implements OnInit {
     })
 
     this.processing = false;
+    this.modalService.dismissAll();
   }
 
 
@@ -164,11 +187,13 @@ export class InternalComponent implements OnInit {
 
       this.http.post(environment.backendUrl + '/api/protected/internal/birthday', data).subscribe(success => {
         this.infoMessage = "Ihr Geburtsdatum wurde erfolgreich geändert";
+        this.populateGreeting();
       }, error1 => {
         this.errorMessage = error1.error.message;
       })
     }
     this.processing = false;
+    this.modalService.dismissAll();
   }
 
 

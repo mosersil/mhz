@@ -103,6 +103,7 @@ public class InternalApi implements ApiController {
     public void postAddress(@RequestBody PostAddressForm postAddressForm) throws ServiceException {
         final Person person = SecurityUtils.getMe();
         person.setGender(postAddressForm.getGender());
+        person.setCompany(isBlank(postAddressForm.getCompany()) ? null : postAddressForm.getCompany());
         person.setTitle(isBlank(postAddressForm.getTitle()) ? null : postAddressForm.getTitle());
         person.setFirstName(isBlank(postAddressForm.getFirstName())? null : postAddressForm.getFirstName());
         person.setLastName(isBlank(postAddressForm.getLastName())? null : postAddressForm.getLastName());
@@ -119,6 +120,7 @@ public class InternalApi implements ApiController {
         final Person person = SecurityUtils.getMe();
         person.setEmail(isBlank(postAddressForm.getEmail()) ? null : postAddressForm.getEmail());
         person.setMobile(isBlank(postAddressForm.getMobile()) ? null : postAddressForm.getMobile());
+        person.setLandline(isBlank(postAddressForm.getLandline()) ? null : postAddressForm.getLandline());
         person.getUser().setUsername(isBlank(postAddressForm.getEmail()) ? null : postAddressForm.getEmail());
         personService.update(person);
     }
