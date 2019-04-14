@@ -6,49 +6,66 @@ import com.silviomoser.demo.api.images.ImageDescriptor;
 import com.silviomoser.demo.config.ImageServiceConfiguration;
 import io.minio.MinioClient;
 import io.minio.Result;
-import io.minio.errors.MinioException;
 import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@Scope(WebApplicationContext.SCOPE_APPLICATION)
 @Slf4j
 public class ImageService {
 
     private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.jpg");
 
-
     @Autowired
     private ImageServiceConfiguration imageServiceConfiguration;
 
+    @Autowired
+    private MinioClient minioClient;
+
     private static final String BUCKET_IMAGES = "images";
+    private static final String BUCKET_BACKGROUND = "background";
+
+
 
     @Cacheable("backgroundImage")
-    public byte[] getBackgroundImage(String index) throws ServiceException {
-        final InputStream in = getClass().getResourceAsStream("/background/" + index + ".jpg");
-        byte[] background = null;
+    public List<byte[]> getBackgroundImages() throws ServiceException {
+        List<byte[]> images = null;
         try {
-            background = IOUtils.toByteArray(in);
-        } catch (IOException ioe) {
-            throw new ServiceException(ioe.getMessage(), ioe);
+            boolean found = minioClient.bucketExists(BUCKET_BACKGROUND);
+            if (found) {
+                final Iterable<Result<Item>> myObjects = minioClient.listObjects(BUCKET_BACKGROUND);
+                int numberOfAvailableImages = IterableUtils.size(myObjects);
+                images = new ArrayList<>(numberOfAvailableImages);
+
+                for (Result<Item> result : myObjects) {
+                    final InputStream inputStream = minioClient.getObject(BUCKET_BACKGROUND, result.get().objectName());
+                    images.add(IOUtils.toByteArray(inputStream));
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        //ignore that
+                    }
+                }
+            } else {
+                log.error("Bucket {} does not exist", BUCKET_BACKGROUND);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
         }
-        return background;
+        log.debug("Returning {} background images ", images.size());
+        return images;
     }
 
     @Cacheable("imageDescriptors")
@@ -56,9 +73,6 @@ public class ImageService {
         final List<ImageDescriptor> images = new ArrayList<>();
 
         try {
-            /* play.minio.io for test and development. */
-            final MinioClient minioClient = new MinioClient(imageServiceConfiguration.getEndpoint(), imageServiceConfiguration.getAccessKey(), imageServiceConfiguration.getSecretKey());
-
 
             // Check whether 'my-bucketname' exist or not.
             boolean found = minioClient.bucketExists(BUCKET_IMAGES);
@@ -66,27 +80,18 @@ public class ImageService {
                 // List objects from 'my-bucketname'
                 Iterable<Result<Item>> myObjects = minioClient.listObjects(BUCKET_IMAGES);
                 for (Result<Item> result : myObjects) {
-                    Item item = result.get();
-                    System.out.println(item.lastModified() + ", " + item.size() + ", " + item.objectName());
-                    ImageDescriptor imageDescriptor = ImageDescriptor.builder()
+                    final Item item = result.get();
+                    final ImageDescriptor imageDescriptor = ImageDescriptor.builder()
                             .src(imageServiceConfiguration.getBaseUrl() + ApiController.URL_PUBLIC_IMAGE + "?name=" + item.objectName())
                             .thumb(imageServiceConfiguration.getBaseUrl() + ApiController.URL_PUBLIC_IMAGE + "?name=" + item.objectName())
                             .build();
                     images.add(imageDescriptor);
                 }
             } else {
-                System.out.println("testbucket does not exist");
+                log.error("bucket {} does not exist", BUCKET_IMAGES);
             }
-        } catch (MinioException e) {
-            System.out.println("Error occurred: " + e);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         return images;
@@ -107,6 +112,11 @@ public class ImageService {
 
             InputStream inputStream = minioClient.getObject(BUCKET_IMAGES, name);
             returnBytes = IOUtils.toByteArray(inputStream);
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                //ignore
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ServiceException(e.getMessage(), e);
