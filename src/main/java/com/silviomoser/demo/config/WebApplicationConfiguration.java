@@ -4,6 +4,11 @@ import com.captcha.botdetect.web.servlet.SimpleCaptchaServlet;
 import com.silviomoser.demo.view.ExcelViewResolver;
 import com.silviomoser.demo.view.PdfViewResolver;
 import com.vaadin.spring.annotation.EnableVaadin;
+import io.minio.MinioClient;
+import io.minio.errors.InvalidEndpointException;
+import io.minio.errors.InvalidPortException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -16,12 +21,13 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-
 @Configuration
 @EnableVaadin
+@Slf4j
 public class WebApplicationConfiguration implements WebMvcConfigurer {
+
+    @Autowired
+    ImageServiceConfiguration imageServiceConfiguration;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -58,6 +64,18 @@ public class WebApplicationConfiguration implements WebMvcConfigurer {
     @Bean
     public ServletContextInitializer initializer() {
         return servletContext -> servletContext.setInitParameter("BDC_configFileLocation", "/resources/botdetect.xml");
+    }
+
+    @Bean
+    public MinioClient getMinioClient() {
+
+        try {
+            return new MinioClient(imageServiceConfiguration.getEndpoint(), imageServiceConfiguration.getAccessKey(), imageServiceConfiguration.getSecretKey());
+
+        } catch (InvalidEndpointException | InvalidPortException e) {
+            log.error(e.getMessage(), e);
+        }
+        return null;
     }
 
 }
