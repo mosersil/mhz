@@ -32,216 +32,135 @@
     <div role="tabpanel" class="tab-pane fade show active" id="personaldata" aria-labelledby="personaldata-tab">
       <div class="spacing">&nbsp;</div>
 
-      <ng-template #content_adr_data let-modal>
-        <form name="form" (ngSubmit)="f_adr_data.form.valid && onAddressDataChangeSubmit()" #f_adr_data="ngForm"
-              novalidate>
-          <div class="modal-header col-md-12">
-            <h4 class="modal-title" id="modal-address-title">Adressdaten bearbeiten</h4>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="gender_female" name="gender" class="custom-control-input" value="FEMALE"
-                         [(ngModel)]="model.person.gender">
-                  <label class="custom-control-label" for="gender_female">Frau</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="gender_male" name="gender" class="custom-control-input" value="MALE"
-                         [(ngModel)]="model.person.gender">
-                  <label class="custom-control-label" for="gender_male">Herr</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="gender_na" name="gender" class="custom-control-input" value="NA"
-                         [(ngModel)]="model.person.gender">
-                  <label class="custom-control-label" for="gender_na">(keine Anrede)</label>
-                </div>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <input id="company" type="text" class="form-control" name="company" placeholder="Firma"
-                       [(ngModel)]="model.person.company" #company="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && company.invalid }"/>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-2">
-                <input id="title" type="text" class="form-control" name="title" placeholder="Titel"
-                       [(ngModel)]="model.person.title" #title="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && title.invalid }"/>
-              </div>
-              <div class="form-group col-md-5">
-                <input id="firstName" type="text" class="form-control" name="firstName"
-                       [(ngModel)]="model.person.firstName"
-                       #firstName="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && firstName.invalid }" required/>
-                <div *ngIf="f_adr_data.submitted && firstName.invalid" class="invalid-feedback">
-                  <div *ngIf="firstName.errors.required">Bitte Vorname eingeben</div>
-                </div>
-              </div>
-              <div class="form-group col-md-5">
-                <input id="lastName" type="text" class="form-control" name="lastName" placeholder="Nachname"
-                       [(ngModel)]="model.person.lastName" #lastName="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && lastName.invalid }" required/>
-                <div *ngIf="f_adr_data.submitted && lastName.invalid" class="invalid-feedback">
-                  <div *ngIf="lastName.errors.required">Bitte Nachnamen eingeben</div>
-                </div>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <input id="address1" type="text" class="form-control" name="address1" placeholder="Strasse/Nr"
-                       title="Strasse/Hausnummer"
-                       [(ngModel)]="model.person.address1" #address1="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && address1.invalid }" required/>
-                <div *ngIf="f_adr_data.submitted && address1.invalid" class="invalid-feedback">
-                  <div *ngIf="address1.errors.required">Bitte Adresse eingeben</div>
-                </div>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-12" title="Adresse Zusatz" data-toggle="tooltip" data-placement="right">
-                <input id="address2" type="text" class="form-control" name="address2"
-                       placeholder="Adresse (Zusatzfeld)"
-                       [(ngModel)]="model.person.address2" #address2="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && address2.invalid }"/>
-                <div *ngIf="f_adr_data.submitted && address2.invalid" class="invalid-feedback">
-                  <div *ngIf="address2.errors.invalid">Bitte korrekten Adresszusatz eingeben</div>
-                </div>
-              </div>
-
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-2">
-                <input id="zip" type="text" class="form-control" name="zip" placeholder="PLZ"
-                       [(ngModel)]="model.person.zip" #zip="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && zip.invalid }" pattern="[0-9]*" required/>
-                <div *ngIf="f_adr_data.submitted && zip.invalid" class="invalid-feedback">
-                  <div *ngIf="zip.errors.invalid">Bitte korrekte PLZ eingeben</div>
-                </div>
-                <div *ngIf="f_adr_data.submitted && city.invalid" class="invalid-feedback">
-                  <div *ngIf="zip.errors.required">Bitte PLZ eingeben</div>
-                </div>
-              </div>
-              <div class="form-group col-md-10">
-                <input id="city" type="text" class="form-control" name="city" placeholder="Ort"
-                       [(ngModel)]="model.person.city" #city="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && city.invalid }" required/>
-                <div *ngIf="f_adr_data.submitted && city.invalid" class="invalid-feedback">
-                  <div *ngIf="city.errors.required">Bitte Ort eingeben</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-top: 10px;">
-
-
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-primary pull-right" [disabled]="processing"
-                      (click)="onAddressDataChangeSubmit() && modal.close('Save click')"><i class="fa fa-save"></i>
-                Änderungen
-                speichern
-              </button>
-            </div>
-          </div>
-        </form>
-      </ng-template>
-
       <div class="card">
         <div class="card-header">Name/Adresse</div>
         <div class="card-body">
-          <div *ngIf="model.person.gender==='MALE'">
-            Herr
-          </div>
-          <div *ngIf="model.person.gender==='FEMALE'">
-            Frau
-          </div>
-          <div *ngIf="model.person.gender==='N/A'">
-            &nbsp;
-          </div>
-          <div>
-            {{model.person.company}}
-          </div>
-          <div>
-            {{model.person.title}}{{model.person.firstName}} {{model.person.lastName}}<br/>
-            {{model.person.address1}}<br/>
-          </div>
-          <div *ngIf="model.person.address2!=null">
-            {{model.person.address2}}<br/>
-          </div>
-          <div>
-            {{model.person.zip}} {{model.person.city}}
+          <div [innerHTML]="data_address" class="text">
           </div>
           <button class="btn btn-primary pull-right" (click)="open(content_adr_data)">Bearbeiten</button>
+          <ng-template #content_adr_data let-modal>
+            <form name="form" (ngSubmit)="f_adr_data.form.valid && onAddressDataChangeSubmit()" #f_adr_data="ngForm"
+                  novalidate>
+              <div class="modal-header col-md-12">
+                <h4 class="modal-title" id="modal-address-title">Adressdaten bearbeiten</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="gender_female" name="gender" class="custom-control-input" value="FEMALE"
+                             [(ngModel)]="model.person.gender">
+                      <label class="custom-control-label" for="gender_female">Frau</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="gender_male" name="gender" class="custom-control-input" value="MALE"
+                             [(ngModel)]="model.person.gender">
+                      <label class="custom-control-label" for="gender_male">Herr</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="gender_na" name="gender" class="custom-control-input" value="NA"
+                             [(ngModel)]="model.person.gender">
+                      <label class="custom-control-label" for="gender_na">(keine Anrede)</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <input id="company" type="text" class="form-control" name="company" placeholder="Firma"
+                           [(ngModel)]="model.person.company" #company="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && company.invalid }"/>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-2">
+                    <input id="title" type="text" class="form-control" name="title" placeholder="Titel"
+                           [(ngModel)]="model.person.title" #title="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && title.invalid }"/>
+                  </div>
+                  <div class="form-group col-md-5">
+                    <input id="firstName" type="text" class="form-control" name="firstName"
+                           [(ngModel)]="model.person.firstName"
+                           #firstName="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && firstName.invalid }" required/>
+                    <div *ngIf="f_adr_data.submitted && firstName.invalid" class="invalid-feedback">
+                      <div *ngIf="firstName.errors.required">Bitte Vorname eingeben</div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-5">
+                    <input id="lastName" type="text" class="form-control" name="lastName" placeholder="Nachname"
+                           [(ngModel)]="model.person.lastName" #lastName="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && lastName.invalid }" required/>
+                    <div *ngIf="f_adr_data.submitted && lastName.invalid" class="invalid-feedback">
+                      <div *ngIf="lastName.errors.required">Bitte Nachnamen eingeben</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <input id="address1" type="text" class="form-control" name="address1" placeholder="Strasse/Nr"
+                           title="Strasse/Hausnummer"
+                           [(ngModel)]="model.person.address1" #address1="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && address1.invalid }" required/>
+                    <div *ngIf="f_adr_data.submitted && address1.invalid" class="invalid-feedback">
+                      <div *ngIf="address1.errors.required">Bitte Adresse eingeben</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-12" title="Adresse Zusatz" data-toggle="tooltip" data-placement="right">
+                    <input id="address2" type="text" class="form-control" name="address2"
+                           placeholder="Adresse (Zusatzfeld)"
+                           [(ngModel)]="model.person.address2" #address2="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && address2.invalid }"/>
+                    <div *ngIf="f_adr_data.submitted && address2.invalid" class="invalid-feedback">
+                      <div *ngIf="address2.errors.invalid">Bitte korrekten Adresszusatz eingeben</div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-2">
+                    <input id="zip" type="text" class="form-control" name="zip" placeholder="PLZ"
+                           [(ngModel)]="model.person.zip" #zip="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && zip.invalid }" pattern="[0-9]*" required/>
+                    <div *ngIf="f_adr_data.submitted && zip.invalid" class="invalid-feedback">
+                      <div *ngIf="zip.errors.invalid">Bitte korrekte PLZ eingeben</div>
+                    </div>
+                    <div *ngIf="f_adr_data.submitted && city.invalid" class="invalid-feedback">
+                      <div *ngIf="zip.errors.required">Bitte PLZ eingeben</div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-10">
+                    <input id="city" type="text" class="form-control" name="city" placeholder="Ort"
+                           [(ngModel)]="model.person.city" #city="ngModel"
+                           [ngClass]="{ 'is-invalid': f_adr_data.submitted && city.invalid }" required/>
+                    <div *ngIf="f_adr_data.submitted && city.invalid" class="invalid-feedback">
+                      <div *ngIf="city.errors.required">Bitte Ort eingeben</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 10px;">
+
+
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-primary pull-right" [disabled]="processing"
+                          (click)="onAddressDataChangeSubmit() && modal.close('Save click')"><i class="fa fa-save"></i>
+                    Änderungen
+                    speichern
+                  </button>
+                </div>
+              </div>
+            </form>
+          </ng-template>
         </div>
       </div>
 
 
-      <ng-template #content_cont_data let-modal>
-        <div class="modal-header col-md-12">
-          <h4 class="modal-title" id="modal-basic-title">Kontakt bearbeiten</h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body col-md-12">
-
-          <form name="formContactData" (ngSubmit)="f_cont_data.form.valid && onContactDataChangeSubmit()"
-                #f_cont_data="ngForm" novalidate>
-
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <label for="email">E-Mail</label>
-                <input id="email" type="email" class="form-control" name="email" placeholder="Email"
-                       [(ngModel)]="model.person.email" #email="ngModel" email
-                       [ngClass]="{ 'is-invalid': f_cont_data.submitted && email.invalid }" required disabled/>
-                <div *ngIf="f_cont_data.submitted && email.invalid" class="invalid-feedback">
-                  <div *ngIf="email.errors.required">Bitte gültige E-Mail Adresse eingeben</div>
-                </div>
-              </div>
-              <div class="form-group col-md-12">
-                <label for="mobile">Mobiltelefon</label>
-                <international-phone-number id="mobile" [(ngModel)]="model.person.mobile" placeholder="Mobiltelefon"
-                                            [maxlength]="20"
-                                            [defaultCountry]="'ch'" [required]="true" #mobile="ngModel"
-                                            name="mobile"
-                                            [allowDropdown]="true"
-                                            [ngClass]="{ 'is-invalid': f_cont_data.submitted && mobile.invalid }"></international-phone-number>
-                <div *ngIf="f_cont_data.submitted && mobile.invalid">
-                  <div class="warning">
-                    Bitte gültige Telfonnummer eingeben im int. Format: z.b. +41 79xxxxxxx
-                  </div>
-                </div>
-              </div>
-              <div class="form-group col-md-12">
-                <label for="landline">Festnetz</label>
-                <international-phone-number id="landline" [(ngModel)]="model.person.landline" placeholder="Festnetz"
-                                            [maxlength]="20"
-                                            [defaultCountry]="'ch'" [required]="false" #landline="ngModel"
-                                            name="landline"
-                                            [allowDropdown]="true"
-                                            [ngClass]="{ 'is-invalid': f_cont_data.submitted && landline.invalid }"></international-phone-number>
-                <div *ngIf="f_cont_data.submitted && landline.invalid">
-                  <div class="warning">
-                    Bitte gültige Telfonnummer eingeben im int. Format: z.b. +41 43xxxxxxx
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button class="btn btn-primary pull-right" [disabled]="processing"
-                    (click)="validate() && onContactDataChangeSubmit() && modal.close('Save click')"><i
-              class="fa fa-save"></i>
-              Änderungen
-              speichern
-            </button>
-          </form>
-        </div>
-      </ng-template>
       <div class="spacing">&nbsp;</div>
       <div class="card">
         <div class="card-header">Kontaktdaten</div>
@@ -249,13 +168,81 @@
 
           <dl>
             <dt>Mobiltelefon</dt>
-            <dd>{{model.person.mobile}}</dd>
-            <dt *ngIf="model.person.landline!=null">Festnetz</dt>
-            <dd *ngIf="model.person.landline!=null">{{model.person.landline}}</dd>
+            <dd>{{person.mobile}}</dd>
+            <dt *ngIf="person.landline!=null">Festnetz</dt>
+            <dd *ngIf="person.landline!=null">{{person.landline}}</dd>
             <dt>Email</dt>
-            <dd>{{model.person.email}}</dd>
+            <dd>{{person.email}}</dd>
           </dl>
           <button class="btn btn-primary pull-right" (click)="open(content_cont_data)">Bearbeiten</button>
+          <ng-template #content_cont_data let-modal>
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header col-md-12">
+                    <h4 class="modal-title" id="modal-basic-title">Kontakt bearbeiten</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body col-md-12">
+
+                    <form name="formContactData" (ngSubmit)="f_cont_data.form.valid && onContactDataChangeSubmit()"
+                          #f_cont_data="ngForm" novalidate>
+
+                      <div class="form-row">
+                        <div class="form-group col-md-12">
+                          <label for="email">E-Mail</label>
+                          <input id="email" type="email" class="form-control" name="email" placeholder="Email"
+                                 [(ngModel)]="model.person.email" #email="ngModel" email
+                                 [ngClass]="{ 'is-invalid': f_cont_data.submitted && email.invalid }" required
+                                 disabled/>
+                          <div *ngIf="f_cont_data.submitted && email.invalid" class="invalid-feedback">
+                            <div *ngIf="email.errors.required">Bitte gültige E-Mail Adresse eingeben</div>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                          <label for="mobile">Mobiltelefon</label>
+                          <international-phone-number id="mobile" [(ngModel)]="model.person.mobile"
+                                                      placeholder="Mobiltelefon"
+                                                      [maxlength]="20"
+                                                      [defaultCountry]="'ch'" [required]="true" #mobile="ngModel"
+                                                      name="mobile"
+                                                      [allowDropdown]="true"
+                                                      [ngClass]="{ 'is-invalid': f_cont_data.submitted && mobile.invalid }"></international-phone-number>
+                          <div *ngIf="f_cont_data.submitted && mobile.invalid">
+                            <div class="warning">
+                              Bitte gültige Telfonnummer eingeben im int. Format: z.b. +41 79xxxxxxx
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                          <label for="landline">Festnetz</label>
+                          <international-phone-number id="landline" [(ngModel)]="model.person.landline"
+                                                      placeholder="Festnetz"
+                                                      [maxlength]="20"
+                                                      [defaultCountry]="'ch'" [required]="false" #landline="ngModel"
+                                                      name="landline"
+                                                      [allowDropdown]="true"
+                                                      [ngClass]="{ 'is-invalid': f_cont_data.submitted && landline.invalid }"></international-phone-number>
+                          <div *ngIf="f_cont_data.submitted && landline.invalid">
+                            <div class="warning">
+                              Bitte gültige Telfonnummer eingeben im int. Format: z.b. +41 43xxxxxxx
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button class="btn btn-primary pull-right" [disabled]="processing"
+                              (click)="validate() && onContactDataChangeSubmit() && modal.close('Save click')"><i
+                        class="fa fa-save"></i>
+                        Änderungen
+                        speichern
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+          </ng-template>
         </div>
       </div>
 
