@@ -6,7 +6,6 @@ import {HttpClient} from "@angular/common/http";
 import {saveAs} from "file-saver";
 import {ChangePasswordResponse} from "../change-password-response";
 import {IMyDpOptions} from 'mydatepicker';
-import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -26,7 +25,7 @@ export class InternalComponent implements OnInit {
   internalFiles;
   practiceFiles;
   model: any = {};
-  modelBirthDate:  any = {};
+  modelBirthDate: any = {};
   processing: boolean = false;
   passwordchange_feedback: string;
   changePasswordSuccess: boolean;
@@ -37,40 +36,32 @@ export class InternalComponent implements OnInit {
   error_confirmpassword: boolean;
   error_confirmpassword_msg: string;
   today = new Date();
+  data_address = "";
 
 
-  constructor(private http: HttpClient, private _authenticationService: AuthenticationService, private modalService: NgbModal) {
+  constructor(private http: HttpClient, private _authenticationService: AuthenticationService) {
   }
 
+
+
   ngOnInit() {
-    this.populateGreeting();
+    this.reloadData();
     this.getAvailableFiles();
   }
 
-  open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      //this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      //this.errorMessage = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
-
-
-  populateGreeting() {
+  reloadData() {
     this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
         this.person = success;
-        this.model.person = this.person;
+        let clonePerson= Object.assign({}, this.person);
+        this.model.person = clonePerson;
         this.setDate(new Date(this.person.birthDate));
+
+        this.data_address="";
+        this.data_address = this.data_address.concat(this.person.firstName + " " + this.person.lastName + "<br />",
+          this.person.address1 + "<br/>",
+          this.person.address2 === null ? "" : +" " + this.person.address2 + "<br />",
+          this.person.zip + " " + this.person.city);
       }, error1 => {
         console.log("error: " + error1.error.message);
       }
@@ -89,7 +80,7 @@ export class InternalComponent implements OnInit {
 
   setDate(theDate: Date): void {
     // for example set date: 09.10.2018, value of year, month and day must be number
-    this.modelBirthDate = {date: {year: theDate.getFullYear(), month: theDate.getMonth()+1, day: theDate.getDate()}};
+    this.modelBirthDate = {date: {year: theDate.getFullYear(), month: theDate.getMonth() + 1, day: theDate.getDate()}};
   }
 
 
@@ -152,7 +143,8 @@ export class InternalComponent implements OnInit {
     })
 
     this.processing = false;
-    this.modalService.dismissAll();
+    this.reloadData();
+    $("#addressModal").modal('hide');
   }
 
   onContactDataChangeSubmit() {
@@ -171,14 +163,15 @@ export class InternalComponent implements OnInit {
     })
 
     this.processing = false;
-    this.modalService.dismissAll();
+    this.reloadData();
+    $("#contactModal").modal('hide');
   }
 
 
   onBirthdayChangeSubmit() {
     this.processing = true;
 
-    if (this.modelBirthDate!=null) {
+    if (this.modelBirthDate != null) {
       var data = {
         year: this.modelBirthDate.date.year,
         month: this.modelBirthDate.date.month,
@@ -187,15 +180,15 @@ export class InternalComponent implements OnInit {
 
       this.http.post(environment.backendUrl + '/api/protected/internal/birthday', data).subscribe(success => {
         this.infoMessage = "Ihr Geburtsdatum wurde erfolgreich geändert";
-        this.populateGreeting();
+        this.reloadData();
       }, error1 => {
         this.errorMessage = error1.error.message;
       })
     }
     this.processing = false;
-    this.modalService.dismissAll();
+    this.reloadData();
+    $("#birthdayModal").modal('hide');
   }
-
 
 
   onPWChangeSubmit() {
