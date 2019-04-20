@@ -26,7 +26,7 @@ export class InternalComponent implements OnInit {
   internalFiles;
   practiceFiles;
   model: any = {};
-  modelBirthDate:  any = {};
+  modelBirthDate: any = {};
   processing: boolean = false;
   passwordchange_feedback: string;
   changePasswordSuccess: boolean;
@@ -37,19 +37,20 @@ export class InternalComponent implements OnInit {
   error_confirmpassword: boolean;
   error_confirmpassword_msg: string;
   today = new Date();
+  closeResult: string;
 
 
   constructor(private http: HttpClient, private _authenticationService: AuthenticationService, private modalService: NgbModal) {
   }
 
   ngOnInit() {
-    this.populateGreeting();
+    this.reloadData();
     this.getAvailableFiles();
   }
 
   open(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      //this.closeResult = `Closed with: ${result}`;
+      this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       //this.errorMessage = `Dismissed ${this.getDismissReason(reason)}`;
     });
@@ -61,15 +62,19 @@ export class InternalComponent implements OnInit {
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       return 'by clicking on a backdrop';
     } else {
-      return  `with: ${reason}`;
+      return `with: ${reason}`;
     }
   }
 
 
-  populateGreeting() {
+  reloadData() {
     this.http.get<Person>(environment.backendUrl + '/auth/user').subscribe(success => {
+        this.person = null;
+        this.model.person = null;
         this.person = success;
-        this.model.person = this.person;
+        console.log(this.person);
+        let clonePerson = Object.assign({}, this.person);
+        this.model.person = clonePerson;
         this.setDate(new Date(this.person.birthDate));
       }, error1 => {
         console.log("error: " + error1.error.message);
@@ -89,7 +94,7 @@ export class InternalComponent implements OnInit {
 
   setDate(theDate: Date): void {
     // for example set date: 09.10.2018, value of year, month and day must be number
-    this.modelBirthDate = {date: {year: theDate.getFullYear(), month: theDate.getMonth()+1, day: theDate.getDate()}};
+    this.modelBirthDate = {date: {year: theDate.getFullYear(), month: theDate.getMonth() + 1, day: theDate.getDate()}};
   }
 
 
@@ -146,11 +151,12 @@ export class InternalComponent implements OnInit {
     };
 
     this.http.post(environment.backendUrl + '/api/protected/internal/address', data).subscribe(success => {
+      this.errorMessage = null;
       this.infoMessage = "Ihre Adressdaten wurden erfolgreich geändert";
+      this.reloadData();
     }, error1 => {
       this.errorMessage = error1.error.message;
     })
-
     this.processing = false;
     this.modalService.dismissAll();
   }
@@ -165,11 +171,12 @@ export class InternalComponent implements OnInit {
     };
 
     this.http.post(environment.backendUrl + '/api/protected/internal/contactdetails', data).subscribe(success => {
+      this.errorMessage = null;
       this.infoMessage = "Ihre Kontaktdaten wurden erfolgreich geändert";
+      this.reloadData();
     }, error1 => {
       this.errorMessage = error1.error.message;
     })
-
     this.processing = false;
     this.modalService.dismissAll();
   }
@@ -178,7 +185,7 @@ export class InternalComponent implements OnInit {
   onBirthdayChangeSubmit() {
     this.processing = true;
 
-    if (this.modelBirthDate!=null) {
+    if (this.modelBirthDate != null) {
       var data = {
         year: this.modelBirthDate.date.year,
         month: this.modelBirthDate.date.month,
@@ -186,8 +193,9 @@ export class InternalComponent implements OnInit {
       };
 
       this.http.post(environment.backendUrl + '/api/protected/internal/birthday', data).subscribe(success => {
+        this.errorMessage = null;
         this.infoMessage = "Ihr Geburtsdatum wurde erfolgreich geändert";
-        this.populateGreeting();
+        this.reloadData();
       }, error1 => {
         this.errorMessage = error1.error.message;
       })
@@ -195,7 +203,6 @@ export class InternalComponent implements OnInit {
     this.processing = false;
     this.modalService.dismissAll();
   }
-
 
 
   onPWChangeSubmit() {

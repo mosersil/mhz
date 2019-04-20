@@ -7,6 +7,8 @@ import {first} from "rxjs/operators";
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.sass']
+
+
 })
 export class LoginComponent implements OnInit {
 
@@ -14,7 +16,10 @@ export class LoginComponent implements OnInit {
   error: string;
   returnUrl: string;
 
+  isInternetExplorer:boolean = false;
+
   constructor(private _authenticationService: AuthenticationService, private route: ActivatedRoute, public router: Router) {
+    this.isInternetExplorer = /msie\s|trident\//i.test(window.navigator.userAgent)
   }
 
   onSubmit() {
@@ -31,3 +36,5 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 }
+
+
