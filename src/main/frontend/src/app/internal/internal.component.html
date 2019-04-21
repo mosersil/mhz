@@ -78,7 +78,7 @@
                 <input id="firstName" type="text" class="form-control" name="firstName"
                        [(ngModel)]="model.person.firstName"
                        #firstName="ngModel"
-                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && firstName.invalid }" required/>
+                       [ngClass]="{ 'is-invalid': f_adr_data.submitted && firstName.invalid }" required />
                 <div *ngIf="f_adr_data.submitted && firstName.invalid" class="invalid-feedback">
                   <div *ngIf="firstName.errors.required">Bitte Vorname eingeben</div>
                 </div>
@@ -138,12 +138,10 @@
             </div>
 
             <div class="form-group" style="margin-top: 10px;">
-
-
             </div>
             <div class="modal-footer">
-              <button class="btn btn-primary pull-right" [disabled]="processing"
-                      (click)="onAddressDataChangeSubmit() && modal.close('Save click')"><i class="fa fa-save"></i>
+              <button class="btn btn-primary pull-right" [disabled]="processing" type="submit"
+                      ><i class="fa fa-save"></i>
                 Änderungen
                 speichern
               </button>
@@ -155,27 +153,27 @@
       <div class="card">
         <div class="card-header">Name/Adresse</div>
         <div class="card-body">
-          <div *ngIf="model.person.gender==='MALE'">
+          <div *ngIf="person.gender==='MALE'">
             Herr
           </div>
-          <div *ngIf="model.person.gender==='FEMALE'">
+          <div *ngIf="person.gender==='FEMALE'">
             Frau
           </div>
-          <div *ngIf="model.person.gender==='N/A'">
+          <div *ngIf="person.gender==='N/A'">
             &nbsp;
           </div>
           <div>
-            {{model.person.company}}
+            {{person.company}}
           </div>
           <div>
-            {{model.person.title}}{{model.person.firstName}} {{model.person.lastName}}<br/>
-            {{model.person.address1}}<br/>
+            {{person.title}}{{person.firstName}} {{person.lastName}}<br/>
+            {{person.address1}}<br/>
           </div>
-          <div *ngIf="model.person.address2!=null">
-            {{model.person.address2}}<br/>
+          <div *ngIf="person.address2!=null">
+            {{person.address2}}<br/>
           </div>
           <div>
-            {{model.person.zip}} {{model.person.city}}
+            {{person.zip}} {{person.city}}
           </div>
           <button class="btn btn-primary pull-right" (click)="open(content_adr_data)">Bearbeiten</button>
         </div>
@@ -249,11 +247,11 @@
 
           <dl>
             <dt>Mobiltelefon</dt>
-            <dd>{{model.person.mobile}}</dd>
-            <dt *ngIf="model.person.landline!=null">Festnetz</dt>
-            <dd *ngIf="model.person.landline!=null">{{model.person.landline}}</dd>
+            <dd>{{person.mobile}}</dd>
+            <dt *ngIf="person.landline!=null">Festnetz</dt>
+            <dd *ngIf="person.landline!=null">{{person.landline}}</dd>
             <dt>Email</dt>
-            <dd>{{model.person.email}}</dd>
+            <dd>{{person.email}}</dd>
           </dl>
           <button class="btn btn-primary pull-right" (click)="open(content_cont_data)">Bearbeiten</button>
         </div>
