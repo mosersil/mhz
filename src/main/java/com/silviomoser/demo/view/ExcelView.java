@@ -1,9 +1,11 @@
 package com.silviomoser.demo.view;
 
 import com.silviomoser.demo.data.AbstractEntity;
+import com.silviomoser.demo.data.type.HasLabel;
+import com.silviomoser.demo.data.type.HasShortCode;
 import com.silviomoser.demo.utils.XlsReport;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
@@ -72,8 +74,19 @@ public class ExcelView extends AbstractXlsView {
                     if (annotation instanceof XlsReport) {
                         XlsReport pdfReport = (XlsReport) annotation;
                         if (pdfReport.header().equals(header.getCell(rowCellCounter).getStringCellValue())) {
-                            String test = BeanUtils.getSimpleProperty(user, f.getName());
-                            userRow.createCell(rowCellCounter).setCellValue(test);
+                            //String test = BeanUtils.getSimpleProperty(user, f.getName());
+                            final Object object = PropertyUtils.getProperty(user, f.getName());
+                            String out = "";
+                            if (object!=null) {
+                                if (object instanceof HasShortCode) {
+                                    out = ((HasShortCode) object).getShortCode();
+                                } else if (object instanceof HasLabel) {
+                                    out = ((HasLabel) object).getLabel();
+                                } else {
+                                    out = object.toString();
+                                }
+                            }
+                            userRow.createCell(rowCellCounter).setCellValue(out);
                         }
                         rowCellCounter++;
                     }

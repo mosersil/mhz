@@ -2,13 +2,16 @@ package com.silviomoser.demo.ui.view;
 
 import com.silviomoser.demo.data.Person;
 import com.silviomoser.demo.data.type.Gender;
+import com.silviomoser.demo.data.type.PreferedChannel;
 import com.silviomoser.demo.services.PersonService;
 import com.silviomoser.demo.services.ServiceException;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Sizeable;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.TextArea;
@@ -34,8 +37,8 @@ public class PersonCrud  implements View {
     private final static String[] PREVIEW_PROPERTIES = new String[]{"id", "firstName", "lastName", "company", "address1", "zip", "city", "remarks"};
     private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"#", "Vorname", "Nachname", "Firma", "Adresse", "PLZ", "Ort", "Bemerkungen"};
 
-    private final static String[] EDITABLE_PROPERTIES = new String[]{"gender", "title", "firstName", "lastName", "company", "address1", "address2", "zip", "city", "landline", "mobile", "email", "birthDate", "remarks"};
-    private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Anrede", "Titel", "Vorname", "Nachname", "Firma", "Adresse", "Adresse (Zusatz)", "PLZ", "Ort", "Telefon", "Mobiltelefon", "Email", "Geburtsdatum", "Bemerkungen"};
+    private final static String[] EDITABLE_PROPERTIES = new String[]{"gender", "title", "firstName", "lastName", "company", "address1", "address2", "zip", "city", "landline", "mobile", "email", "birthDate", "remarks", "preferedChannel"};
+    private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Anrede", "Titel", "Vorname", "Nachname", "Firma", "Adresse", "Adresse (Zusatz)", "PLZ", "Ort", "Telefon", "Mobiltelefon", "Email", "Geburtsdatum", "Bemerkungen", "Komm. Präferenz"};
 
 
     public static final String VIEW_NAME = "personcrud";
@@ -141,10 +144,12 @@ public class PersonCrud  implements View {
 
         CrudFormHelper.setCaptions(formFactory);
 
-
-
-
         formFactory.setFieldType("remarks", TextArea.class);
+        formFactory.setFieldCreationListener("preferedChannel", field -> {
+            ComboBox comboBox = (ComboBox) field;
+            comboBox.setDataProvider(new ListDataProvider(Arrays.asList(PreferedChannel.values())));
+            comboBox.setItemCaptionGenerator((ItemCaptionGenerator<PreferedChannel>) item -> item.getLabel());
+        });
 
 
         return formFactory;

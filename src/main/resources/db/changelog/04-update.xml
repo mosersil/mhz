@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="04" author="silvio">
+
+        <addColumn tableName="PERSON">
+            <column name="PREF_CHANNEL" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <dropView viewName="VIEW_ADDRESSLIST" />
+
+        <createView viewName="VIEW_ADDRESSLIST" replaceIfExists="true">
+            SELECT P.ID, P.GENDER, P.FIRST_NAME, P.LAST_NAME, P.ADDRESS1 AS ADDRESS, P.ADDRESS2,
+            P.ZIP, P.CITY, P.MOBILE, P.LANDLINE, P.EMAIL, P.PREF_CHANNEL,  O.NAME AS ORGANIZATION
+            FROM PERSON AS P
+            INNER JOIN MEMBERSHIP AS M ON P.ID=M.PERSON_ID
+            INNER JOIN ORGANIZATION AS O ON O.ID=M.ORGANIZATION_ID
+            WHERE M.LEAVE_DATE IS NULL
+            ORDER BY P.LAST_NAME;
+        </createView>
+
+
+
+
+    </changeSet>
+</databaseChangeLog>

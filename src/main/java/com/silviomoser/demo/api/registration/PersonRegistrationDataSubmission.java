@@ -18,4 +18,5 @@ public class PersonRegistrationDataSubmission {
     private String city;
     private String password;
     private String password_confirmation;
+    private String preferedChannel;
 }

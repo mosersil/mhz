@@ -1,8 +1,11 @@
 package com.silviomoser.demo.data;
 
 import com.silviomoser.demo.data.type.Gender;
+import com.silviomoser.demo.data.type.PreferedChannel;
 import com.silviomoser.demo.utils.PdfReport;
 import com.silviomoser.demo.utils.XlsReport;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
@@ -15,6 +18,8 @@ import javax.persistence.Table;
 @Entity
 @Immutable
 @Table(name = "VIEW_ADDRESSLIST")
+@Getter
+@Setter
 public class AddressListEntry  extends AbstractEntity {
 
     @PdfReport(header = "Anrede")
@@ -41,64 +46,22 @@ public class AddressListEntry  extends AbstractEntity {
     @XlsReport(header = "Ort")
     @Column(name = "CITY")
     private String city;
+    @PdfReport(header = "Mobiltelefon")
+    @XlsReport(header = "Mobiltelefon")
+    @Column(name = "MOBILE")
+    private String mobile;
+    @XlsReport(header = "Telefon")
+    @Column(name = "LANDLINE")
+    private String landline;
+    @PdfReport(header = "Email")
+    @XlsReport(header = "Email")
+    @Column(name = "EMAIL")
+    private String email;
+    @XlsReport(header = "Kommunikation")
+    @Column(name = "PREF_CHANNEL")
+    private PreferedChannel channel;
     @Column(name = "ORGANIZATION")
     private String organization;
 
 
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress1(String address1) {
-        this.address = address1;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
 }

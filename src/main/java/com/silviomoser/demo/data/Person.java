@@ -2,6 +2,7 @@ package com.silviomoser.demo.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.demo.data.type.Gender;
+import com.silviomoser.demo.data.type.PreferedChannel;
 import com.silviomoser.demo.data.type.RoleType;
 import com.silviomoser.demo.utils.OrganizationUtils;
 import com.silviomoser.demo.utils.StringUtils;
@@ -115,7 +116,6 @@ public class Person extends AbstractEntity {
     @JsonView({Views.Internal.class})
     private LocalDate birthDate;
 
-
     @Column(name = "REMARKS", length = 500)
     private String remarks;
 
@@ -131,6 +131,10 @@ public class Person extends AbstractEntity {
 
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private PersonVerification personVerification;
+
+    @NotNull
+    @Column(name = "PREF_CHANNEL", nullable = false)
+    private PreferedChannel preferedChannel;
 
     @JsonView({Views.Public.class, Views.Internal.class})
     @Transient
@@ -159,6 +163,7 @@ public class Person extends AbstractEntity {
         private String password;
         private String[] roles;
         private String verificationToken;
+        private String preferedChannel;
 
         public PersonBuilder firstName(String firstName) {
             if (isNotBlank(firstName)) {
@@ -258,6 +263,12 @@ public class Person extends AbstractEntity {
             return this;
         }
 
+        public PersonBuilder preferedChannel(String preferedChannel) {
+            if (isNotBlank(preferedChannel)) {
+                this.preferedChannel = preferedChannel;
+            }
+            return this;
+        }
 
         public Person bulid() {
             Person person = new Person();
@@ -273,6 +284,10 @@ public class Person extends AbstractEntity {
 
             if (isNotBlank(gender)) {
                 person.setGender(Gender.valueOf(gender.toUpperCase()));
+            }
+
+            if (isNotBlank(preferedChannel)) {
+                person.setPreferedChannel(PreferedChannel.valueOf(preferedChannel.toUpperCase()));
             }
 
             if (isNotBlank(password) && isNotBlank(email)) {
