@@ -9,7 +9,9 @@
     {{error}}
   </div>
 
-  <p *ngIf="feedback==null">Sie möchten uns etwas mitteilen? Am schnellsten erreicht uns Ihre Mitteilung, wenn Sie das untenstehende
+  <h3>Kontaktformular</h3>
+  <p *ngIf="feedback==null">Sie möchten uns etwas mitteilen? Am schnellsten erreicht uns Ihre Mitteilung, wenn Sie das
+    untenstehende
     Kontaktformular benutzen.</p>
   <div class="col-md-6 offset-md-3" *ngIf="feedback==null">
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
@@ -33,7 +35,8 @@
       <div class="form-group">
         <label for="message">Ihre Nachricht an uns:</label>
         <textarea id="message" class="form-control" name="message" [(ngModel)]="model.message" #message="ngModel"
-                  [ngClass]="{ 'is-invalid': f.submitted && message.invalid }" required minlength="5" rows="10" maxlength="2000">
+                  [ngClass]="{ 'is-invalid': f.submitted && message.invalid }" required minlength="5" rows="10"
+                  maxlength="2000">
           </textarea>
         <div *ngIf="f.submitted && message.invalid" class="invalid-feedback">
           <div *ngIf="message.errors.required">Bitte geben Sie eine Nachricht ein</div>
@@ -45,9 +48,11 @@
           <div class="form-group">
             <botdetect-captcha styleName="exampleCaptcha"></botdetect-captcha>
             <label for="captchaCode">Bitte wiederholen Sie den oben angezeigten Code:</label>
-            <input id="captchaCode" type="text" class="form-control" name="captchaCode" [(ngModel)]="model.captchaCode" #captchaCode="ngModel"
-                   [ngClass]="{ 'is-invalid': (f.submitted && !isHuman)|| (f.submitted && captchaCode.invalid)}" required />
-            <div  class="invalid-feedback">
+            <input id="captchaCode" type="text" class="form-control" name="captchaCode" [(ngModel)]="model.captchaCode"
+                   #captchaCode="ngModel"
+                   [ngClass]="{ 'is-invalid': (f.submitted && !isHuman)|| (f.submitted && captchaCode.invalid)}"
+                   required/>
+            <div class="invalid-feedback">
               <div>Bitte wiederholen Sie den angezeigten Code</div>
             </div>
           </div>
@@ -59,7 +64,33 @@
     </form>
   </div>
   <p>Natürlich können Sie uns auch auf dem herkömmlichen Weg per Briefpost erreichen. Unsere Adresse lautet:</p>
+
+  <h3>Impressum</h3>
+  <b>Kontaktadresse</b>
   <p>Musikverein Harmonie Zürich-Oberstrass<br/>
     8000 Zürich
   </p>
+
+  <b>Vertretungsberechtigte Personen</b>
+  <p>
+  <span *ngFor="let record of president; let last = last">
+            {{record.person.firstName}} {{record.person.lastName}}{{ last ? '':", "}}
+          </span>
+  </p>
+
+  <b>Urheberrechte</b>
+  <p>Die Urheber- und alle anderen Rechte an Inhalten, Bildern, Fotos oder anderen Dateien auf dieser Website, gehören
+    ausschliesslich der juristischen Person Musikverein Harmonie Zürich oder den speziell genannten Rechteinhabern. Für
+    die Reproduktion jeglicher Elemente ist die schriftliche Zustimmung des Urheberrechtsträgers im Voraus
+    einzuholen.</p>
+
+  <b>Verwendung von cookies</b>
+  <p>
+    Diese Website verwendet Cookies. Cookies sind kleine Textdateien, die beim Besuch dieser Website in Ihrem Computer
+    dauerhaft oder temporär gespeichert werden. Zweck der Cookies ist insbesondere die Analyse der Nutzung dieser
+    Website zur statistischen Auswertung sowie für kontinuierliche Verbesserungen.
+    In Ihrem Browser können Sie Cookies in den Einstellungen jederzeit ganz oder teilweise deaktivieren. Bei
+    deaktivierten Cookies stehen Ihnen allenfalls nicht mehr alle Funktionen dieser Website zur Verfügung.
+  </p>
+
 </div>
