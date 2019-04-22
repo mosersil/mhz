@@ -5,6 +5,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.silviomoser.demo.api.core.ApiException;
+import com.silviomoser.demo.data.type.PreferedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class PersonRegistrationApiTest extends AbstractTestNGSpringContextTests 
     private static final String EXPECTED_MESSAGE_VALIDATIONERROR = "Ungültige oder fehlende Eingabe";
     private static final String EXPECTED_MESSAGE_PASSWORDERROR = "Das Gewählte Password ist nicht sicher. Bitte wählen Sie ein 8-16 Zeichen langes Passwort aus Gross-/Kleinbuchstaben, Zahlen und Sonderzeichen. Keine Leerschläge.";
     private static final String STRONG_PASSWORD = "Ha123!us";
-    public static final String PREFERED_CHANNEL = "email";
+    public static final String PREFERED_CHANNEL = PreferedChannel.ELECTRONIC.name();
 
     @Autowired
     private PersonRegistrationApi personRegistrationApi;
