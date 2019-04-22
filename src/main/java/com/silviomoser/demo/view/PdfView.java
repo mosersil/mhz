@@ -225,17 +225,19 @@ public class PdfView extends AbstractITextPdfView {
                     for (Annotation annotation : annotations) {
                         if (annotation instanceof PdfReport) {
                             final Object object = PropertyUtils.getProperty(it, f.getName());
-                            String out;
-                            if (object.getClass() == LocalDateTime.class) {
-                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                                out = ((LocalDateTime) object).format(formatter);
-                            } else {
-                                if (object instanceof HasShortCode) {
-                                    out = ((HasShortCode) object).getShortCode();
-                                } else if (object instanceof HasLabel) {
-                                    out = ((HasLabel) object).getLabel();
+                            String out = "";
+                            if (object != null) {
+                                if (object.getClass() == LocalDateTime.class) {
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                                    out = ((LocalDateTime) object).format(formatter);
                                 } else {
-                                    out = object.toString();
+                                    if (object instanceof HasShortCode) {
+                                        out = ((HasShortCode) object).getShortCode();
+                                    } else if (object instanceof HasLabel) {
+                                        out = ((HasLabel) object).getLabel();
+                                    } else {
+                                        out = object.toString();
+                                    }
                                 }
                             }
                             line.add(out);
@@ -248,7 +250,8 @@ public class PdfView extends AbstractITextPdfView {
                 }
                 pdfItems.add(line.toArray(new String[0]));
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
 
@@ -261,6 +264,8 @@ public class PdfView extends AbstractITextPdfView {
             logo.scaleToFit(100, 100);
 
             document.open();
+
+            document.newPage();
             placeAbsoluteText(writer, title, 200, 750);
 
             PdfPTable table = new PdfPTable(pdfHeaders.size());
@@ -279,12 +284,15 @@ public class PdfView extends AbstractITextPdfView {
             document.add(table);
 
 
-        } catch (DocumentException ex) {
+        } catch (
+                DocumentException ex) {
 
             ex.printStackTrace();
-        } catch (MalformedURLException e) {
+        } catch (
+                MalformedURLException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (
+                IOException e) {
             e.printStackTrace();
         }
 

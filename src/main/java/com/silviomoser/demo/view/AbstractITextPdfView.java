@@ -29,8 +29,17 @@ public abstract class AbstractITextPdfView extends AbstractView {
         // IE workaround: write into byte array first.
         ByteArrayOutputStream baos = createTemporaryOutputStream();
 
+        Document document = null;
+        if (model.get("orientation")!=null) {
+            if (model.get("orientation").equals("landscape")) {
+                document = new Document(PageSize.A4.rotate());
+            }
+        } else {
+            document = new Document(PageSize.A4);
+        }
+
         // Apply preferences and build metadata.
-        Document document = newDocument();
+
         PdfWriter writer = newWriter(document, baos);
         prepareWriter(model, writer, request);
         buildPdfMetadata(model, document, request);
@@ -44,9 +53,6 @@ public abstract class AbstractITextPdfView extends AbstractView {
         writeToResponse(response, baos);
     }
 
-    protected Document newDocument() {
-        return new Document(PageSize.A4);
-    }
 
     protected PdfWriter newWriter(Document document, OutputStream os) throws DocumentException {
         return PdfWriter.getInstance(document, os);

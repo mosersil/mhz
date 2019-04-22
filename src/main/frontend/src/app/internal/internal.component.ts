@@ -83,6 +83,7 @@ export class InternalComponent implements OnInit {
     disableHeaderButtons: false,
     editableDateField: false,
     dateFormat: "dd.mm.yyyy",
+
     disableSince: {year: this.today.getFullYear(), month: this.today.getMonth() + 1, day: this.today.getDate() + 1}
   };
 

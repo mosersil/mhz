@@ -76,6 +76,7 @@ public class InternalApi implements ApiController {
             log.debug("Assemble document {} in format {}", organization, format);
             ModelAndView modelAndView =  new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organization));
             modelAndView.addObject("title", "Adressliste " + organization);
+            modelAndView.addObject("orientation", "landscape");
             return modelAndView;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
