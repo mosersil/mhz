@@ -5,6 +5,7 @@ import com.silviomoser.demo.security.utils.SecurityUtils;
 import com.silviomoser.demo.ui.view.AccountCrud;
 import com.silviomoser.demo.ui.view.ArticleCrud;
 import com.silviomoser.demo.ui.view.CalendarCrud;
+import com.silviomoser.demo.ui.view.CompositionCrud;
 import com.silviomoser.demo.ui.view.DefaultView;
 import com.silviomoser.demo.ui.view.MembershipCrud;
 import com.silviomoser.demo.ui.view.PersonCrud;
@@ -55,7 +56,10 @@ public class VaadinUI extends UI {
             articleCrud.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
             Button calendarCrud = new Button("Kalender", e -> getNavigator().navigateTo(CalendarCrud.VIEW_NAME));
             calendarCrud.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
-            menu.addComponents(articleCrud, calendarCrud);
+
+            Button compositionCrud = new Button("Noten", e -> getNavigator().navigateTo(CompositionCrud.VIEW_NAME));
+            calendarCrud.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
+            menu.addComponents(articleCrud, calendarCrud, compositionCrud);
         }
         if (SecurityUtils.hasRole(RoleType.USRMGR)) {
             Button accountsCrud = new Button("Accounts", e -> getNavigator().navigateTo(AccountCrud.VIEW_NAME));
