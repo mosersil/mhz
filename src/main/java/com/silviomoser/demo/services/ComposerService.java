@@ -20,7 +20,24 @@ public class ComposerService {
         return composerRepository.findAll();
     }
 
-    public Composer create(Composer composer) {
-        return composerRepository.save(composer);
+    public Composer add(Composer composer) throws ServiceException {
+        Composer composer1 = composerRepository.save(composer);
+        log.info("Added/updated composition {}", composer1);
+        return composer1;
+    }
+
+    public Composer update(Composer composer) throws ServiceException {
+        try {
+            Composer composer1 = composerRepository.save(composer);
+            log.info("Added/updated composition {}", composer1);
+            return composer1;
+        } catch (Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    public void delete(Composer composer) throws ServiceException {
+        composerRepository.delete(composer);
+        log.info("Deleted composer {}", composer);
     }
 }

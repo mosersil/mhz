@@ -1,16 +1,17 @@
 package com.silviomoser.demo.ui.view;
 
-import com.silviomoser.demo.data.Composition;
+import com.silviomoser.demo.data.Composer;
 import com.silviomoser.demo.services.ComposerService;
 import com.silviomoser.demo.services.CompositionService;
 import com.silviomoser.demo.services.ServiceException;
+import com.vaadin.data.HasValue;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Sizeable;
+import com.vaadin.shared.Registration;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +23,25 @@ import org.vaadin.crudui.form.impl.form.factory.GridLayoutCrudFormFactory;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-@SpringView(name = CompositionCrud.VIEW_NAME)
-public class CompositionCrud implements View {
+@SpringView(name = ComposerCrud.VIEW_NAME)
+public class ComposerCrud implements View, HasValue<Set<Composer>> {
 
-    private final static String[] PREVIEW_PROPERTIES = new String[]{"tag", "title", "subtitle", "composers", "genre"};
-    private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"#", "Titel", "Untertitel", "Komponist", "Genre"};
+    public static final String VIEW_NAME = "composercrud";
 
-    private final static String[] EDITABLE_PROPERTIES = new String[]{"tag", "title", "subtitle", "composers", "genre"};
-    private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Ident.", "Titel", "Untertitel", "Komponist", "Genre"};
+    private final static String[] PREVIEW_PROPERTIES = new String[]{"name" };
+    private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"#", "Name"};
+
+    private final static String[] EDITABLE_PROPERTIES = new String[]{"name" };
+    private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Name" };
 
 
-    public static final String VIEW_NAME = "compositioncrud";
+    private Set<Composer> composersSet;
 
-    private GridCrud<Composition> crud = new GridCrud<>(Composition.class);
-
-    private final TextField titleFilter = new TextField();
-
+    private GridCrud<Composer> crud = new GridCrud<>(Composer.class);
 
     @Autowired
     private CompositionService compositionService;
@@ -48,11 +49,13 @@ public class CompositionCrud implements View {
     @Autowired
     private ComposerService composerService;
 
+    private final TextField titleFilter = new TextField();
+
 
     @PostConstruct
     public void init() {
 
-        final GridLayoutCrudFormFactory<Composition> formFactory = gridLayoutCrudFormFactory();
+        final GridLayoutCrudFormFactory<Composer> formFactory = gridLayoutCrudFormFactory();
 
         crud.setCrudFormFactory(formFactory);
 
@@ -81,16 +84,16 @@ public class CompositionCrud implements View {
         crud.getCrudLayout().addFilterComponent(clearFilters);
 
 
-        crud.setFindAllOperation(new FindAllCrudOperationListener<Composition>() {
+        crud.setFindAllOperation(new FindAllCrudOperationListener<Composer>() {
             @Override
-            public Collection<Composition> findAll() {
-                return compositionService.findByTitleContaining(titleFilter.getValue());
+            public Collection<Composer> findAll() {
+                return composersSet;
             }
         });
 
         crud.setAddOperation(p -> {
             try {
-                return compositionService.add(p);
+                return composerService.add(p);
             } catch (ServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
@@ -98,14 +101,14 @@ public class CompositionCrud implements View {
 
         crud.setUpdateOperation(p -> {
             try {
-                return compositionService.update(p);
+                return composerService.update(p);
             } catch (ServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });
         crud.setDeleteOperation(person -> {
             try {
-                compositionService.delete(person);
+                composerService.delete(person);
             } catch (ServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
@@ -119,7 +122,7 @@ public class CompositionCrud implements View {
 
     private GridLayoutCrudFormFactory gridLayoutCrudFormFactory() {
 
-        final GridLayoutCrudFormFactory<Composition> formFactory = new GridLayoutCrudFormFactory<>(Composition.class, 2, 2);
+        final GridLayoutCrudFormFactory<Composer> formFactory = new GridLayoutCrudFormFactory<>(Composer.class, 2, 2);
         formFactory.setUseBeanValidation(true);
 
         formFactory.setVisibleProperties(CrudOperation.READ, PREVIEW_PROPERTIES);
@@ -133,54 +136,43 @@ public class CompositionCrud implements View {
 
         CrudFormHelper.setCaptions(formFactory);
 
-        formFactory.setFieldType("description", TextArea.class);
-
-
-        formFactory.setFieldType("composers", ComposerField.class);
-
-
-        formFactory.setFieldCreationListener("composers", field -> {
-
-                    ComposerField composerField = (ComposerField) field;
-                    composerField.setItems(composerService.findAll());
-                }
-        );
-
-
-        /*
-        formFactory.setFieldCreationListener("composers", field -> {
-            ComboBox comboBox = (ComboBox) field;
-            comboBox.setDataProvider(new ListDataProvider(composerService.findAll()));
-            comboBox.setItemCaptionGenerator((ItemCaptionGenerator<Composer>) item -> item.getName());
-
-
-            comboBox.addValueChangeListener(new HasValue.ValueChangeListener() {
-                @Override
-                public void valueChange(HasValue.ValueChangeEvent event) {
-                    log.debug("Value changed. Selected Value: " + event.getValue());
-                }
-            });
-        });
-        */
-
-
-
-/*
-        formFactory.setFieldCreationListener("arrangers", field -> {
-            ComboBox comboBox = (ComboBox) field;
-            comboBox.setDataProvider(new ListDataProvider(composerService.findAll()));
-            comboBox.setItemCaptionGenerator((ItemCaptionGenerator<Composer>) item -> item.getName());
-
-
-            comboBox.setNewItemProvider(s -> {
-                Composer composer = new Composer();
-                composer.setName(s);
-                return Optional.of(composerService.create(composer));
-            });
-        });
-*/
         return formFactory;
 
     }
 
+
+    @Override
+    public void setValue(Set<Composer> value) {
+        this.composersSet=value;
+    }
+
+    @Override
+    public Set<Composer> getValue() {
+        return composersSet;
+    }
+
+    @Override
+    public Registration addValueChangeListener(ValueChangeListener<Set<Composer>> listener) {
+        return null;
+    }
+
+    @Override
+    public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
+
+    }
+
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return false;
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return false;
+    }
 }
