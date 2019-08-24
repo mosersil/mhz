@@ -57,6 +57,9 @@ public class AddressListEntry  extends AbstractEntity {
     @XlsReport(header = "Email")
     @Column(name = "EMAIL")
     private String email;
+    @XlsReport(header = "Geburtstag")
+    @Column(name = "BIRTHDATE")
+    private String birthDate;
     @XlsReport(header = "Kommunikation")
     @Column(name = "PREF_CHANNEL")
     private PreferedChannel channel;
