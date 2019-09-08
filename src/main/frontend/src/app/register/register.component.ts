@@ -34,7 +34,8 @@ export class RegisterComponent implements OnInit {
       zip: this.model.zip,
       city: this.model.city,
       password: this.model.password,
-      password_confirmation: this.model.passwordconfirm
+      password_confirmation: this.model.passwordconfirm,
+      preferredChannel: this.model.preferredChannel
     };
 
     this.http.post(environment.backendUrl + '/api/public/registration/registerPerson', data).subscribe(success => {
