@@ -38,6 +38,8 @@ import {registerLocaleData} from "@angular/common";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MyDatePickerModule} from 'mydatepicker';
 import {InternationalPhoneNumberModule} from "ngx-international-phone-number";
+import {SignupmemberComponent} from './signupmember/signupmember.component';
+import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-landing.component';
 
 
 registerLocaleData(localeDe, 'de');
@@ -82,7 +84,9 @@ registerLocaleData(localeDe, 'de');
     ForgotComponent,
     PaymentComponent,
     TransactionsComponent,
-    ForgotLandingComponent
+    ForgotLandingComponent,
+    SignupmemberComponent,
+    SignupmemberLandingComponent
   ],
 
   providers: [
