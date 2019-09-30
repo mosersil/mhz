@@ -66,7 +66,7 @@ public class MembershipCrud implements View {
         tabSheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
         tabSheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
 
-        for (Organization organization : organizationService.findAll()) {
+        for (Organization organization : organizationService.getAll()) {
             GridCrud<Membership> crud = new GridCrud<>(Membership.class);
 
             crud.getGrid().setColumns(PREVIEW_PROPERTIES);

@@ -7,7 +7,6 @@ import com.silviomoser.mhz.api.core.ApiController;
 import com.silviomoser.mhz.api.core.ApiException;
 import com.silviomoser.mhz.data.CalendarEvent;
 import com.silviomoser.mhz.data.Views;
-import com.silviomoser.mhz.repository.CalendarEventRepository;
 import com.silviomoser.mhz.services.CalendarService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -24,7 +23,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by silvio on 10.05.18.
@@ -33,12 +31,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CalendarApi implements ApiController {
 
-    @Autowired
-    CalendarEventRepository repository;
+
 
     @Autowired
     CalendarService calendarService;
-
 
     @CrossOrigin(origins = "*")
     @ApiOperation(value = "List events starting from a given date")
@@ -63,19 +59,7 @@ public class CalendarApi implements ApiController {
             }
 
         }
-
-        List<CalendarEvent> foundItems = repository.findCalendarEventsFromStartDate(startFromDate);
-        foundItems.sort(CalendarEvent::compareTo);
-
-        if (publicOnly) {
-            foundItems = foundItems.stream().filter(p -> p.isPublicEvent()).collect(Collectors.toList());
-        }
-
-        if (max != null && foundItems.size() >= max) {
-            foundItems = foundItems.subList(0, max);
-        }
-        log.debug("Returning {} items", foundItems.size());
-        return foundItems;
+        return calendarService.findAllEntries(startFromDate, publicOnly, max);
 
     }
 

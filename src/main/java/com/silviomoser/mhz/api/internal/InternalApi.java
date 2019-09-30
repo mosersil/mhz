@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,7 +54,7 @@ public class InternalApi implements ApiController {
     @PreAuthorize("hasAuthority('ROLE_DATAVIEWER')")
     @RequestMapping(value = URL_INTERNAL_CALENDAR, method = RequestMethod.GET)
     public ModelAndView getPDF(@RequestParam(name = "year", required = false) String year,
-                                                      @RequestParam(name = "format") AddressListFormat format) {
+                               @RequestParam(name = "format") AddressListFormat format) {
         try {
             int currentYear = Integer.parseInt(year);
             log.debug("Assemble calendar for year {} in format {}", year, format);
@@ -74,7 +73,7 @@ public class InternalApi implements ApiController {
                                        @RequestParam(name = "format") AddressListFormat format) {
         try {
             log.debug("Assemble document {} in format {}", organization, format);
-            ModelAndView modelAndView =  new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organization));
+            ModelAndView modelAndView = new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organization));
             modelAndView.addObject("title", "Adressliste " + organization);
             modelAndView.addObject("orientation", "landscape");
             return modelAndView;
@@ -87,7 +86,7 @@ public class InternalApi implements ApiController {
 
     @JsonView(Views.Public.class)
     @RequestMapping(value = URL_INTERNAL_FILES, method = RequestMethod.GET)
-    public List<StaticFile> getStaticFiles(@RequestParam(name="staticFileCategory", required = false) String category) {
+    public List<StaticFile> getStaticFiles(@RequestParam(name = "staticFileCategory", required = false) String category) {
         try {
             final List availableFiles = fileService.getFiles(category);
             log.debug("returning " + availableFiles);
@@ -99,19 +98,18 @@ public class InternalApi implements ApiController {
     }
 
 
-
     @RequestMapping(value = URL_INTERNAL_ADDRESS, method = RequestMethod.POST)
     public void postAddress(@RequestBody PostAddressForm postAddressForm) throws ServiceException {
         final Person person = SecurityUtils.getMe();
         person.setGender(postAddressForm.getGender());
         person.setCompany(isBlank(postAddressForm.getCompany()) ? null : postAddressForm.getCompany());
         person.setTitle(isBlank(postAddressForm.getTitle()) ? null : postAddressForm.getTitle());
-        person.setFirstName(isBlank(postAddressForm.getFirstName())? null : postAddressForm.getFirstName());
-        person.setLastName(isBlank(postAddressForm.getLastName())? null : postAddressForm.getLastName());
-        person.setAddress1(isBlank(postAddressForm.getAddress1())? null : postAddressForm.getAddress1());
-        person.setAddress2(isBlank(postAddressForm.getAddress2())? null : postAddressForm.getAddress2());
-        person.setZip(isBlank(postAddressForm.getZip())? null : postAddressForm.getZip());
-        person.setCity(isBlank(postAddressForm.getCity())? null : postAddressForm.getCity());
+        person.setFirstName(isBlank(postAddressForm.getFirstName()) ? null : postAddressForm.getFirstName());
+        person.setLastName(isBlank(postAddressForm.getLastName()) ? null : postAddressForm.getLastName());
+        person.setAddress1(isBlank(postAddressForm.getAddress1()) ? null : postAddressForm.getAddress1());
+        person.setAddress2(isBlank(postAddressForm.getAddress2()) ? null : postAddressForm.getAddress2());
+        person.setZip(isBlank(postAddressForm.getZip()) ? null : postAddressForm.getZip());
+        person.setCity(isBlank(postAddressForm.getCity()) ? null : postAddressForm.getCity());
         personService.update(person);
     }
 
@@ -134,21 +132,20 @@ public class InternalApi implements ApiController {
     }
 
 
-
     @PreAuthorize("hasAuthority('ROLE_DATAVIEWER')")
     @RequestMapping(value = URL_INTERNAL_DOWNLOAD, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> staticFileDownload(@RequestParam(name = "id") Long id) {
-        final StaticFile staticFile = fileService.findById(id);
-
-        if (staticFile != null) {
+        try {
+            final StaticFile staticFile = fileService.get(id);
             try {
                 final ByteArrayInputStream bis = fileService.download(staticFile);
                 return downloadResponse(bis, staticFile);
             } catch (ServiceException e) {
                 throw new ApiException(e.getMessage());
             }
+        } catch (ServiceException e) {
+            throw new ApiException(e.getMessage());
         }
-        throw new ApiException("Invalid download", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

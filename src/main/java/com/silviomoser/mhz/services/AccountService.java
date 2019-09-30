@@ -17,7 +17,7 @@ import static java.text.MessageFormat.format;
 import static java.time.LocalDateTime.now;
 
 @Service
-public class AccountService {
+public class AccountService extends AbstractCrudService<User> {
 
     private static final String RESOURCE_BUNDLE_NAME = "email_resources";
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
@@ -43,10 +43,6 @@ public class AccountService {
         return userRepository.findByUsernameContains(searchString);
     }
 
-    public User update(User user) throws ServiceException {
-        return userRepository.save(user);
-    }
-
     public User add(User user) throws ServiceException {
         final String passwordClearText = generateToken(8, false);
         user.setPassword(hashPassword(passwordClearText));
@@ -58,10 +54,6 @@ public class AccountService {
 
         sendEmailConfirmation(user.getPerson(), subject, text);
         return userRepository.save(user);
-    }
-
-    public void delete(User user) throws ServiceException {
-        userRepository.delete(user);
     }
 
     private String getMessage(String key, String... params) {

@@ -33,7 +33,7 @@ public class CrudFormHelper {
         formFactory.setFieldType("person", ComboBox.class);
         formFactory.setFieldCreationListener("person", field -> {
             ComboBox comboBox = (ComboBox) field;
-            comboBox.setDataProvider(new ListDataProvider(personService.findAll()));
+            comboBox.setDataProvider(new ListDataProvider(personService.getAll()));
             comboBox.setItemCaptionGenerator(new ItemCaptionGenerator<Person>() {
                 @Override
                 public String apply(Person item) {

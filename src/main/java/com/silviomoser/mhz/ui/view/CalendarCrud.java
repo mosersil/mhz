@@ -199,7 +199,7 @@ public class CalendarCrud implements View {
         formFactory.setFieldType("article", ComboBox.class);
         formFactory.setFieldCreationListener("article", field -> {
             ComboBox comboBox = (ComboBox) field;
-            comboBox.setDataProvider(new ListDataProvider(articleService.findAll()));
+            comboBox.setDataProvider(new ListDataProvider(articleService.getAll()));
             comboBox.setItemCaptionGenerator((ItemCaptionGenerator<Article>) item -> item.getTitle());
         });
 

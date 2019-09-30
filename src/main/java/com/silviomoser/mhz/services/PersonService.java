@@ -2,7 +2,6 @@ package com.silviomoser.mhz.services;
 
 import com.silviomoser.mhz.data.Person;
 import com.silviomoser.mhz.repository.PersonRepository;
-import com.silviomoser.mhz.repository.RoleRepository;
 import com.silviomoser.mhz.utils.FormatUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +12,17 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class PersonService {
+public class PersonService extends AbstractCrudService<Person> {
 
     @Autowired
     private PersonRepository personRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
 
     public Person findByEmail(String email) {
         Optional<Person> personOptional = personRepository.findByEmail(email);
         return personOptional.isPresent() ? personOptional.get() : null;
     }
+
 
     public Person add(Person person) throws ServiceException {
 
@@ -38,15 +35,6 @@ public class PersonService {
         return person;
     }
 
-    public Person update(Person person) throws ServiceException {
-        try {
-            personRepository.save(person);
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage());
-        }
-        log.info("Added/updated person {}", FormatUtils.toFirstLastName(person));
-        return person;
-    }
 
     public Collection<Person> findByLastNameContains(String value) {
         return personRepository.findByLastNameContains(value);
@@ -59,9 +47,5 @@ public class PersonService {
         } else {
             throw new ServiceException("exception_notdeleteable_activemember");
         }
-    }
-
-    public Collection<Person> findAll() {
-        return personRepository.findAll();
     }
 }
