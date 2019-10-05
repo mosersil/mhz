@@ -3,8 +3,8 @@ import {environment} from "../../../environments/environment";
 import {NewsService} from "../../news.service";
 import {AuthenticationService} from "../../authentication.service";
 import {Router} from "@angular/router";
-import {Role} from "../../role";
-import {Person} from "../../person";
+import {Role} from "../../common/entities/role";
+import {Person} from "../../common/entities/person";
 
 
 @Component({

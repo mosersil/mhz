@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Person} from "../person";
+import {Person} from "../common/entities/person";
 import {AuthenticationService} from "../authentication.service";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
