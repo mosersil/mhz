@@ -2,6 +2,7 @@ package com.silviomoser.demo.services;
 
 import com.silviomoser.demo.data.Composer;
 import com.silviomoser.demo.repository.ComposerRepository;
+import com.silviomoser.mhz.services.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
