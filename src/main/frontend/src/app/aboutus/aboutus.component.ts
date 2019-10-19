@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Membership} from "../membership";
+import {Membership} from "../common/entities/membership";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 
