@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class MembershipService {
+public class MembershipService extends AbstractCrudService<Membership> {
 
     private static final String CACHE_MEMBERLIST = "memberlist";
 

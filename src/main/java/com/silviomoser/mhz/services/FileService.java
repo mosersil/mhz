@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.silviomoser.mhz.utils.StaticFileUtils.addTrailingSlash;
@@ -33,7 +32,7 @@ import static com.silviomoser.mhz.utils.StringUtils.isBlank;
 @Getter
 @Setter
 @Slf4j
-public class FileService {
+public class FileService extends AbstractCrudService<StaticFile> {
 
     @Autowired
     private FileServiceConfiguration fileServiceConfiguration;
@@ -52,13 +51,9 @@ public class FileService {
                 .build();
     }
 
-    public StaticFile findById(long id) {
-        final Optional<StaticFile> optionalStaticFile = staticFileRepository.findById(id);
-        return optionalStaticFile.isPresent() ? optionalStaticFile.get() : null;
-    }
 
     public ByteArrayInputStream download(long id) throws ServiceException {
-        final StaticFile staticFile = findById(id);
+        final StaticFile staticFile = get(id);
         if (staticFile == null) {
             log.warn(String.format("File with id %s does not exist", id));
             throw new ServiceException(String.format("File %s does not exist", id));

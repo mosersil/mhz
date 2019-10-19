@@ -11,7 +11,7 @@ import java.util.List;
 public class BackgroundService {
 
     @Autowired
-    ImageService imageService;
+    private ImageService imageService;
 
     public byte[] loadRandomBackgroundImage() throws ServiceException {
         List<byte[]> backgroundImages = imageService.getBackgroundImages();
