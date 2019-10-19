@@ -13,7 +13,7 @@ import java.util.List;
 public class AddresslistService {
 
     @Autowired
-    AddressListRepository addressListRepository;
+    private AddressListRepository addressListRepository;
 
     public List<AddressListEntry> generateAddressList(String organization) {
         return addressListRepository.findByOrganization(organization);

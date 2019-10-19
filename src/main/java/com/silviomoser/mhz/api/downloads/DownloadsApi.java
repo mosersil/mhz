@@ -42,22 +42,22 @@ public class DownloadsApi implements ApiController {
     @RequestMapping(value = URL_DOWNLOADS, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> publicDownload(@RequestParam(name = "id", required = true) Long id) {
 
-        final StaticFile staticFile = fileService.findById(id);
-
-        if (staticFile.getRole() != null) {
-            log.warn(String.format("rejected attempt to download file id '%s' (unauthorized)", id));
-            throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
-        }
-
-        if (staticFile != null) {
+        try {
+            final StaticFile staticFile = fileService.get(id);
+            if (staticFile.getRole() != null) {
+                log.warn(String.format("rejected attempt to download file id '%s' (unauthorized)", id));
+                throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
+            }
             try {
                 final ByteArrayInputStream bis = fileService.download(staticFile);
                 return downloadResponse(bis, staticFile);
             } catch (ServiceException e) {
                 throw new ApiException(e.getMessage());
             }
+
+        } catch (ServiceException e) {
+            throw new ApiException("Invalid download", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        throw new ApiException("Invalid download", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

@@ -1,33 +1,27 @@
 package com.silviomoser.mhz.services;
 
 import biweekly.ICalendar;
-import biweekly.component.VEvent;
 import com.silviomoser.mhz.data.CalendarEvent;
 import com.silviomoser.mhz.repository.CalendarEventRepository;
+import com.silviomoser.mhz.utils.CalendarUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
+import static com.silviomoser.mhz.utils.CalendarUtils.firstMomentOfYear;
+import static com.silviomoser.mhz.utils.CalendarUtils.lastMomentOfYear;
 
 @Service
 @Slf4j
-public class CalendarService {
+public class CalendarService extends AbstractCrudService<CalendarEvent> {
 
     @Autowired
     private CalendarEventRepository calendarEventRepository;
-
-    @Autowired
-    private CacheManagerService cacheManagerService;
 
 
     @Cacheable("icalCalendar")
@@ -42,45 +36,13 @@ public class CalendarService {
 
         final ICalendar ical = new ICalendar();
 
-        calendarEventList.forEach(it -> {
-            final VEvent event = new VEvent();
-            if (it.isFullDay()) {
-                event.setDateStart(localDateToDate(it.getDateStart()), false);
-            } else {
-                event.setDateStart(localDateToDate(it.getDateStart()));
-                event.setDateEnd(localDateToDate(it.getDateEnd()));
-            }
-            event.setSummary(it.getTitle());
-            event.setDescription(it.getRemarks());
-            event.setLocation(it.getLocation());
-            ical.addEvent(event);
-        });
+        calendarEventList.stream().map(CalendarUtils::toIcalEvent).forEach(ical::addEvent);
         return ical;
     }
 
     @Cacheable("eventsPerYear")
     public List<CalendarEvent> getAllEventsForCurrentYear(int year) {
-        final LocalDate now = LocalDate.now();
-        final LocalDate from = LocalDate.of(year, 1, 1);
-        final LocalDate to = from.with(lastDayOfYear());
-        return calendarEventRepository.findCalendarEventsBetween(from.atStartOfDay(), to.atTime(23, 59));
-    }
-
-
-    private Date localDateToDate(LocalDateTime localDateTime) {
-        final ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
-        return Date.from(zdt.toInstant());
-    }
-
-    public CalendarEvent addOrUpdate(CalendarEvent calendarEvent) throws ServiceException {
-        final CalendarEvent calendarEvent1 = calendarEventRepository.save(calendarEvent);
-        log.info("Saved item {}", calendarEvent1.getId());
-        return calendarEvent1;
-    }
-
-    public void delete(CalendarEvent calendarEvent) throws ServiceException {
-        calendarEventRepository.delete(calendarEvent);
-        log.info("Deleted calendarEvent {} " + calendarEvent.getTitle());
+        return calendarEventRepository.findCalendarEventsBetween(firstMomentOfYear(year), lastMomentOfYear(year));
     }
 
     public List<CalendarEvent> findByTitleLike(String title) throws ServiceException {
@@ -89,6 +51,21 @@ public class CalendarService {
 
     public int countByTitleLike(String title) throws ServiceException {
         return calendarEventRepository.countByTitleLike(title);
+    }
+
+    public List<CalendarEvent> findAllEntries(LocalDateTime from, boolean publicOnly, Integer maxResults) {
+        List<CalendarEvent> foundItems = calendarEventRepository.findCalendarEventsFromStartDate(from);
+        foundItems.sort(CalendarEvent::compareTo);
+
+        if (publicOnly) {
+            foundItems = foundItems.stream().filter(p -> p.isPublicEvent()).collect(Collectors.toList());
+        }
+
+        if (maxResults != null && foundItems.size() >= maxResults) {
+            foundItems = foundItems.subList(0, maxResults);
+        }
+        log.debug("Returning {} items", foundItems.size());
+        return foundItems;
     }
 
 }
