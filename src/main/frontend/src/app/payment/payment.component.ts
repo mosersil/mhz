@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Element as StripeElement, Elements, ElementsOptions, StripeService} from "ngx-stripe";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../authentication.service";
-import {Person} from "../person";
+import {Person} from "../common/entities/person";
 import {environment} from "../../environments/environment";
 
 @Component({

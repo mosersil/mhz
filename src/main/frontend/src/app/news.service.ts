@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../environments/environment";
-import {Article} from "./article";
+import {Article} from "./common/entities/article";
 
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
+
+const URL_API_ARTICLE = environment.backendUrl + '/public/api/article';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +15,6 @@ export class NewsService {
   }
 
   getArticle() {
-    return this.http.get<Article>(environment.backendUrl + '/public/api/article');
+    return this.http.get<Article>(URL_API_ARTICLE);
   }
 }

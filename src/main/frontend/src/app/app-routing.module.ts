@@ -15,6 +15,8 @@ import {RegisterComponent} from "./register/register.component";
 import {PaymentComponent} from "./payment/payment.component";
 import {TransactionsComponent} from "./transactions/transactions.component";
 import {ForgotLandingComponent} from "./forgot-landing/forgot-landing.component";
+import {SignupmemberComponent} from "./signupmember/signupmember.component";
+import {SignupmemberLandingComponent} from "./signupmember-landing/signupmember-landing.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -28,6 +30,8 @@ const routes: Routes = [
   {path: 'forgot', component: ForgotComponent},
   {path: 'resetpass', component: ForgotLandingComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'signup', component: SignupmemberComponent},
+  {path: 'signuplanding', component: SignupmemberLandingComponent},
   {path: 'payment', component: PaymentComponent, canActivate: [AuthGuard]},
   {path: 'intra', component: InternalComponent, canActivate: [AuthGuard]},
   {path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard]},

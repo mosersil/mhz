@@ -4,7 +4,7 @@ import localeDe from '@angular/common/locales/de-CH';
 import {AppComponent} from './app.component';
 import {UiModule} from './ui/ui.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {CalendarService} from "./calendar.service";
+import {CalendarService} from "./common/services/calendar.service";
 import {AppRoutingModule} from './app-routing.module';
 import {AboutusComponent} from './aboutus/aboutus.component';
 import {HomeComponent} from './home/home.component';
@@ -38,6 +38,10 @@ import {registerLocaleData} from "@angular/common";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MyDatePickerModule} from 'mydatepicker';
 import {InternationalPhoneNumberModule} from "ngx-international-phone-number";
+import {SignupmemberComponent} from './signupmember/signupmember.component';
+import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-landing.component';
+import { LegalComponent } from './pages/legal/legal.component';
+import { RegistrationComponent } from './common/components/registration/registration.component';
 
 
 registerLocaleData(localeDe, 'de');
@@ -82,7 +86,11 @@ registerLocaleData(localeDe, 'de');
     ForgotComponent,
     PaymentComponent,
     TransactionsComponent,
-    ForgotLandingComponent
+    ForgotLandingComponent,
+    SignupmemberComponent,
+    SignupmemberLandingComponent,
+    LegalComponent,
+    RegistrationComponent
   ],
 
   providers: [

@@ -1,4 +1,4 @@
-import {Person} from "./person";
+import {Person} from "./common/entities/person";
 
 export class ShopTransaction {
 
