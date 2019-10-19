@@ -4,136 +4,13 @@
   <h3>Passivmitglied werden</h3>
 
   <p>Als Passivmitglied helfen Sie mit einem finanziellen Beitrag, dass der Musikverein Harmonie Zürich-Oberstrass
-    weiterhin seine kulturelle und gesellschaftliche Aufgaben wahrnehmen kann.</p>
+    weiterhin seine kulturellen und gesellschaftlichen Aufgaben wahrnehmen kann.</p>
   <p>Mit einem <b>jählichen Beitrag ab CHF 15.-</b> können Sie uns tatkräftig unterstützen. Als Passivmitglied haben Sie
     zudem das Recht, an der Generalversammlung teilzunehmen. Natürlich nur, wenn Sie das denn auch möchten. Jeweils im Frühjahr erhalten Sie
     Post von uns - dann laden wir nämlich immer alle unsere Passivmitglieder zum Jahreskonzert ein.</p>
   <p>Zum Schluss möchten wir Ihnen noch versichern: Wir sind ein Musikverein und keine Werbeagentur. Nebst der Jahresrechnung und GV-Einladung werden wir Sie nicht mit Werbung belästigen.</p>
 
-  <div class="alert alert-danger" *ngIf="errormessage!=null">
-    {{errormessage}}
-  </div>
-  <div class="alert alert-info" *ngIf="infomessage!=null">
-    {{infomessage}}
-  </div>
 
-  <div class="alert alert-info" *ngIf="registrationSubmitted===true">
-    Vielen Dank! Ihre Daten wurden an uns übermittelt. Um die Registrierung abzuschliessen, müssen wir Ihre E-Mail Adresse validieren. Sie erhalten in den nächsten Minuten eine E-Mail mit einem personalisierten Link. Falls Sie keine E-Mail erhalten, prüfen Sie bitte auch den Spamverdachts Ordner.
-  </div>
-
-
-  <div class="col-md-6 offset-md-3" *ngIf="registrationSubmitted===false">
-    <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-      <div class="form-row">
-        <div class="form-group col-md-12">
-          <div class="form-group is-invalid">
-            <div class="form-check-inline">
-              <input id="genderMale" class="form-check-input" type="radio" required #gender="ngModel" value="male"
-                     name="gender" [(ngModel)]="model.gender" [ngClass]="{ 'is-invalid': f.submitted && gender.invalid }">
-              <label class="form-check-label" for="genderMale">
-                Herr
-              </label>
-            </div>
-            <div class="form-check-inline">
-              <input id="genderFemale" class="form-check-input" type="radio" required #gender="ngModel" value="female"
-                     name="gender" [(ngModel)]="model.gender" [ngClass]="{ 'is-invalid': f.submitted && gender.invalid }">
-              <label class="form-check-label" for="genderFemale">
-                Frau
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-6">
-          <input id="firstName" type="text" class="form-control" name="firstName" [(ngModel)]="model.firstName"
-                 #firstName="ngModel"
-                 [ngClass]="{ 'is-invalid': f.submitted && firstName.invalid }" required placeholder="Vorname"/>
-        </div>
-        <div class="form-group col-md-6">
-          <input id="lastName" type="text" class="form-control" name="lastName" [(ngModel)]="model.lastName"
-                 #lastName="ngModel" placeholder="Nachname"
-                 [ngClass]="{ 'is-invalid': f.submitted && lastName.invalid }" required/>
-        </div>
-
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-12">
-
-          <input id="address1" type="text" class="form-control" name="address1" [(ngModel)]="model.address1"
-                 #address1="ngModel" placeholder="Adresse"
-                 [ngClass]="{ 'is-invalid': f.submitted && address1.invalid }" required/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-3">
-
-          <input id="zip" type="text" class="form-control" name="zip" [(ngModel)]="model.zip"
-                 #zip="ngModel"
-                 [ngClass]="{ 'is-invalid': f.submitted && zip.invalid }" required placeholder="PLZ"
-                 pattern="[0-9]*"/>
-          <div *ngIf="f.submitted && zip.invalid" class="invalid-feedback">
-            <div>nur Ziffern</div>
-          </div>
-        </div>
-        <div class="form-group col-md-9">
-
-          <input id="city" type="text" class="form-control" name="city" [(ngModel)]="model.city"
-                 #city="ngModel"
-                 [ngClass]="{ 'is-invalid': f.submitted && city.invalid }" required placeholder="Ort"/>
-        </div>
-
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-12">
-
-          <input id="email" type="email" class="form-control" name="email" [(ngModel)]="model.email" #email="ngModel"
-                 [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email placeholder="Email"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-12">
-          <div class="form-group is-invalid">
-            <div class="form-check">
-              <input id="channelElectronic" class="form-check-input" type="radio" required #preferredChannel="ngModel"
-                     value="electronic"
-                     name="preferredChannel" [(ngModel)]="model.preferredChannel" [ngClass]="{ 'is-invalid': f.submitted && preferredChannel.invalid }">
-              <label class="form-check-label" for="channelElectronic">
-                Korrespondenz per E-Mail
-              </label>
-            </div>
-            <div class="form-check">
-              <input id="channelMail" class="form-check-input" type="radio" required #preferredChannel="ngModel"
-                     value="mail"
-                     name="preferredChannel" [(ngModel)]="model.preferredChannel" [ngClass]="{ 'is-invalid': f.submitted && preferredChannel.invalid }">
-
-              <label class="form-check-label" for="channelMail">
-                Korrespondenz per Briefpost
-              </label>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <div class="form-group">
-                <botdetect-captcha styleName="exampleCaptcha"></botdetect-captcha>
-                <label for="captchaCode">Bitte wiederholen Sie den oben angezeigten Code:</label>
-                <input id="captchaCode" type="text" class="form-control" name="captchaCode" [(ngModel)]="model.captchaCode"
-                       #captchaCode="ngModel"
-                       [ngClass]="{ 'is-invalid': (f.submitted && !isHuman)|| (f.submitted && captchaCode.invalid)}"
-                       required/>
-                <div class="invalid-feedback">
-                  <div>Bitte wiederholen Sie den angezeigten Code</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group mt-2">
-            <button class="btn btn-primary" [disabled]="processing">Senden</button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
+  <app-registration></app-registration>
 
 </div>

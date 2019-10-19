@@ -1,17 +1,16 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ContactResponse} from "../contact-response";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {CaptchaComponent} from "angular-captcha";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Membership} from "../membership";
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.sass']
 })
-export class ContactComponent implements OnInit{
+export class ContactComponent {
 
   model: any = {};
   processing: boolean = false;
@@ -20,35 +19,10 @@ export class ContactComponent implements OnInit{
   feedback: any;
   error: any;
 
-  members_vorstand: Membership[];
-  president: Membership[];
-
   @ViewChild(CaptchaComponent) captchaComponent: CaptchaComponent;
 
 
-  constructor(private http: HttpClient, private spinner: NgxSpinnerService, private _http: HttpClient) {
-  }
-
-  ngOnInit() {
-    this.getMembers('Vorstand').subscribe(data => {
-      this.members_vorstand = data;
-
-      this.members_vorstand.sort((a: Membership, b: Membership) => {
-        if (a.person.lastName > b.person.lastName) {
-          return 1;
-        }
-        if (a.person.lastName == b.person.lastName) {
-          return 0;
-        }
-        return -1;
-      });
-
-      this.president = this.members_vorstand.filter(item => {
-        if (item.function === 'Präsident') {
-          return item;
-        }
-      });
-    });
+  constructor(private http: HttpClient, private spinner: NgxSpinnerService) {
   }
 
   onSubmit() {
@@ -83,9 +57,4 @@ export class ContactComponent implements OnInit{
       }
     });
   }
-
-  getMembers(group: string) {
-    return this._http.get<Membership[]>(environment.backendUrl + "/api/public/members?group=" + group);
-  }
-
 }

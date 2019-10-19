@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NewsService} from "../news.service";
-import {CalendarService} from "../calendar.service";
+import {CalendarService} from "../common/services/calendar.service";
 
 @Component({
   selector: 'app-news',

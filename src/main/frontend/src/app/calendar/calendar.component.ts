@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CalendarService} from "../calendar.service";
-import {saveAs} from "file-saver";
+import {CalendarService} from "../common/services/calendar.service";
 import {environment} from "../../environments/environment";
 
 @Component({
@@ -10,7 +9,7 @@ import {environment} from "../../environments/environment";
 })
 export class CalendarComponent implements OnInit {
   backendUrl: string = environment.backendUrl;
-  events;
+  events : Event[];
   showOnlyPublic: boolean = true;
   subscribe_url: string = environment.backendUrl + '/public/api/ical'
 
@@ -21,7 +20,7 @@ export class CalendarComponent implements OnInit {
     this.getEvents();
   }
 
-  getEvents() {
+  private getEvents() {
     this._calendarService.getEvents(null, this.showOnlyPublic).subscribe(
       data => {
         this.events = data

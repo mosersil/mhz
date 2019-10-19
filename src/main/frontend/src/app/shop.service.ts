@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ShopItem} from "./shop-item";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {Router} from "@angular/router";
@@ -130,7 +130,8 @@ export class ShopService {
   }
 
   getTransactionDetails() {
-    return this.http.get(environment.backendUrl + "/api/protected/shop/transaction?id=" + this.purchaseId);
+    let params = new HttpParams().set('id', this.purchaseId);
+    return this.http.get(environment.backendUrl + "/api/protected/shop/transaction", { params: params });
   }
 
   getMyTransactions() {
