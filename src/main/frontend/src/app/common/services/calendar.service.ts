@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
 import {saveAs} from "file-saver";
-
 
 
 const CALENDAR_API_URL = environment.backendUrl + '/public/api/calendar';
@@ -18,14 +17,13 @@ export class CalendarService {
 
 
   getEvents(max, publicOnly: boolean) {
-
     let params = new HttpParams().set('publicOnly', String(publicOnly));
 
     if (max != null) {
-      params.append("max", max)
+      params = params.append("max", String(max));
     }
 
-    return this.http.get<Event[]>(CALENDAR_API_URL, { params: params });
+    return this.http.get<Event[]>(CALENDAR_API_URL, {params: params});
 
   }
 
