@@ -1,4 +1,4 @@
-package com.silviomoser.demo.data;
+package com.silviomoser.mhz.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
@@ -27,6 +27,7 @@ import java.util.Set;
 @Table(name = "COMPOSITION")
 public class Composition extends AbstractEntity {
 
+    @JsonView(Views.Public.class)
     @Column(name = "TAG")
     private String tag;
 
@@ -43,17 +44,38 @@ public class Composition extends AbstractEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Composer> arrangers;
 
-
+    @JsonView(Views.Public.class)
     @Column(name = "TITLE")
     private String title;
 
+    @JsonView(Views.Public.class)
     @Column(name = "SUBTITLE")
     private String subtitle;
 
+    @JsonView(Views.Public.class)
     @Column(name = "GENRE")
     private String genre;
 
+    @JsonView(Views.Public.class)
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @JsonView(Views.Public.class)
+    @Column(name = "LINK")
+    private String link;
+
+    @JsonView(Views.Public.class)
+    @JoinTable(name = "COMPOSITION_SHEET", joinColumns = {
+            @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "SHEET_ID", referencedColumnName = "ID")})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Sheet> sheets;
+
+    @JsonView(Views.Public.class)
+    @JoinTable(name = "COMPOSITION_SAMPLE", joinColumns = {
+            @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "SAMPLE_ID", referencedColumnName = "ID")})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Sample> samples;
 
 }

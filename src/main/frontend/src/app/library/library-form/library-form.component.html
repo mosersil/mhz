@@ -1,0 +1,65 @@
+<div class="container bg-white rounded shadow p-4">
+
+  <form [formGroup]="myForm" (ngSubmit)="submitForm()">
+
+
+    <div class="form-group">
+      <label for="input_id">Inventar-Nummer</label>
+      <input id="input_id" class="form-control" formControlName="id" type="text">
+    </div>
+    <div class="form-group">
+      <label for="input_title">Titel</label>
+      <input id="input_title" class="form-control" formControlName="title" type="text"/>
+    </div>
+    <div class="form-group">
+      <label for="input_subtitle">Untertitel</label>
+      <input id="input_subtitle" class="form-control" formControlName="subtitle" type="text">
+    </div>
+    <div class="form-group">
+      <label for="input_description">Beschreibung</label>
+      <textarea id="input_description" class="form-control" formControlName="description" type="text" rows="4"></textarea>
+    </div>
+
+
+    <div class="form-group">
+      <label for="fieldset_composers">Komponisten</label>
+      <span (click)="addComposerControl()" class="fa fa-plus fa-lg pull-right" aria-hidden="true"></span>
+      <fieldset id="fieldset_composers" formArrayName="composers">
+        <div class="form-group">
+          <input class="form-control" type="text" *ngFor="let c of myForm.get('composers').controls; index as i"
+                 [formControlName]="i" list="composerlist">
+
+          <datalist id="composerlist">
+            <option *ngFor="let c of composer_list" [value]="c.name"></option>
+          </datalist>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="form-group">
+      <label for="fieldset_composers">Arrangeure</label>
+      <span (click)="addArrangerControl()" class="fa fa-plus fa-lg pull-right" aria-hidden="true"></span>
+      <fieldset id="fieldset_arrangers" formArrayName="arrangers">
+        <div class="form-group">
+          <input class="form-control" type="text" *ngFor="let c of myForm.get('arrangers').controls; index as i"
+                 [formControlName]="i" list="arrangerlist">
+
+          <datalist id="arrangerlist">
+            <option *ngFor="let c of composer_list" [value]="c.name"></option>
+          </datalist>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="form-group">
+      <label for="file">Choose File</label>
+      <input type="file"
+             id="file"
+             (change)="handleFileInput($event.target.files)">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Speichern</button>
+
+  </form>
+
+</div>

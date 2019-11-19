@@ -55,6 +55,7 @@ public class VaadinUI extends UI {
             articleCrud.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
             Button calendarCrud = new Button("Kalender", e -> getNavigator().navigateTo(CalendarCrud.VIEW_NAME));
             calendarCrud.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
+            menu.addComponents(articleCrud, calendarCrud);
         }
         if (SecurityUtils.hasRole(RoleType.USRMGR)) {
             Button accountsCrud = new Button("Accounts", e -> getNavigator().navigateTo(AccountCrud.VIEW_NAME));

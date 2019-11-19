@@ -40,8 +40,14 @@ import {MyDatePickerModule} from 'mydatepicker';
 import {InternationalPhoneNumberModule} from "ngx-international-phone-number";
 import {SignupmemberComponent} from './signupmember/signupmember.component';
 import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-landing.component';
-import { LegalComponent } from './pages/legal/legal.component';
-import { RegistrationComponent } from './common/components/registration/registration.component';
+import {LegalComponent} from './pages/legal/legal.component';
+import {RegistrationComponent} from './common/components/registration/registration.component';
+import {LibraryListComponent} from './library/library-list/library-list.component';
+import {LibraryDetailsComponent} from './library/library-details/library-details.component';
+import {LibraryHomeComponent} from './library/library-home/library-home.component';
+import {LibraryEditComponent} from './library/library-edit/library-edit.component';
+import {LibrarySearchComponent} from './library/library-search/library-search.component';
+import {LibraryFormComponent} from "./library/library-form/library-form.component";
 
 
 registerLocaleData(localeDe, 'de');
@@ -90,7 +96,13 @@ registerLocaleData(localeDe, 'de');
     SignupmemberComponent,
     SignupmemberLandingComponent,
     LegalComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    LibraryListComponent,
+    LibraryDetailsComponent,
+    LibraryHomeComponent,
+    LibraryEditComponent,
+    LibrarySearchComponent,
+    LibraryFormComponent
   ],
 
   providers: [

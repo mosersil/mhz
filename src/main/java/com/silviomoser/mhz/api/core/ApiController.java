@@ -23,4 +23,11 @@ public interface ApiController {
     String URL_PUBLIC_IMAGE = "/api/public/image";
 
     String URL_CONTACT = "/api/public/contact";
+
+    String URL_COMPOSITION = "/api/public/composition";
+    String URL_SHEET = "/api/public/sheet";
+    String URL_SAMPLE = "/api/public/sample";
+    String URL_COMPOSER = "/api/public/composer";
+
+    String URL_REPERTOIRE = "/api/public/repertoire";
 }

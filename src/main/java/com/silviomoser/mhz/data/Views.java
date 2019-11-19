@@ -9,4 +9,7 @@ public class Views {
 
     public static class Internal {
     }
+
+    public static class RepertoireSummary {
+    }
 }

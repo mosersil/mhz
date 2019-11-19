@@ -1,5 +1,6 @@
-package com.silviomoser.demo.data;
+package com.silviomoser.mhz.data;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,8 @@ import java.util.Set;
 @Setter
 @Table(name = "COMPOSER")
 public class Composer extends AbstractEntity {
+
+    @JsonView(Views.Public.class)
     private String name;
 
     @ManyToMany(mappedBy = "composers", fetch = FetchType.EAGER )

@@ -33,7 +33,8 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="nav-item dropdown" *ngIf="_authenticationService.isAuthenticated(); else showLoginOnly"
+        <!--<li class="nav-item dropdown" *ngIf="_authenticationService.isAuthenticated(); else showLoginOnly"-->
+        <li class="nav-item dropdown"
             data-toggle="collapse" data-target=".navbar-collapse.show">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false">
@@ -42,6 +43,9 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" data-toggle="collapse" data-target=".navbar-collapse.show">
             <li class="dropdown-item">
               <a class="nav-link" routerLink="intra" routerLinkActive="active">Mein Bereich</a>
+            </li>
+            <li class="dropdown-item">
+              <a class="nav-link" routerLink="library" routerLinkActive="active">Notenbibliothek</a>
             </li>
             <!--
             <li class="dropdown-item">
