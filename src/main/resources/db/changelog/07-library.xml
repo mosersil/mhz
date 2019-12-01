@@ -11,6 +11,9 @@
             <column name="ID" autoIncrement="true" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
+            <column name="INVENTORY" type="varchar(20)">
+                <constraints nullable="true" unique="true"/>
+            </column>
             <column name="TAG" type="varchar(10)">
                 <constraints nullable="true"/>
             </column>
@@ -24,9 +27,6 @@
                 <constraints nullable="true"/>
             </column>
             <column name="DESCRIPTION" type="varchar(300)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="Link" type="varchar(200)">
                 <constraints nullable="true"/>
             </column>
         </createTable>
@@ -62,8 +62,8 @@
         </createTable>
 
         <createTable tableName="SHEET">
-            <column name="ID" type="bigint">
-                <constraints nullable="false" unique="true" primaryKey="true"/>
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" />
             </column>
             <column name="TITLE" type="varchar(50)">
                 <constraints nullable="true"/>

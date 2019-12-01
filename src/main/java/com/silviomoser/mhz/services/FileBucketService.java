@@ -46,4 +46,14 @@ public class FileBucketService {
         return inputStream;
     }
 
+    public void putFile(String bucket, String name, InputStream inputStream, String contentType) throws ServiceException {
+        try {
+            minioClient.putObject(bucket, name, inputStream, contentType);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+
+    }
+
 }

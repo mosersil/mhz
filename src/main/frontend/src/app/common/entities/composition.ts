@@ -4,6 +4,7 @@ import {Sample} from "./sample";
 
 export class Composition {
   id: number;
+  inventory: string;
   title: string;
   subtitle: string;
   genre: string;

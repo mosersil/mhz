@@ -1,0 +1,80 @@
+<div class="container bg-white rounded shadow p-4">
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item" (click)="backClicked()">Bibliothek</li>
+      <li class="breadcrumb-item active" aria-current="page">{{composition.title}}</li>
+    </ol>
+  </nav>
+
+  <!--
+  <button (click)="backClicked()">
+    Back
+  </button>
+  -->
+
+  <div class="card">
+    <div class="card-body">
+      <a routerLink="/library/composition/edit/{{composition.id}}"><button class="btn btn-secondary pull-right">Bearbeiten</button></a>
+      <dl class="row">
+        <dt class="col-sm-3">Titel:</dt>
+        <dd class="col-sm-9">{{composition?.title}}</dd>
+
+        <dt class="col-sm-3" *ngIf="composition.subtitle!=''">Zus./Untertitel:</dt>
+        <dd class="col-sm-9" *ngIf="composition.subtitle!=''">{{composition.subtitle}}</dd>
+
+        <dt class="col-sm-3">Genre:</dt>
+        <dd class="col-sm-9">{{composition.genre}}</dd>
+
+        <dt class="col-sm-3" *ngIf="composition.tag!=''">Tags:</dt>
+        <dd class="col-sm-9" *ngIf="composition.tag!=''">{{composition.tags}}</dd>
+
+        <dt class="col-sm-3">Komposition:</dt>
+        <dd class="col-sm-9">
+          <ng-container *ngFor="let composer of composition.composers; let isLast=last">
+            {{composer.name}}{{isLast ? '' : ', '}}
+          </ng-container>
+        </dd>
+        <dt class="col-sm-3">Arrangement:</dt>
+        <dd class="col-sm-9">
+          <ng-container *ngFor="let arranger of composition.arrangers; let isLast=last">
+            {{arranger.name}}{{isLast ? '' : ', '}}
+          </ng-container>
+        </dd>
+        <dt class="col-sm-3">Beschreibung:</dt>
+        <dd class="col-sm-9">{{composition.description}}</dd>
+
+        <dt class="col-sm-3">Noten:</dt>
+        <dd class="col-sm-9">
+          <ng-container *ngFor="let sheet of composition.sheets">
+            <a (click)="download(sheet.location)">
+            <span
+              class="fa fa-file-pdf-o" aria-hidden="true"></span>&nbsp;{{sheet.title}}<br/>
+            </a>
+          </ng-container>
+        </dd>
+
+        <dt class="col-sm-3">Hörbeispiele:</dt>
+        <dd class="col-sm-9">
+          <ng-container *ngFor="let sample of composition.samples">
+          <audio src="/api/public/sample/{{sample.location}}" controls="controls" preload="none">
+            <!--<audio src="http://localhost:8085/api/public/sample/rename.mp3" controls="controls" preload="none"-->
+            Your browser does not support the audio element.
+
+          </audio>
+          </ng-container>
+          <!--
+          <ng-container *ngFor="let sample of composition.samples">
+            <a (click)="download(sample.location)">
+            <span
+              class="fa fa-download" aria-hidden="true"></span>&nbsp;{{sample.title}}<br/>
+            </a>
+          </ng-container>
+          -->
+        </dd>
+
+      </dl>
+
+    </div>
+  </div>
+</div>

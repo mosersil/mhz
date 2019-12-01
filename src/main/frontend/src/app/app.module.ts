@@ -33,7 +33,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GalleryModule} from "@ngx-gallery/core";
 import {BotDetectCaptchaModule} from "angular-captcha";
 import {NgxSpinnerModule} from "ngx-spinner";
-import {ContentsModule} from "angular-contents";
 import {registerLocaleData} from "@angular/common";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MyDatePickerModule} from 'mydatepicker';
@@ -72,7 +71,6 @@ registerLocaleData(localeDe, 'de');
       }
     ),
     NgxSpinnerModule,
-    ContentsModule,
     NgbModule,
     MyDatePickerModule,
     InternationalPhoneNumberModule

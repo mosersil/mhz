@@ -5,7 +5,7 @@
 
     <div class="form-group">
       <label for="input_id">Inventar-Nummer</label>
-      <input id="input_id" class="form-control" formControlName="id" type="text">
+      <input id="input_id" class="form-control" formControlName="inventory" type="text">
     </div>
     <div class="form-group">
       <label for="input_title">Titel</label>
@@ -17,7 +17,8 @@
     </div>
     <div class="form-group">
       <label for="input_description">Beschreibung</label>
-      <textarea id="input_description" class="form-control" formControlName="description" type="text" rows="4"></textarea>
+      <textarea id="input_description" class="form-control" formControlName="description" type="text"
+                rows="4"></textarea>
     </div>
 
 
@@ -52,12 +53,29 @@
     </div>
 
     <div class="form-group">
-      <label for="file">Choose File</label>
-      <input type="file"
-             id="file"
-             (change)="handleFileInput($event.target.files)">
+      <label for="list_sheets">Noten</label>
+
+      <fieldset id="list_sheets" formArrayName="sheets">
+        <input class="form-control" type="text" *ngFor="let c of myForm.get('sheets').controls; index as i"
+               [formControlName]="i">
+        <!--
+        <div id="list_existingsheets" class="list-group" *ngFor="let s of composition.sheets">
+          <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            {{s.title}}
+          </div>
+        </div>
+        -->
+      </fieldset>
+
     </div>
 
+    <div class="form-group">
+      <input type="file"
+             #file
+             (change)="onFilesAdded()"
+             multiple
+      >
+    </div>
     <button type="submit" class="btn btn-primary">Speichern</button>
 
   </form>

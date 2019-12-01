@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LibraryService} from "../../common/services/library.service";
 import {Composer} from "../../common/entities/composer";
@@ -6,11 +6,11 @@ import {Composition} from "../../common/entities/composition";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
-  selector: 'app-library-form',
-  templateUrl: './library-form.component.html',
-  styleUrls: ['./library-form.component.scss']
+  selector: 'app-library-edit',
+  templateUrl: './library-edit.component.html',
+  styleUrls: ['./library-edit.component.scss']
 })
-export class LibraryFormComponent implements OnInit, OnChanges {
+export class LibraryEditComponent implements OnInit, OnChanges {
 
   @Input() composition: Composition;
   @Input() editing: false;
@@ -18,16 +18,23 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   myForm: FormGroup;
   composer_list: Composer[];
 
-  @ViewChild('file', {static: true} ) file;
-  public files: Set<File> = new Set();
-
   constructor(private fb: FormBuilder, private ls: LibraryService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+
+    const params = this.route.snapshot.paramMap;
+    console.log(params);
+    this.ls.getComposition(params.get('id')).subscribe(data => {
+      this.composition = data;
+    })
+
     this.ls.getComposers().subscribe(data => {
       this.composer_list = data;
     });
+
+
+
   }
 
   ngOnChanges() {
@@ -45,7 +52,6 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   private initForm() {
     this.myForm = this.fb.group({
       id: ['', Validators.required],
-      inventory: [''],
       title: [''],
       subtitle: [''],
       description: [''],
@@ -55,24 +61,17 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   private buildComposersArray(values: Composer[]): FormArray {
-    return this.fb.array(values.map(t => t.name), Validators.required);
-  }
-
-  private getComposerByName(name: string): Composer {
-    console.log("try to find composer with name " + name);
-    return this.composer_list.find(value => value.name == name);
+    return this.fb.array(values, Validators.required);
   }
 
   submitForm() {
     const formValue = this.myForm.value;
 
-
-    const composers = formValue.composers.map(composer => this.getComposerByName(composer));
-    const arrangers = formValue.arrangers.map(arranger => this.getComposerByName(arranger));
+    const composers = formValue.composers.filter(composer => composer);
+    const arrangers = formValue.arrangers.filter(arranger => arranger);
 
     const newComposition: Composition = <Composition>{
-      id: formValue.id,
-      inventory: formValue.inventory,
+      id: null,
       title: formValue.title,
       subtitle: formValue.subtitle,
       description: formValue.description,
@@ -84,9 +83,6 @@ export class LibraryFormComponent implements OnInit, OnChanges {
 
     console.log(newComposition);
     this.ls.save(newComposition).subscribe(data => {
-
-      this.ls.upload(data.id, formValue.title, this.files);
-
       console.log("created new composition: " + data);
     })
 
@@ -106,17 +102,6 @@ export class LibraryFormComponent implements OnInit, OnChanges {
 
   addArrangerControl() {
     this.arrangers.push(this.fb.control(null));
-  }
-
-
-  onFilesAdded() {
-    const files: { [key: string]: File } = this.file.nativeElement.files;
-    for (let key in files) {
-      if (!isNaN(parseInt(key))) {
-        this.files.add(files[key]);
-      }
-    }
-    console.log(this.files);
   }
 
 }

@@ -5,8 +5,8 @@ import com.silviomoser.mhz.api.core.ApiController;
 import com.silviomoser.mhz.api.core.ApiException;
 import com.silviomoser.mhz.data.Composer;
 import com.silviomoser.mhz.data.Composition;
-import com.silviomoser.mhz.data.CompositionFormSubmition;
 import com.silviomoser.mhz.data.Repertoire;
+import com.silviomoser.mhz.data.SheetUpload;
 import com.silviomoser.mhz.data.Views;
 import com.silviomoser.mhz.data.type.FileType;
 import com.silviomoser.mhz.services.ComposerService;
@@ -24,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,7 @@ import java.util.List;
 
 import static com.silviomoser.mhz.utils.StringUtils.isBlank;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @Slf4j
@@ -116,9 +118,9 @@ public class CompositionApi implements ApiController {
             @ApiResponse(code = 400, message = "Bad request")
     })
     @RequestMapping(value = URL_COMPOSITION, method = RequestMethod.POST)
-    public Composition create(@Valid @RequestBody CompositionFormSubmition compositionFormSubmition) {
+    public Composition create(@Valid @RequestBody Composition composition) {
         try {
-            return compositionService.create(compositionFormSubmition);
+            return compositionService.addOrUpdate(composition);
         } catch (ServiceException e) {
             log.warn(e.getMessage(), e);
             throw new ApiException(e.getMessage(), e);
@@ -135,7 +137,6 @@ public class CompositionApi implements ApiController {
     @RequestMapping(path = URL_SHEET + "/{location}", method = GET)
     public ResponseEntity<InputStreamResource> publicDownload(@PathVariable(name = "location") String location) {
 
-
         try {
             final HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=sheet.pdf");
@@ -147,10 +148,24 @@ public class CompositionApi implements ApiController {
         } catch (ServiceException e) {
             throw new ApiException(e.getMessage());
         }
-
-
     }
 
+
+    @CrossOrigin(origins = "*")
+    @ApiOperation(value = "Upload a new sheet")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad request")
+    })
+    @RequestMapping(path = URL_SHEET, method = POST)
+    public void uploadSheet(@ModelAttribute SheetUpload sheetUpload) throws ApiException{
+        try {
+            compositionService.addSheet(sheetUpload);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
     @RequestMapping(method = GET, path = URL_SAMPLE + "/{location}")
@@ -197,5 +212,8 @@ public class CompositionApi implements ApiController {
             return repertoireService.get(name);
 
     }
+
+
+
 
 }

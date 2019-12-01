@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,11 @@ import java.util.Set;
 @ToString
 @Table(name = "COMPOSITION")
 public class Composition extends AbstractEntity {
+
+    @JsonView(Views.Public.class)
+    @Column(name = "Inventory", length = 20)
+    @Size(max = 20)
+    private String inventory;
 
     @JsonView(Views.Public.class)
     @Column(name = "TAG")
@@ -59,10 +65,6 @@ public class Composition extends AbstractEntity {
     @JsonView(Views.Public.class)
     @Column(name = "DESCRIPTION")
     private String description;
-
-    @JsonView(Views.Public.class)
-    @Column(name = "LINK")
-    private String link;
 
     @JsonView(Views.Public.class)
     @JoinTable(name = "COMPOSITION_SHEET", joinColumns = {

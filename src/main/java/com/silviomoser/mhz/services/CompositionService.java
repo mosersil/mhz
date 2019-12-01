@@ -1,13 +1,15 @@
 package com.silviomoser.mhz.services;
 
-import com.silviomoser.mhz.data.Composer;
 import com.silviomoser.mhz.data.Composition;
-import com.silviomoser.mhz.data.CompositionFormSubmition;
+import com.silviomoser.mhz.data.Sheet;
+import com.silviomoser.mhz.data.SheetUpload;
 import com.silviomoser.mhz.repository.CompositionRepository;
+import com.silviomoser.mhz.repository.SheetRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,12 +24,15 @@ public class CompositionService extends AbstractCrudService<Composition> {
     private CompositionRepository compositionRepository;
 
     @Autowired
-    private ComposerService composerService;
+    private SheetRepository sheetRepository;
+
+    @Autowired
+    private FileBucketService fileBucketService;
 
     public List<Composition> find(String searchTerm) {
-        Set<Composition> results = new HashSet<>();
+        final Set<Composition> results = new HashSet<>();
 
-        String[] searchStringArray = searchTerm.split(" ");
+        final String[] searchStringArray = searchTerm.split(" ");
 
         Arrays.stream(searchStringArray).forEach(it -> {
             if (it.length() > 3) {
@@ -44,35 +49,27 @@ public class CompositionService extends AbstractCrudService<Composition> {
         return new ArrayList<>(results);
     }
 
-    public Composition create(CompositionFormSubmition compositionFormSubmition) throws ServiceException {
+    public void addSheet(SheetUpload sheetUpload) throws ServiceException {
+        try {
+            fileBucketService.putFile("sheets", sheetUpload.getTitle(), sheetUpload.getFile().getInputStream(), sheetUpload.getFile().getContentType());
+            Sheet newSheet = new Sheet();
+            newSheet.setLocation(sheetUpload.getTitle());
+            newSheet.setTitle(sheetUpload.getTitle());
 
-        final Composition composition = new Composition();
-        composition.setTitle(compositionFormSubmition.getTitle());
-        composition.setSubtitle(compositionFormSubmition.getSubtitle());
-        composition.setDescription(compositionFormSubmition.getDescription());
-        composition.setGenre(compositionFormSubmition.getGenre());
+            Sheet savedSheet = sheetRepository.save(newSheet);
 
-        final HashSet<Composer> composerArrayList = new HashSet<>();
-        for (String s : compositionFormSubmition.getComposers()) {
-            final Composer existingComposer = composerService.findOneByName(s);
-            if (existingComposer != null) {
-                composerArrayList.add(existingComposer);
-            } else {
-                Composer newComposer = new Composer();
-                newComposer.setName(s);
-                composerArrayList.add(composerService.addOrUpdate(newComposer));
+
+            Composition composition = compositionRepository.getOne((long) sheetUpload.getId());
+            if (composition.getSheets()==null) {
+                composition.setSheets(new HashSet<>(1));
             }
+            composition.getSheets().add(savedSheet);
+            compositionRepository.save(composition);
+
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
         }
 
-
-        HashSet<Composer> arrangerArrayList = new HashSet<>();
-        compositionFormSubmition.getArrangers().forEach(it -> {
-            arrangerArrayList.add(composerService.findOneByName(it));
-        });
-
-        composition.setComposers(composerArrayList);
-
-        return compositionRepository.save(composition);
-
     }
+
 }
