@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.silviomoser.mhz.utils.StringUtils.isBlank;
@@ -73,7 +74,8 @@ public class InternalApi implements ApiController {
                                        @RequestParam(name = "format") AddressListFormat format) {
         try {
             log.debug("Assemble document {} in format {}", organization, format);
-            ModelAndView modelAndView = new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organization));
+            List<String> organizations = Arrays.asList(organization.split(","));
+            ModelAndView modelAndView = new ModelAndView(format.name(), "entries", addresslistService.generateAddressList(organizations));
             modelAndView.addObject("title", "Adressliste " + organization);
             modelAndView.addObject("orientation", "landscape");
             return modelAndView;
@@ -83,6 +85,7 @@ public class InternalApi implements ApiController {
         }
 
     }
+
 
     @JsonView(Views.Public.class)
     @RequestMapping(value = URL_INTERNAL_FILES, method = RequestMethod.GET)

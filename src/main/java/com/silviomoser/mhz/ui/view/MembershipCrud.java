@@ -32,13 +32,13 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.silviomoser.mhz.ui.view.CrudFormHelper.setLocalDateRenderer;
-import static com.silviomoser.mhz.utils.FormatUtils.toFirstLastName;
+import static com.silviomoser.mhz.utils.FormatUtils.toFirstLastNameOrCompany;
 
 @SpringView(name = MembershipCrud.VIEW_NAME)
 public class MembershipCrud implements View {
 
     private final static String[] PREVIEW_PROPERTIES = new String[]{"person", "joinDate", "leaveDate", "function", "remarks"};
-    private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"Person", "Eintritt", "Austritt", "Funktion", "Bemerkungen"};
+    private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"Person/Organisation", "Eintritt", "Austritt", "Funktion", "Bemerkungen"};
 
     private I18Helper i18Helper = new I18Helper(VaadinSession.getCurrent().getLocale());
 
@@ -86,7 +86,7 @@ public class MembershipCrud implements View {
 
 
             Grid.Column<Membership, Person> personColumn = (Grid.Column<Membership, Person>) crud.getGrid().getColumn("person");
-            personColumn.setRenderer((ValueProvider<Person, String>) person -> toFirstLastName(person), new TextRenderer());
+            personColumn.setRenderer((ValueProvider<Person, String>) person -> toFirstLastNameOrCompany(person), new TextRenderer());
 
 
             setLocalDateRenderer(crud.getGrid(), "joinDate");
