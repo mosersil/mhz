@@ -14,7 +14,7 @@ import {environment} from "../../environments/environment";
   styleUrls: ['./payment.component.sass']
 })
 export class PaymentComponent implements OnInit {
-  @ViewChild('cardInfo') cardInfo: ElementRef;
+  @ViewChild('cardInfo', {static:false}) cardInfo: ElementRef;
 
   elements: Elements
   card: StripeElement

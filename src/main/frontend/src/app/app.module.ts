@@ -33,15 +33,15 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {GalleryModule} from "@ngx-gallery/core";
 import {BotDetectCaptchaModule} from "angular-captcha";
 import {NgxSpinnerModule} from "ngx-spinner";
-import {ContentsModule} from "angular-contents";
 import {registerLocaleData} from "@angular/common";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MyDatePickerModule} from 'mydatepicker';
 import {InternationalPhoneNumberModule} from "ngx-international-phone-number";
 import {SignupmemberComponent} from './signupmember/signupmember.component';
 import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-landing.component';
-import { LegalComponent } from './pages/legal/legal.component';
-import { RegistrationComponent } from './common/components/registration/registration.component';
+import {LegalComponent} from './pages/legal/legal.component';
+import {RegistrationComponent} from './common/components/registration/registration.component';
+import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
 
 
 registerLocaleData(localeDe, 'de');
@@ -66,7 +66,6 @@ registerLocaleData(localeDe, 'de');
       }
     ),
     NgxSpinnerModule,
-    ContentsModule,
     NgbModule,
     MyDatePickerModule,
     InternationalPhoneNumberModule
@@ -90,7 +89,8 @@ registerLocaleData(localeDe, 'de');
     SignupmemberComponent,
     SignupmemberLandingComponent,
     LegalComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    AddresslistGeneratorComponent
   ],
 
   providers: [

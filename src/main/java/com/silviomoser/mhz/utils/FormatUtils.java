@@ -11,6 +11,16 @@ public class FormatUtils {
 
     private static final String LINE_BREAK = "\n";
 
+    public static final String toFirstLastNameOrCompany(Person person) {
+        if (person == null) {
+            return "";
+        }
+        if (isNotBlank(person.getCompany())) {
+            return person.getCompany();
+        }
+        return person.getFirstName() + " " + person.getLastName();
+    }
+
     public static final String toFirstLastName(Person person) {
         if (person == null) {
             return "";
