@@ -37,7 +37,7 @@ public class CrudFormHelper {
             comboBox.setItemCaptionGenerator(new ItemCaptionGenerator<Person>() {
                 @Override
                 public String apply(Person item) {
-                    return FormatUtils.toFirstLastName(item);
+                    return FormatUtils.toFirstLastNameOrCompany(item);
                 }
             });
         });
