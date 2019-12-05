@@ -10,6 +10,7 @@
     <include file="changelog/04-update.xml" relativeToChangelogFile="true"/>
     <include file="changelog/05-update.xml" relativeToChangelogFile="true"/>
     <include file="changelog/06-update.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/07-update.xml" relativeToChangelogFile="true"/>
 
 
     <!--include file="changelog/02-data.xml" relativeToChangelogFile="true"/-->
