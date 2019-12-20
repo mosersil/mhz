@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {saveAs} from "file-saver";
 import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
@@ -42,7 +42,7 @@ export class AddresslistGeneratorComponent implements OnInit {
   }
 
   get organizations() {
-    return this.form.get('organizations');
+    return <FormArray>this.form.get('organizations');
   }
 
   buildOrganizations() {
