@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {saveAs} from "file-saver";
 import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
@@ -11,42 +11,57 @@ import {HttpClient} from "@angular/common/http";
 })
 export class AddresslistGeneratorComponent implements OnInit {
 
+
+
   organizationData = [
-    { id: "Aktivmitglied", name: "Aktivmitglieder" },
-    { id: "Passivmitglied", name: "Passivmitglieder" },
-    { id: "Ehrenmitglied", name: "Ehrenmitglieder" },
-    { id: "Freimitglied", name: "Freimitglieder" },
-    { id: "Sonstige", name: "Sonstige" }
+    { id: "Aktivmitglied", name: "Aktivmitglieder", selected: true},
+    { id: "Passivmitglied", name: "Passivmitglieder", selected: false },
+    { id: "Ehrenmitglied", name: "Ehrenmitglieder", selected: false },
+    { id: "Freimitglied", name: "Freimitglieder", selected: false },
+    { id: "Sonstige", name: "Sonstige", selected: false }
   ];
-  myForm: FormGroup;
+
+  minimumOneSelected: boolean = true;
+
+  form: FormGroup;
+
 
 
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 
   ngOnInit() {
-    this.myForm = this.fb.group( {
-      organizations: new FormArray([])
+    this.form = this.fb.group( {
+      organizations: this.buildOrganizations(),
+      format: ['PDF', [Validators.required]]
     });
-    this.addCheckboxes();
+    this.form.controls['organizations'].valueChanges.subscribe(value => {
+      this.minimumOneSelected = value.some(function (item) {
+        return item;
+      });
+    })
   }
 
-  private addCheckboxes() {
-    this.organizationData.forEach((o, i) => {
-      const control = new FormControl(i === 0); // if first item set to true, else false
-      (this.myForm.controls.organizations as FormArray).push(control);
+  get organizations() {
+    return this.form.get('organizations');
+  }
+
+  buildOrganizations() {
+    const organizations = this.organizationData.map(organization => {
+      return this.fb.control(organization.selected);
     });
-    console.log(this.myForm.controls);
+    return this.fb.array(organizations);
   }
 
   submit() {
-    const selectedorganizations = this.myForm.value.organizations
+    const format = this.form.value.format;
+    const selectedorganizations = this.form.value.organizations
       .map((v, i) => v ? this.organizationData[i].id : null)
       .filter(v => v !== null);
-    console.log(selectedorganizations);
-    this.http.get(environment.backendUrl + "/api/protected/internal/addresslist?organization="+encodeURIComponent(selectedorganizations)+"&format=XLS", {
+
+    this.http.get(environment.backendUrl + "/api/protected/internal/addresslist?organization="+encodeURIComponent(selectedorganizations)+"&format="+format, {
       responseType: 'arraybuffer'
     })
-      .subscribe(response => this.downLoadFile(response, 'application/vnd.ms-excel', "download.xls"));
+      .subscribe(response => this.saveFile(response, format));
   }
 
   /**
@@ -54,9 +69,21 @@ export class AddresslistGeneratorComponent implements OnInit {
    * @param data - Array Buffer data
    * @param type - type of the document.
    */
-  downLoadFile(data: any, type: string, filename: string) {
-    var blob = new Blob([data], {type: type});
-    saveAs(blob, filename);
+  saveFile(data: any, format: string) {
+    switch (format) {
+      case "PDF": {
+        var blob = new Blob([data], {type: "application/pdf"});
+        saveAs(blob, "download.pdf");
+        break;
+      }
+      case "XLS": {
+        var blob = new Blob([data], {type: "application/vnd.ms-excel"});
+        saveAs(blob, "download.xls");
+        break;
+      }
+
+    }
+
   }
 
 }
