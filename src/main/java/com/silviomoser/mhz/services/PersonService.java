@@ -1,6 +1,7 @@
 package com.silviomoser.mhz.services;
 
 import com.silviomoser.mhz.data.Person;
+import com.silviomoser.mhz.data.specifications.PersonSpecifications;
 import com.silviomoser.mhz.repository.PersonRepository;
 import com.silviomoser.mhz.utils.FormatUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class PersonService extends AbstractCrudService<Person> {
 
 
     public Person findByEmail(String email) {
-        Optional<Person> personOptional = personRepository.findByEmail(email);
+        Optional<Person> personOptional = personRepository.findOne(PersonSpecifications.filterByEmail(email));
         return personOptional.isPresent() ? personOptional.get() : null;
     }
 
@@ -36,8 +37,8 @@ public class PersonService extends AbstractCrudService<Person> {
     }
 
 
-    public Collection<Person> findByLastNameContains(String value) {
-        return personRepository.findByLastNameContains(value);
+    public Collection<Person> findByNameOrCompany(String value) {
+        return personRepository.findAll(PersonSpecifications.filterByNameOrCompany(value));
     }
 
     public void delete(Person person) throws ServiceException {

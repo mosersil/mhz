@@ -3,6 +3,7 @@ package com.silviomoser.mhz.data;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.mhz.data.type.Gender;
 import com.silviomoser.mhz.data.type.PreferredChannel;
+import com.silviomoser.mhz.data.validator.PersonConstraint;
 import com.silviomoser.mhz.utils.OrganizationUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,7 @@ import static com.silviomoser.mhz.utils.StringUtils.isNotBlank;
 @Setter
 @ToString
 @Table(name = "PERSON")
+@PersonConstraint(message = "Person benötigt entweder Vor-/Nachnamen, oder Firmenname")
 public class Person extends AbstractEntity {
 
     private static final String MSG_VALIDCHARACTERS = "Bitte nur gültige Zeichen verwenden oder Feld komplett leer lassen";
@@ -51,16 +53,14 @@ public class Person extends AbstractEntity {
     private String title;
 
     @JsonView({Views.Public.class, Views.Internal.class})
-    @NotNull
-    @Column(name = "FIRST_NAME", nullable = false, length = 30)
-    @Size(min = 2, max = 30)
+    @Column(name = "FIRST_NAME", length = 30)
+    @Size(max = 30)
     @Pattern(regexp = REGEXP_VALID_NAME, message = MSG_VALIDCHARACTERS)
     private String firstName;
 
     @JsonView({Views.Public.class, Views.Internal.class})
-    @NotNull
-    @Column(name = "LAST_NAME", nullable = false, length = 30)
-    @Size(min = 2, max = 30)
+    @Column(name = "LAST_NAME", length = 30)
+    @Size(max = 30)
     @Pattern(regexp = REGEXP_VALID_NAME, message = MSG_VALIDCHARACTERS)
     private String lastName;
 
@@ -71,7 +71,6 @@ public class Person extends AbstractEntity {
     private String company;
 
     @JsonView(Views.Internal.class)
-    @NotNull
     @Column(name = "ADDRESS1", nullable = false, length = 50)
     private String address1;
 
