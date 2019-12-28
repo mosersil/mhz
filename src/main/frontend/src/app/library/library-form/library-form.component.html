@@ -1,5 +1,14 @@
 <div class="container bg-white rounded shadow p-4">
 
+  <nav aria-label="breadcrumb" *ngIf="composition">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item" routerLink="/library">Bibliothek</li>
+      <li class="breadcrumb-item" routerLink="/library/composition/{{composition.id}}">{{composition.title}}</li>
+      <li class="breadcrumb-item active" routerLink="/library/composition/edit/{{composition.id}}" aria-current="page">Bearbeiten</li>
+
+    </ol>
+  </nav>
+
   <form [formGroup]="myForm" (ngSubmit)="submitForm()">
 
 
@@ -37,6 +46,7 @@
       </fieldset>
     </div>
 
+
     <div class="form-group">
       <label for="fieldset_composers">Arrangeure</label>
       <span (click)="addArrangerControl()" class="fa fa-plus fa-lg pull-right" aria-hidden="true"></span>
@@ -52,31 +62,44 @@
       </fieldset>
     </div>
 
+
+
     <div class="form-group">
       <label for="list_sheets">Noten</label>
-
+      <span (click)="addSheet()" class="fa fa-plus fa-lg pull-right" aria-hidden="true"></span>
       <fieldset id="list_sheets" formArrayName="sheets">
+        <!--
         <input class="form-control" type="text" *ngFor="let c of myForm.get('sheets').controls; index as i"
                [formControlName]="i">
-        <!--
+               -->
+
         <div id="list_existingsheets" class="list-group" *ngFor="let s of composition.sheets">
           <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            {{s.title}}
+            {{s.title}} <i class="fa fa-trash" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <!--
+        <div id="list_newsheets" class="list-group" *ngFor="let f of files">
+          <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            {{s.title}} <i class="fa fa-trash" aria-hidden="true"></i>
           </div>
         </div>
         -->
+
       </fieldset>
 
     </div>
 
-    <div class="form-group">
-      <input type="file"
-             #file
-             (change)="onFilesAdded()"
-             multiple
-      >
-    </div>
+      <div class="form-group">
+        <input type="file"
+               #file
+               (change)="onFileAdded()"
+        >
+      </div>
+
     <button type="submit" class="btn btn-primary">Speichern</button>
+    <button type="reset" class="btn btn-primary">Abbrechen</button>
 
   </form>
 

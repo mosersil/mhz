@@ -1,4 +1,4 @@
-<div class="container bg-white rounded shadow p-4">
+<div class="container bg-white rounded shadow p-4" *ngIf="composition">
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -31,13 +31,13 @@
 
         <dt class="col-sm-3">Komposition:</dt>
         <dd class="col-sm-9">
-          <ng-container *ngFor="let composer of composition.composers; let isLast=last">
+          <ng-container *ngFor="let composer of composition.composers  ; let isLast=last">
             {{composer.name}}{{isLast ? '' : ', '}}
           </ng-container>
         </dd>
         <dt class="col-sm-3">Arrangement:</dt>
         <dd class="col-sm-9">
-          <ng-container *ngFor="let arranger of composition.arrangers; let isLast=last">
+          <ng-container *ngFor="let arranger of composition.arrangers  ; let isLast=last">
             {{arranger.name}}{{isLast ? '' : ', '}}
           </ng-container>
         </dd>

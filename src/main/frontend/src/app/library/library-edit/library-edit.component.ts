@@ -24,7 +24,6 @@ export class LibraryEditComponent implements OnInit, OnChanges {
   ngOnInit() {
 
     const params = this.route.snapshot.paramMap;
-    console.log(params);
     this.ls.getComposition(params.get('id')).subscribe(data => {
       this.composition = data;
     })

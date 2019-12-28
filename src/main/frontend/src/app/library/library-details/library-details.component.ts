@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Composition} from "../../common/entities/composition";
 import {LibraryService} from "../../common/services/library.service";
 import {ActivatedRoute} from "@angular/router";
@@ -11,7 +11,7 @@ import {Location} from '@angular/common';
 })
 export class LibraryDetailsComponent implements OnInit {
 
-  composition: Composition;
+  @Input() composition: Composition;
 
   constructor(
     private libraryService: LibraryService,
@@ -37,6 +37,5 @@ export class LibraryDetailsComponent implements OnInit {
   playerDownload(id: string) {
     this.libraryService.downloadSample(id);
   }
-
 
 }
