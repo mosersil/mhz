@@ -21,8 +21,7 @@ export class RegistrationComponent implements OnInit {
   infomessage: string = null;
   registrationSubmitted: boolean = false;
 
-  @ViewChild(CaptchaComponent, {static: true})
-  captchaComponent: CaptchaComponent;
+  @ViewChild(CaptchaComponent, {static:false}) captchaComponent: CaptchaComponent;
 
   constructor(private http: HttpClient, private router: Router, private location: Location, private spinner: NgxSpinnerService,) {
   }

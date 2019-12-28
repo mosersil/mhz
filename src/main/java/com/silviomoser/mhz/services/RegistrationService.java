@@ -5,6 +5,7 @@ import com.silviomoser.mhz.data.Person;
 import com.silviomoser.mhz.data.PersonVerification;
 import com.silviomoser.mhz.data.Role;
 import com.silviomoser.mhz.data.User;
+import com.silviomoser.mhz.data.specifications.PersonSpecifications;
 import com.silviomoser.mhz.data.type.RoleType;
 import com.silviomoser.mhz.repository.PersonRepository;
 import com.silviomoser.mhz.repository.PersonVerificationRepository;
@@ -70,7 +71,7 @@ public class RegistrationService {
             }
         }
 
-        final Optional<Person> maybeExisting = personRepository.findByEmail(person.getEmail());
+        final Optional<Person> maybeExisting = personRepository.findOne(PersonSpecifications.filterByEmail(person.getEmail()));
 
         if (maybeExisting.isPresent()) {
             log.warn("Person with email {} does already exist", maybeExisting.get().getEmail());

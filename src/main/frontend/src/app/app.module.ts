@@ -41,6 +41,7 @@ import {SignupmemberComponent} from './signupmember/signupmember.component';
 import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-landing.component';
 import {LegalComponent} from './pages/legal/legal.component';
 import {RegistrationComponent} from './common/components/registration/registration.component';
+import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
 import {LibraryListComponent} from './library/library-list/library-list.component';
 import {LibraryDetailsComponent} from './library/library-details/library-details.component';
 import {LibraryHomeComponent} from './library/library-home/library-home.component';
@@ -100,7 +101,8 @@ registerLocaleData(localeDe, 'de');
     LibraryHomeComponent,
     LibraryEditComponent,
     LibrarySearchComponent,
-    LibraryFormComponent
+    LibraryFormComponent,
+    AddresslistGeneratorComponent
   ],
 
   providers: [

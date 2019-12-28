@@ -34,6 +34,9 @@ public class AddressListEntry  extends AbstractEntity {
     @PdfReport(header = "Name")
     @Column(name = "LAST_NAME")
     private String lastName;
+    @XlsReport(header = "Firma")
+    @Column(name = "COMPANY")
+    private String company;
     @PdfReport(header = "Adresse")
     @XlsReport(header = "Adresse")
     @Column(name = "ADDRESS")

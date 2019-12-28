@@ -15,7 +15,7 @@ public class AddresslistService {
     @Autowired
     private AddressListRepository addressListRepository;
 
-    public List<AddressListEntry> generateAddressList(String organization) {
+    public List<AddressListEntry> generateAddressList(List<String> organization) {
         return addressListRepository.findByOrganization(organization);
     }
 

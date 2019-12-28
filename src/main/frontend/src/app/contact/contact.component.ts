@@ -19,7 +19,7 @@ export class ContactComponent {
   feedback: any;
   error: any;
 
-  @ViewChild(CaptchaComponent, {static: true}) captchaComponent: CaptchaComponent;
+  @ViewChild(CaptchaComponent,{static:false}) captchaComponent: CaptchaComponent;
 
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService) {

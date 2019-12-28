@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface AddressListRepository extends JpaRepository<AddressListEntry, Long> {
 
-    @Query("SELECT a FROM AddressListEntry a where a.organization = :organization")
-    List<AddressListEntry> findByOrganization(@Param("organization") String organization);
+    @Query("SELECT a FROM AddressListEntry a where a.organization in :organization")
+    List<AddressListEntry> findByOrganization(@Param("organization") List<String> organization);
+
 }

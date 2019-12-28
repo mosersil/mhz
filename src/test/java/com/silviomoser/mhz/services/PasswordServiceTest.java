@@ -5,6 +5,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.silviomoser.mhz.data.Person;
+import com.silviomoser.mhz.data.specifications.PersonSpecifications;
 import com.silviomoser.mhz.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,14 +37,14 @@ public class PasswordServiceTest extends AbstractTestNGSpringContextTests  {
     @DatabaseSetup("/services/create_account_initial.xml")
     @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/services/create_account_expected.xml")
     public void testCreateAccount() throws ServiceException {
-        Person person = personRepository.findByEmail("max_muster@localhost.com").get();
+        Person person = personRepository.findOne(PersonSpecifications.filterByEmail("max_muster@localhost.com")).get();
         passwordService.createAccount(person);
     }
 
     @Test(expectedExceptions = ServiceException.class, expectedExceptionsMessageRegExp = "Max Muster already has an account")
     @DatabaseSetup("/services/create_account_initial_existing.xml")
     public void testCreateAccount_alreadyExisting() throws ServiceException {
-        Person person = personRepository.findByEmail("max_muster@localhost.com").get();
+        Person person = personRepository.findOne(PersonSpecifications.filterByEmail("max_muster@localhost.com")).get();
         passwordService.createAccount(person);
     }
 }

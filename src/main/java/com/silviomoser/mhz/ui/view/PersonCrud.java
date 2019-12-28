@@ -87,7 +87,7 @@ public class PersonCrud  implements View {
         crud.setFindAllOperation(new FindAllCrudOperationListener<Person>() {
             @Override
             public Collection<Person> findAll() {
-                return personService.findByLastNameContains(nameFilter.getValue());
+                return personService.findByNameOrCompany(nameFilter.getValue());
             }
         });
 
@@ -124,6 +124,7 @@ public class PersonCrud  implements View {
 
         final GridLayoutCrudFormFactory<Person> formFactory = new GridLayoutCrudFormFactory<>(Person.class, 2, 2);
         formFactory.setUseBeanValidation(true);
+
 
         formFactory.setFieldProvider("gender", new RadioButtonGroupProvider<>("Anrede", Arrays.asList(Gender.values()), new ItemCaptionGenerator<Gender>() {
             @Override

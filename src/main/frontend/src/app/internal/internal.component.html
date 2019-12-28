@@ -342,6 +342,8 @@
 
         <div *ngIf="person.organizations.includes('Aktivmitglied')|| person.organizations.includes('Passivmitglied')">
           <h3>Adresslisten</h3>
+          <app-addresslist-generator></app-addresslist-generator>
+          <!--
           <table class="table">
             <thead>
             <tr>
@@ -356,7 +358,7 @@
               <td>Adressliste aller Mitglieder, die aktiv im Verein mitspielen</td>
               <td>
         <span
-          (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied&format=PDF', 'application/pdf', 'aktivmitglieder.pdf')"
+          (click)="downloadFile('/api/protected/internal/addresslist?organization=Aktivmitglied%26Passivmitglied&format=PDF', 'application/pdf', 'aktivmitglieder.pdf')"
           class="fa fa-file-pdf-o"
           aria-hidden="true"></span>&nbsp;
                 <span
@@ -409,6 +411,7 @@
 
             </tbody>
           </table>
+          -->
         </div>
 
 
