@@ -10,6 +10,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.silviomoser.mhz.data.ShopTransaction;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * Created by silvio on 07.08.18.
  */
+@Slf4j
 public class PdfBuilder {
 
     private static Font HEAD_FONT = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
@@ -61,8 +63,7 @@ public class PdfBuilder {
             document.close();
 
         } catch (DocumentException ex) {
-
-            ex.printStackTrace();
+            log.error(ex.getMessage(), ex);
         }
 
         return new ByteArrayInputStream(out.toByteArray());

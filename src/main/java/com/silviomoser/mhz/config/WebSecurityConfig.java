@@ -92,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 log.error("Caught unexpected exception: " + e.getClass(), e);
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            log.error("Caught unexpected exceptoin : " + e.getMessage(), ioe);
         }
     }
 
