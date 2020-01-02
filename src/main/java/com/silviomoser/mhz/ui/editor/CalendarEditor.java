@@ -7,12 +7,10 @@ import com.silviomoser.mhz.data.type.DressCode;
 import com.silviomoser.mhz.repository.RoleRepository;
 import com.silviomoser.mhz.services.FileHandle;
 import com.silviomoser.mhz.services.FileService;
-import com.silviomoser.mhz.ui.i18.I18Helper;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Page;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
@@ -47,7 +45,6 @@ public class CalendarEditor extends AbstractEditor<CalendarEvent> {
     @Autowired
     RoleRepository roleRepository;
 
-    private I18Helper i18Helper = new I18Helper(VaadinSession.getCurrent().getLocale());
 
     private final TextField title = new TextField("Anlass");
     private final DateTimeField dateStart = new DateTimeField("Datum/Zeit (Beginn)");

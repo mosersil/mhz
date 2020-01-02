@@ -42,7 +42,7 @@ public class ImagesApi implements ApiController {
     }
 
 
-    @RequestMapping(value = URL_PUBLIC_IMAGE)
+    @RequestMapping(value = URL_PUBLIC_IMAGE, method = RequestMethod.GET)
     public void getImageAsByteArray(@RequestParam(name="name") String name, HttpServletResponse response) throws IOException {
         log.debug("enter getImageAsByteArray: " + name);
         InputStream in = null;

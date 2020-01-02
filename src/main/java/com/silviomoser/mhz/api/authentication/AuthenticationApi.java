@@ -44,7 +44,7 @@ public class AuthenticationApi implements ApiController {
             @ApiResponse(code = 401, message = "Unauthorized")
     })
     @JsonView(Views.Internal.class)
-    @RequestMapping(URL_AUTH_USER)
+    @RequestMapping(value = URL_AUTH_USER, method = RequestMethod.GET)
     public Person my() {
         final Person me = SecurityUtils.getMe();
         if (me == null) {

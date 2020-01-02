@@ -26,6 +26,7 @@ import com.silviomoser.mhz.data.type.ShopItemType;
 import com.silviomoser.mhz.data.type.ShopOrderStatusType;
 import com.silviomoser.mhz.utils.FormatUtils;
 import com.silviomoser.mhz.utils.PdfReport;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 import static com.silviomoser.mhz.api.shop.ShopHelper.calculateTotal;
 import static com.silviomoser.mhz.api.shop.ShopHelper.formatCurrency;
 
-
+@Slf4j
 public class PdfView extends AbstractITextPdfView {
 
     private static CMYKColor MHZ_BLUE = new CMYKColor(0.59f, 0.32f, 0.f, 0.62f);
@@ -183,12 +183,8 @@ public class PdfView extends AbstractITextPdfView {
 
             }
 
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (DocumentException | IOException e) {
+            log.error(e.getMessage(), e);
         }
 
     }
@@ -252,7 +248,7 @@ public class PdfView extends AbstractITextPdfView {
             }
         } catch (
                 Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
 
@@ -284,16 +280,8 @@ public class PdfView extends AbstractITextPdfView {
             document.add(table);
 
 
-        } catch (
-                DocumentException ex) {
-
-            ex.printStackTrace();
-        } catch (
-                MalformedURLException e) {
-            e.printStackTrace();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
+        } catch (DocumentException | IOException e) {
+            log.error(e.getMessage(), e);
         }
 
 
