@@ -8,18 +8,19 @@ import java.util.ResourceBundle;
 @Getter
 public class CrudServiceException extends Exception {
     private ErrorType errorType;
-    private String message;
+
     private static final String RESOURCES = "exception_resources";
 
     ResourceBundle labels = ResourceBundle.getBundle(RESOURCES);
 
     public CrudServiceException(ErrorType errorType) {
+        super();
         this.errorType=errorType;
     }
 
     public CrudServiceException(ErrorType errorType, String message) {
+        super(message);
         this.errorType=errorType;
-        this.message=message;
     }
 
     public String getLocalizedMessage() {

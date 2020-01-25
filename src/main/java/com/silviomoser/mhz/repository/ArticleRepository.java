@@ -14,7 +14,7 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("SELECT a FROM Article a WHERE :current BETWEEN a.startDate AND a.endDate")
-    Article getCurrent(@Param("current")LocalDateTime current);
+    List<Article> getCurrent(@Param("current")LocalDateTime current);
 
     List<Article> findByTitleContains(String title);
 

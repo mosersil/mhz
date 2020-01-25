@@ -59,7 +59,7 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CrudServiceException.class)
     public ResponseEntity<Object> handleCrudServiceException(CrudServiceException ex, WebRequest request) {
         HttpStatus status = HttpStatus.resolve(ex.getErrorType().getHttpStatus());
-        final ApiError apiError = new ApiError(status);
+        final ApiError apiError = new ApiError(status, ex.getErrorType().getMessage());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json; charset=utf-8");
         return new ResponseEntity<Object>(apiError, responseHeaders, apiError.getStatus());

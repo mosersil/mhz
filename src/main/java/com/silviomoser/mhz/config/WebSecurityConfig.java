@@ -158,7 +158,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/vaadinServlet/UIDL/**").hasRole("ADMIN")
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/app").hasRole("ADMIN")
-                //.antMatchers(HttpMethod.POST, ArticleApi.API_CONTEXTROOT).hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, ArticleApi.API_CONTEXTROOT).hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, ArticleApi.API_CONTEXTROOT+"/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, ArticleApi.API_CONTEXTROOT+"/**").hasRole("ADMIN")
 

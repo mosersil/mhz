@@ -4,7 +4,7 @@ import {environment} from "../environments/environment";
 import {Article} from "./common/entities/article";
 
 
-const URL_API_ARTICLE = environment.backendUrl + '/public/api/article?date=now';
+const URL_API_ARTICLE = environment.backendUrl + '/api/article?date=now';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,6 @@ export class NewsService {
   }
 
   getArticle() {
-    return this.http.get<Article>(URL_API_ARTICLE);
+    return this.http.get<Article[]>(URL_API_ARTICLE);
   }
 }

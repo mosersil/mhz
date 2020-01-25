@@ -4,15 +4,17 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorType {
-    NOT_FOUND(400),
-    NOT_AUTHORIZED(403),
-    ALREADY_EXIST(400),
-    BAD_REQUEST(400),
-    INTERNAL_SERVER_ERROR(500);
+    NOT_FOUND(404, "Not found"),
+    NOT_AUTHORIZED(403, "Not authorized"),
+    ALREADY_EXIST(400, "Already exists"),
+    BAD_REQUEST(400, "Bad request"),
+    INTERNAL_SERVER_ERROR(500, "Internal server error");
 
     private int httpStatus;
+    private String message;
 
-    ErrorType(int httpStatus) {
+    ErrorType(int httpStatus, String message) {
         this.httpStatus=httpStatus;
+        this.message=message;
     }
 }

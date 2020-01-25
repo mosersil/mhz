@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 /**
  * Created by silvio on 23.07.18.
@@ -41,8 +42,7 @@ public class ArticleApi extends CrudApi<Article> {
             @ApiResponse(code = 400, message = "Bad request")
     })
     @GetMapping(params = "date")
-    public Article getArticles(@RequestParam(name = "date") String date) {
-        log.info("date=" + date);
+    public List<Article> getArticles(@RequestParam(name = "date") String date) {
         if (date.equalsIgnoreCase("now")) {
             return articleRepository.getCurrent(LocalDateTime.now());
         } else {
