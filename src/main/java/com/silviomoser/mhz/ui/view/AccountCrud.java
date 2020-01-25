@@ -6,6 +6,7 @@ import com.silviomoser.mhz.data.Role;
 import com.silviomoser.mhz.data.User;
 import com.silviomoser.mhz.repository.RoleRepository;
 import com.silviomoser.mhz.services.AccountService;
+import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.PersonService;
 import com.silviomoser.mhz.services.ServiceException;
 import com.vaadin.data.ValueProvider;
@@ -102,7 +103,7 @@ public class AccountCrud implements View {
         crud.setAddOperation(user -> {
             try {
                 return accountService.add(user);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });
@@ -110,14 +111,14 @@ public class AccountCrud implements View {
         crud.setUpdateOperation(user -> {
             try {
                 return accountService.update(user);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });
         crud.setDeleteOperation(user -> {
             try {
                 accountService.delete(user);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });

@@ -1,5 +1,6 @@
 package com.silviomoser.mhz.api.core;
 
+import com.silviomoser.mhz.services.CrudServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,18 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
         final HttpStatus httpStatus = ex.getHttpStatus() == null ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getHttpStatus();
         final ApiError apiError = new ApiError(httpStatus, ex.getMessage(), ex.getErrors());
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json; charset=utf-8");;
+        responseHeaders.set("Content-Type", "application/json; charset=utf-8");
+        ;
+        return new ResponseEntity<Object>(apiError, responseHeaders, apiError.getStatus());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(CrudServiceException.class)
+    public ResponseEntity<Object> handleCrudServiceException(CrudServiceException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.resolve(ex.getErrorType().getHttpStatus());
+        final ApiError apiError = new ApiError(status);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json; charset=utf-8");
         return new ResponseEntity<Object>(apiError, responseHeaders, apiError.getStatus());
     }
 

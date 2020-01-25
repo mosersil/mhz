@@ -3,6 +3,7 @@ package com.silviomoser.mhz.ui.view;
 import com.silviomoser.mhz.data.Article;
 import com.silviomoser.mhz.repository.CalendarEventRepository;
 import com.silviomoser.mhz.services.ArticleService;
+import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.ServiceException;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -29,7 +30,7 @@ public class ArticleCrud implements View {
     private final static String[] PREVIEW_PROPERTIES = new String[]{"id", "title", "teaser", "startDate", "endDate"};
     private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"#", "Titel", "Vorschau", "Von", "Bis"};
 
-    private final static String[] EDITABLE_PROPERTIES = new String[]{"title", "teaser", "text","startDate", "endDate"};
+    private final static String[] EDITABLE_PROPERTIES = new String[]{"title", "teaser", "text", "startDate", "endDate"};
     private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Titel", "Vorschau", "Text", "Von", "Bis"};
 
 
@@ -85,24 +86,16 @@ public class ArticleCrud implements View {
         });
 
         crud.setAddOperation(p -> {
-            try {
-                return articleService.addOrUpdate(p);
-            } catch (ServiceException e) {
-                throw new RuntimeException(e.getLocalizedMessage());
-            }
+            return articleService.addOrUpdate(p);
         });
 
         crud.setUpdateOperation(p -> {
-            try {
-                return articleService.addOrUpdate(p);
-            } catch (ServiceException e) {
-                throw new RuntimeException(e.getLocalizedMessage());
-            }
+            return articleService.addOrUpdate(p);
         });
         crud.setDeleteOperation(article -> {
             try {
                 articleService.delete(article);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });

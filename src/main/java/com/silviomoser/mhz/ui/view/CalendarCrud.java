@@ -5,6 +5,7 @@ import com.silviomoser.mhz.data.CalendarEvent;
 import com.silviomoser.mhz.data.type.DressCode;
 import com.silviomoser.mhz.services.ArticleService;
 import com.silviomoser.mhz.services.CalendarService;
+import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.ServiceException;
 import com.silviomoser.mhz.ui.i18.I18Helper;
 import com.vaadin.data.provider.DataProvider;
@@ -42,10 +43,10 @@ public class CalendarCrud implements View {
 
     public static final String VIEW_NAME = "calendarcrud";
 
-    private final static String[] PREVIEW_PROPERTIES = new String[]{"id", "title", "dateStart","fullDay", "location", "publicEvent"};
+    private final static String[] PREVIEW_PROPERTIES = new String[]{"id", "title", "dateStart", "fullDay", "location", "publicEvent"};
     private final static String[] PREVIEW_PROPERTIES_CAPTIONS = new String[]{"#", "Titel", "Beginn", "Ganztägig", "Ort", "Öffentlich"};
 
-    private final static String[] EDITABLE_PROPERTIES = new String[]{"title", "dateStart", "dateEnd","location", "dressCode", "fullDay", "publicEvent", "remarks", "article"};
+    private final static String[] EDITABLE_PROPERTIES = new String[]{"title", "dateStart", "dateEnd", "location", "dressCode", "fullDay", "publicEvent", "remarks", "article"};
     private final static String[] EDITABLE_PROPERTIES_CAPTIONS = new String[]{"Titel", "Beginn", "Ende", "Ort", "Dresscode", "ganztägig", "öffentlich", "Bemerkungen", "News-Artikel"};
 
 
@@ -83,14 +84,12 @@ public class CalendarCrud implements View {
         dressCodeRadioButtonGroup.setItemCaptionGenerator(it -> i18Helper.getMessage(it.getTag()));
 
 
-
         final GridLayoutCrudFormFactory<CalendarEvent> formFactory = gridLayoutCrudFormFactory();
 
         crud.setCrudFormFactory(formFactory);
 
 
         crud.setUpdateOperationVisible(true);
-
 
 
         crud.setWidth(100, Sizeable.Unit.PERCENTAGE);
@@ -129,7 +128,7 @@ public class CalendarCrud implements View {
         crud.getCrudLayout().addFilterComponent(clearFilters);
         crud.getGrid().addItemClickListener(event -> {
             attachmentsButton.setEnabled(true);
-           calendarAttachment.setCalendarEvent(event.getItem());
+            calendarAttachment.setCalendarEvent(event.getItem());
         });
         crud.getGrid().addContextClickListener(event -> {
             attachmentsButton.setEnabled(false);
@@ -145,24 +144,20 @@ public class CalendarCrud implements View {
         });
 
         crud.setAddOperation(p -> {
-            try {
-                return calendarService.addOrUpdate(p);
-            } catch (ServiceException e) {
-                throw new RuntimeException(e.getLocalizedMessage());
-            }
+
+            return calendarService.addOrUpdate(p);
+
         });
 
         crud.setUpdateOperation(p -> {
-            try {
+
                 return calendarService.addOrUpdate(p);
-            } catch (ServiceException e) {
-                throw new RuntimeException(e.getLocalizedMessage());
-            }
+
         });
         crud.setDeleteOperation(article -> {
             try {
                 calendarService.delete(article);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });
@@ -207,7 +202,6 @@ public class CalendarCrud implements View {
         return formFactory;
 
     }
-
 
 
 }
