@@ -102,9 +102,13 @@ public abstract class AbstractCrudService<T extends AbstractEntity> {
         }
     }
 
-    public List<T> getAll(String filter, int pageNumber, int pageSize) {
+    public List<T> getAll(String filter, int pageNumber, int pageSize, String sortBy) {
 
-        final Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        if (isBlank(sortBy)) {
+            sortBy = "id";
+        }
+
+        final Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending());
 
         if (isBlank(filter)) {
             return repository.findAll(pageable).getContent();
@@ -116,4 +120,5 @@ public abstract class AbstractCrudService<T extends AbstractEntity> {
         return ((JpaSpecificationExecutor<T>) repository).findAll(spec, pageable).getContent();
 
     }
+
 }

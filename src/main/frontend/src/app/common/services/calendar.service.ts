@@ -23,10 +23,12 @@ export class CalendarService {
 
     let params = new HttpParams().set('filter', "dateStart>="+formatDate(new Date(), 'yyyy-MM-ddTHH:mm', 'de')+" and publicEvent=="+publicOnly);
 
+
     if (max != null) {
       params = params.append("pageNumber", String(0));
       params = params.append("pageSize", String(3));
     }
+    params = params.append("sortBy", "dateStart");
 
     return this.http.get<Event[]>(CALENDAR_API_URL, {params: params});
 

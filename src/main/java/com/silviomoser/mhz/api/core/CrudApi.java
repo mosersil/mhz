@@ -55,7 +55,7 @@ public abstract class CrudApi<T extends AbstractEntity> {
             return service.getAll(filter, sortBy);
         }
         else {
-            return service.getAll(filter, pageNumber, pageSize);
+            return service.getAll(filter, pageNumber, pageSize, sortBy);
         }
 
     }

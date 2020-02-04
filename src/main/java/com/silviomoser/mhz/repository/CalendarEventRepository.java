@@ -20,4 +20,5 @@ public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Lo
     List<CalendarEvent> findByTitleContains(String title);
 
     int countByTitleLike(String title);
+
 }
