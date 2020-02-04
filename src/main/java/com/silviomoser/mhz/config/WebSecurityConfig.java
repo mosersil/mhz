@@ -2,6 +2,7 @@ package com.silviomoser.mhz.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silviomoser.mhz.api.article.ArticleApi;
+import com.silviomoser.mhz.api.calendar.CalendarApi;
 import com.silviomoser.mhz.security.AuthRole;
 import com.silviomoser.mhz.security.AuthUser;
 import com.silviomoser.mhz.security.AuthenticationResult;
@@ -53,6 +54,7 @@ import java.util.stream.Collectors;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
+    public static final String ROLE_ADMIN = "ADMIN";
     @Autowired
     private SecurityUserDetailsService userDetailsService;
 
@@ -158,9 +160,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/vaadinServlet/UIDL/**").hasRole("ADMIN")
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/app").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, ArticleApi.API_CONTEXTROOT).hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, ArticleApi.API_CONTEXTROOT+"/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, ArticleApi.API_CONTEXTROOT+"/**").hasRole("ADMIN")
+
+                //Article API
+                .antMatchers(HttpMethod.POST, ArticleApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PUT, ArticleApi.API_CONTEXTROOT+"/**").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.DELETE, ArticleApi.API_CONTEXTROOT+"/**").hasRole(ROLE_ADMIN)
+
+                //Calendar API
+                .antMatchers(HttpMethod.POST, CalendarApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PUT, CalendarApi.API_CONTEXTROOT+"/**").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.DELETE, CalendarApi.API_CONTEXTROOT+"/**").hasRole(ROLE_ADMIN)
 
 
                 .antMatchers("/internal/api/**").hasRole("USER")

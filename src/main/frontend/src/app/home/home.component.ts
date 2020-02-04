@@ -11,7 +11,7 @@ import {Article} from "../common/entities/article";
 })
 export class HomeComponent implements OnInit {
 
-  events;
+  events: Event[];
   main_background: string = "url('" + environment.backendUrl + "/public/api/background')";
   hotArticles: Article[];
   now = new Date();

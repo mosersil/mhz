@@ -11,7 +11,7 @@ export class CalendarComponent implements OnInit {
   backendUrl: string = environment.backendUrl;
   events : Event[];
   showOnlyPublic: boolean = true;
-  subscribe_url: string = environment.backendUrl + '/public/api/ical'
+  subscribe_url: string = environment.backendUrl + '/downloads/calendar/ical'
 
   constructor(private _calendarService: CalendarService) {
   }

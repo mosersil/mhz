@@ -2,25 +2,30 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
 import {saveAs} from "file-saver";
+import {formatDate} from "@angular/common";
 
 
-const CALENDAR_API_URL = environment.backendUrl + '/public/api/calendar';
-const ICAL_API_URL = environment.backendUrl + '/public/api/ical';
+const CALENDAR_API_URL = environment.backendUrl + '/api/calendar';
+const ICAL_API_URL = environment.backendUrl + '/api/calendar/ical';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarService {
 
+  today = new Date();
+
   constructor(private http: HttpClient) {
   }
 
 
   getEvents(max, publicOnly: boolean) {
-    let params = new HttpParams().set('publicOnly', String(publicOnly));
+
+    let params = new HttpParams().set('filter', "dateStart>="+formatDate(new Date(), 'yyyy-MM-ddTHH:mm', 'de')+" and publicEvent=="+publicOnly);
 
     if (max != null) {
-      params = params.append("max", String(max));
+      params = params.append("pageNumber", String(0));
+      params = params.append("pageSize", String(3));
     }
 
     return this.http.get<Event[]>(CALENDAR_API_URL, {params: params});

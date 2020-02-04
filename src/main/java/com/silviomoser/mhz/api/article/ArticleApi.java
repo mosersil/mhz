@@ -35,7 +35,7 @@ public class ArticleApi extends CrudApi<Article> {
     ArticleRepository articleRepository;
 
     @CrossOrigin(origins = "*")
-    @ApiOperation(value = "List current head article")
+    @ApiOperation(value = "List articles")
     @JsonView(Views.Public.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = Article.class),
@@ -53,4 +53,5 @@ public class ArticleApi extends CrudApi<Article> {
             }
         }
     }
+
 }

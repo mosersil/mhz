@@ -2,9 +2,16 @@ package com.silviomoser.mhz.services;
 
 import com.silviomoser.mhz.data.AbstractEntity;
 import com.silviomoser.mhz.services.error.ErrorType;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +19,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.silviomoser.mhz.services.error.ErrorType.ALREADY_EXIST;
 import static com.silviomoser.mhz.services.error.ErrorType.NOT_FOUND;
+import static com.silviomoser.mhz.utils.StringUtils.isBlank;
 
 
 @Slf4j
@@ -51,8 +59,7 @@ public abstract class AbstractCrudService<T extends AbstractEntity> {
         if (repository.existsById(id)) {
             final Optional<T> optionalItem = repository.findById(id);
             return optionalItem.isPresent() ? optionalItem.get() : null;
-        }
-        else {
+        } else {
             throw new CrudServiceException(NOT_FOUND);
         }
     }
@@ -77,4 +84,36 @@ public abstract class AbstractCrudService<T extends AbstractEntity> {
         return results;
     }
 
+    public List<T> getAll(String filter, String sortBy) {
+
+        if (isBlank(filter)) {
+            if (isBlank(sortBy)) {
+                return getAll();
+            }
+        }
+
+        final Node rootNode = new RSQLParser().parse(filter);
+        final Specification<T> spec = rootNode.accept(new CustomRsqlVisitor<T>());
+
+        if (isBlank(sortBy)) {
+            return ((JpaSpecificationExecutor<T>) repository).findAll(spec);
+        } else {
+            return ((JpaSpecificationExecutor<T>) repository).findAll(spec, Sort.by(Sort.Direction.ASC, sortBy));
+        }
+    }
+
+    public List<T> getAll(String filter, int pageNumber, int pageSize) {
+
+        final Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        if (isBlank(filter)) {
+            return repository.findAll(pageable).getContent();
+        }
+
+        final Node rootNode = new RSQLParser().parse(filter);
+        final Specification<T> spec = rootNode.accept(new CustomRsqlVisitor<T>());
+
+        return ((JpaSpecificationExecutor<T>) repository).findAll(spec, pageable).getContent();
+
+    }
 }
