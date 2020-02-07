@@ -28,7 +28,7 @@ public enum FileType {
                 return fileType;
             }
         }
-        throw new IllegalArgumentException(String.format("%s is not a supported MIME type type"));
+        throw new IllegalArgumentException(String.format("%s is not a supported MIME type type", mime));
     }
 
     public String getMime() {

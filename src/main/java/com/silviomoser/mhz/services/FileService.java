@@ -10,6 +10,7 @@ import com.silviomoser.mhz.data.type.FileType;
 import com.silviomoser.mhz.data.type.StaticFileCategory;
 import com.silviomoser.mhz.repository.StaticFileRepository;
 import com.silviomoser.mhz.security.utils.SecurityUtils;
+import com.silviomoser.mhz.services.error.ErrorType;
 import com.silviomoser.mhz.utils.StaticFileUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,22 +53,18 @@ public class FileService extends AbstractCrudService<StaticFile> {
     }
 
 
-    public ByteArrayInputStream download(long id) throws ServiceException {
+    public ByteArrayInputStream download(long id) throws CrudServiceException {
         final StaticFile staticFile = get(id);
-        if (staticFile == null) {
-            log.warn(String.format("File with id %s does not exist", id));
-            throw new ServiceException(String.format("File %s does not exist", id));
-        }
         return download(staticFile);
     }
 
-    public ByteArrayInputStream download(StaticFile staticFile) throws ServiceException {
+    public ByteArrayInputStream download(StaticFile staticFile) throws CrudServiceException {
         if (staticFile.getRole() != null) {
             log.debug("file {} requires authorization. Required role: {} ", staticFile.getId(), staticFile.getRole());
             final Person me = SecurityUtils.getMe();
             if (!me.getUser().getRoles().contains(staticFile.getRole())) {
                 log.warn("User {} is not permitted to download file {}", me.getUser().getUsername(), staticFile.getId());
-                throw new ServiceException("Not authorized");
+                throw new CrudServiceException(ErrorType.NOT_AUTHORIZED);
             }
         }
         else {
@@ -79,13 +76,13 @@ public class FileService extends AbstractCrudService<StaticFile> {
         final File file = new File(absolutePath);
         if (!file.exists()) {
             log.warn(String.format("File %s does not exist", file));
-            throw new ServiceException(String.format("File %s does not exist", file));
+            throw new CrudServiceException(ErrorType.NOT_FOUND, String.format("File %s does not exist", file));
         }
         try {
             return new ByteArrayInputStream(FileUtils.readFileToByteArray(file));
         } catch (IOException e) {
             log.warn(String.format("Unexpected exception occured when downloading file %s: %s", staticFile, e.getMessage()), e);
-            throw new ServiceException(e.getMessage(), e);
+            throw new CrudServiceException(ErrorType.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 

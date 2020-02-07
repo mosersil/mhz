@@ -4,6 +4,7 @@ import com.silviomoser.mhz.config.PwResetConfiguration;
 import com.silviomoser.mhz.data.Person;
 import com.silviomoser.mhz.data.User;
 import com.silviomoser.mhz.repository.UserRepository;
+import com.silviomoser.mhz.services.error.ErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class AccountService extends AbstractCrudService<User> {
         return userRepository.findByUsernameContains(searchString);
     }
 
-    public User add(User user) throws ServiceException {
+    public User add(User user) throws CrudServiceException {
         final String passwordClearText = generateToken(8, false);
         user.setPassword(hashPassword(passwordClearText));
         user.setCreatedDate(now());
@@ -52,7 +53,12 @@ public class AccountService extends AbstractCrudService<User> {
         final String subject = getMessage(LABEL_WELCOME_SUBJECT);
         final String text = getMessage(LABEL_WELCOME_TEXT, welcomingInformal(user.getPerson()), pwResetConfiguration.getBaseUrl(), user.getUsername(), passwordClearText);
 
-        sendEmailConfirmation(user.getPerson(), subject, text);
+        try {
+            sendEmailConfirmation(user.getPerson(), subject, text);
+        } catch (ServiceException se) {
+            throw new CrudServiceException(ErrorType.INTERNAL_SERVER_ERROR);
+        }
+
         return userRepository.save(user);
     }
 
