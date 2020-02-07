@@ -79,6 +79,7 @@ public class EnvironmentConfiguration {
         return registrationConfiguration;
     }
 
+
     @Bean
     @RequestScope
     public I18Helper i18Helper() {

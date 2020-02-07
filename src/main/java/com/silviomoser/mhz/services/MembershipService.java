@@ -42,13 +42,13 @@ public class MembershipService extends AbstractCrudService<Membership> {
         return result;
     }
 
-    public void delete(Membership membership) throws ServiceException {
+    public void delete(Membership membership) throws CrudServiceException {
         membershipRepository.delete(membership);
         cacheManagerService.clearCache(CACHE_MEMBERLIST);
         log.info("Deleted membership {}", FormatUtils.toFirstLastName(membership.getPerson()));
     }
 
-    public Membership addOrUpdate(Membership membership) throws ServiceException {
+    public Membership addOrUpdate(Membership membership) {
         Membership membership1 = membershipRepository.save(membership);
         cacheManagerService.clearCache(CACHE_MEMBERLIST);
         log.info("Saved membership {}", FormatUtils.toFirstLastName(membership.getPerson()));
