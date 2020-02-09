@@ -9,7 +9,7 @@ export class Composition {
   subtitle: string;
   genre: string;
   tag: string;
-  description: Date;
+  description: string;
   composers: Composer[];
   arrangers: Composer[];
   sheets: Sheet[];

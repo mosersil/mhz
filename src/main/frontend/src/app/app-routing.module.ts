@@ -21,6 +21,7 @@ import {LibraryDetailsComponent} from "./library/library-details/library-details
 import {LibraryHomeComponent} from "./library/library-home/library-home.component";
 import {LibraryEditComponent} from "./library/library-edit/library-edit.component";
 import {LibrarySearchComponent} from "./library/library-search/library-search.component";
+import {LibraryCreateCompositionComponent} from "./library/library-create-composition/library-create-composition.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -43,6 +44,7 @@ const routes: Routes = [
   {path: 'app', redirectTo: '/app'},
   {path: 'library', component: LibraryHomeComponent},
   {path: 'library/archive', component: LibrarySearchComponent},
+  {path: 'library/create', component: LibraryCreateCompositionComponent},
   {path: 'library/composition/edit/:id', component: LibraryEditComponent},
   {path: 'library/composition/:id', component: LibraryDetailsComponent},
   {path: '**', component: HomeComponent},

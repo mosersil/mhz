@@ -1,9 +1,9 @@
-import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LibraryService} from "../../common/services/library.service";
 import {Composer} from "../../common/entities/composer";
 import {Composition} from "../../common/entities/composition";
-import {ActivatedRoute} from "@angular/router";
+import {Router} from "@angular/router";
 import {Sheet} from "../../common/entities/sheet";
 
 @Component({
@@ -13,8 +13,9 @@ import {Sheet} from "../../common/entities/sheet";
 })
 export class LibraryFormComponent implements OnInit, OnChanges {
 
+  @Output() submitComposition = new EventEmitter<Composition>();
   @Input() composition: Composition;
-  @Input() editing: false;
+  @Input() editing = false;
 
   myForm: FormGroup;
   composer_list: Composer[];
@@ -23,19 +24,16 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   @ViewChild('file', {static: true}) file;
   public files: Set<File> = new Set();
 
-  constructor(private fb: FormBuilder, private ls: LibraryService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private ls: LibraryService, private router: Router) {
   }
 
   ngOnInit() {
-    this.ls.getComposers().subscribe(data => {
-      this.composer_list = data;
-    });
-    this.addedSheets = new Array();
+    this.initForm();
   }
 
   ngOnChanges() {
-    this.initForm();
-    this.setFormValues(this.composition);
+      this.initForm();
+      this.setFormValues(this.composition);
   }
 
 
@@ -47,6 +45,16 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   private initForm() {
+    if (this.myForm) {
+      return;
+    }
+
+
+    this.ls.getComposers().subscribe(data => {
+      this.composer_list = data;
+    });
+    this.addedSheets = new Array();
+
     this.myForm = this.fb.group({
       id: ['', Validators.required],
       inventory: [''],
@@ -68,7 +76,19 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   private getComposerByName(name: string): Composer {
-    return this.composer_list.find(value => value.name == name);
+
+    if (name == null || name.trim() == "") {
+      return null;
+    }
+
+    var composer: Composer =  this.composer_list.find(value => value.name == name);
+
+    if (composer == null) {
+      composer = new Composer();
+      composer.name = name;
+    }
+
+    return composer;
   }
 
   submitForm() {
@@ -77,25 +97,51 @@ export class LibraryFormComponent implements OnInit, OnChanges {
     const composers = formValue.composers.map(composer => this.getComposerByName(composer));
     const arrangers = formValue.arrangers.map(arranger => this.getComposerByName(arranger));
 
-    const newComposition: Composition = <Composition>{
-      id: formValue.id,
-      inventory: formValue.inventory,
-      title: formValue.title,
-      subtitle: formValue.subtitle,
-      description: formValue.description,
-      genre: formValue.genre,
-      tag: formValue.tag,
-      composers: composers,
-      arrangers: arrangers
-    };
+    let newComposition: Composition;
+    //if (this.editing) {
+      newComposition = new Composition();
+
+      newComposition.id = formValue.id;
+      newComposition.inventory = formValue.inventory;
+      newComposition.title = formValue.title;
+      newComposition.subtitle = formValue.subtitle;
+      newComposition.description = formValue.description;
+      newComposition.genre = formValue.genre;
+      newComposition.tag = formValue.tag;
+      newComposition.composers = composers;
+      newComposition.arrangers = arrangers;
+
+      /*
+    } else {
+      newComposition: <Composition>{
+        id: formValue.id,
+        inventory: formValue.inventory,
+        title: formValue.title,
+        subtitle: formValue.subtitle,
+        description: formValue.description,
+        genre: formValue.genre,
+        tag: formValue.tag,
+        composers: composers,
+        arrangers: arrangers
+      };
+    }
+    */
 
 
-    this.ls.save(newComposition).subscribe(data => {
 
-      //this.ls.uploadSheet(data.id, formValue.title, this.files);
+    /*
+    if (this.editing) {
+      this.ls.update(newComposition).subscribe(data => {
+      });
+    } else {
+      this.ls.create(newComposition).subscribe(data => {
+      });
+    }
+      this.router.navigate(["/library/composition/"+this.composition.id]);
+    */
 
-      //console.log("created new composition: " + data);
-    })
+    this.submitComposition.emit(newComposition);
+
 
   }
 
@@ -111,12 +157,21 @@ export class LibraryFormComponent implements OnInit, OnChanges {
     this.composers.push(this.fb.control(null));
   }
 
+  removeComposerControl(index: number) {
+    this.composers.removeAt(index)
+  }
+
   addArrangerControl() {
     this.arrangers.push(this.fb.control(null));
   }
 
+  removeArrangerControl(index: number) {
+    this.arrangers.removeAt(index)
+  }
+
 
   onFileAdded() {
+    /*
     const files: { [key: string]: File } = this.file.nativeElement.files;
     for (let key in files) {
       if (!isNaN(parseInt(key))) {
@@ -131,6 +186,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
       this.composition = data;
       this.setFormValues(this.composition);
     });
+    */
   }
 
 }

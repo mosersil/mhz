@@ -48,6 +48,7 @@ import {LibraryHomeComponent} from './library/library-home/library-home.componen
 import {LibraryEditComponent} from './library/library-edit/library-edit.component';
 import {LibrarySearchComponent} from './library/library-search/library-search.component';
 import {LibraryFormComponent} from "./library/library-form/library-form.component";
+import {LibraryCreateCompositionComponent} from './library/library-create-composition/library-create-composition.component';
 
 
 registerLocaleData(localeDe, 'de');
@@ -102,7 +103,8 @@ registerLocaleData(localeDe, 'de');
     LibraryEditComponent,
     LibrarySearchComponent,
     LibraryFormComponent,
-    AddresslistGeneratorComponent
+    AddresslistGeneratorComponent,
+    LibraryCreateCompositionComponent
   ],
 
   providers: [

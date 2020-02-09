@@ -2,7 +2,7 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item" (click)="backClicked()">Bibliothek</li>
+      <li class="breadcrumb-item" routerLink="/library">Bibliothek</li>
       <li class="breadcrumb-item active" aria-current="page">{{composition.title}}</li>
     </ol>
   </nav>
@@ -57,7 +57,7 @@
         <dt class="col-sm-3">Hörbeispiele:</dt>
         <dd class="col-sm-9">
           <ng-container *ngFor="let sample of composition.samples">
-          <audio src="/api/public/sample/{{sample.location}}" controls="controls" preload="none">
+          <audio src="/api/sampledownload/{{sample.location}}" controls="controls" preload="none">
             <!--<audio src="http://localhost:8085/api/public/sample/rename.mp3" controls="controls" preload="none"-->
             Your browser does not support the audio element.
 

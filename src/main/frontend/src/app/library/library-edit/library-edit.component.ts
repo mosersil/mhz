@@ -3,7 +3,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LibraryService} from "../../common/services/library.service";
 import {Composer} from "../../common/entities/composer";
 import {Composition} from "../../common/entities/composition";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-library-edit',
@@ -18,7 +18,7 @@ export class LibraryEditComponent implements OnInit, OnChanges {
   myForm: FormGroup;
   composer_list: Composer[];
 
-  constructor(private fb: FormBuilder, private ls: LibraryService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private ls: LibraryService, private route: ActivatedRoute, private router:Router) {
   }
 
   ngOnInit() {
@@ -31,7 +31,6 @@ export class LibraryEditComponent implements OnInit, OnChanges {
     this.ls.getComposers().subscribe(data => {
       this.composer_list = data;
     });
-
 
 
   }
@@ -80,11 +79,23 @@ export class LibraryEditComponent implements OnInit, OnChanges {
       arrangers: arrangers
     };
 
-    console.log(newComposition);
-    this.ls.save(newComposition).subscribe(data => {
-      console.log("created new composition: " + data);
-    })
+    if (this.editing) {
+      this.ls.update(newComposition).subscribe(data => {
+        console.log("created new composition: " + data);
+      })
+    }
+    else {
+      this.ls.create(newComposition).subscribe(data => {
+        console.log("created new composition: " + data);
+      })
+    }
 
+  }
+
+  updateComposition(composition: Composition) {
+    this.ls.update(composition).subscribe(() => {
+      this.router.navigate(['/library/composition/'+composition.id]);
+    });
   }
 
   get composers(): FormArray {

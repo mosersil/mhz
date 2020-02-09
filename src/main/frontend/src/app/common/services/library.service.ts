@@ -8,11 +8,13 @@ import {HttpClient, HttpEventType, HttpRequest, HttpResponse} from '@angular/com
 import {Injectable} from "@angular/core";
 
 
-const SAMPLE_API = environment.backendUrl + '/api/public/sample';
-const SHEET_API = environment.backendUrl + '/api/public/sheet';
-const COMPOSITION_API = environment.backendUrl + '/api/public/composition';
-const COMPOSER_API = environment.backendUrl + '/api/public/composer';
-const REPERTOIRE_API = environment.backendUrl + '/api/public/repertoire';
+const SAMPLE_API = environment.backendUrl + '/api/sample';
+const SHEET_API = environment.backendUrl + '/api/sheet';
+const COMPOSITION_API = environment.backendUrl + '/api/composition';
+const COMPOSER_API = environment.backendUrl + '/api/composer';
+const REPERTOIRE_API = environment.backendUrl + '/api/repertoire';
+const SHEETDOWNLOAD = environment.backendUrl + '/api/sheetdownload';
+const SAMPLEDOWNLOAD = environment.backendUrl + '/api/sampledownload';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,6 @@ export class LibraryService {
 
   constructor(private http: HttpClient) {
   }
-
 
   getCompositions(): Observable<Composition[]> {
     return this.http.get<Composition[]>(COMPOSITION_API);
@@ -38,14 +39,18 @@ export class LibraryService {
   }
 
   getComposers(): Observable<Composer[]> {
-    return this.http.get<any>(COMPOSER_API);
+    return this.http.get<any>(COMPOSER_API+"?sortBy=name");
   }
 
   getRepertoires(): Observable<Repertoire[]> {
     return this.http.get<any>(REPERTOIRE_API)
   }
 
-  save(composition: Composition): Observable<Composition> {
+  update(composition: Composition): Observable<Composition> {
+    return this.http.put<any>(COMPOSITION_API, composition);
+  }
+
+  create(composition: Composition): Observable<Composition> {
     return this.http.post<any>(COMPOSITION_API, composition);
   }
 
@@ -54,14 +59,14 @@ export class LibraryService {
   }
 
   downloadFile(sheetId: string) {
-    this.http.get(SHEET_API + "/" + sheetId, {
+    this.http.get(SHEETDOWNLOAD + "/" + sheetId, {
       responseType: 'arraybuffer'
     })
       .subscribe(response => this.downLoadFile(response, "application/pdf", "download.pdf"));
   }
 
   downloadSample(sampleId: string) {
-    this.http.get(SAMPLE_API + "/" + sampleId, {
+    this.http.get(SAMPLEDOWNLOAD + "/" + sampleId, {
       responseType: 'arraybuffer'
     })
       .subscribe(response => this.downLoadFile(response, "audio/mpeg", "download.mp3"));

@@ -92,14 +92,18 @@ public abstract class AbstractCrudService<T extends AbstractEntity> {
             }
         }
 
-        final Node rootNode = new RSQLParser().parse(filter);
-        final Specification<T> spec = rootNode.accept(new CustomRsqlVisitor<T>());
-
-        if (isBlank(sortBy)) {
-            return ((JpaSpecificationExecutor<T>) repository).findAll(spec);
-        } else {
-            return ((JpaSpecificationExecutor<T>) repository).findAll(spec, Sort.by(Sort.Direction.ASC, sortBy));
+        if (!isBlank(filter)) {
+            final Node rootNode = new RSQLParser().parse(filter);
+            final Specification<T> spec = rootNode.accept(new CustomRsqlVisitor<T>());
+            if (isBlank(sortBy)) {
+                return ((JpaSpecificationExecutor<T>) repository).findAll(spec);
+            } else {
+                return ((JpaSpecificationExecutor<T>) repository).findAll(spec, Sort.by(Sort.Direction.ASC, sortBy));
+            }
         }
+
+        return ( repository).findAll(Sort.by(Sort.Direction.ASC, sortBy));
+
     }
 
     public List<T> getAll(String filter, int pageNumber, int pageSize, String sortBy) {

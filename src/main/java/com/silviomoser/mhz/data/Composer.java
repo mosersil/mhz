@@ -25,6 +25,6 @@ public class Composer extends AbstractEntity {
     @JsonView(Views.Public.class)
     private String name;
 
-    @ManyToMany(mappedBy = "composers", fetch = FetchType.EAGER )
+    @ManyToMany(mappedBy = "composers", fetch = FetchType.EAGER)
     private Set<Composition> compositions;
 }

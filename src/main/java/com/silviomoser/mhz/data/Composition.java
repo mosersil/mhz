@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,13 +42,13 @@ public class Composition extends AbstractEntity {
     @JoinTable(name = "COMPOSITION_COMPOSER", joinColumns = {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "COMPOSER_ID", referencedColumnName = "ID")})
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     private Set<Composer> composers;
     @JsonView(Views.Public.class)
     @JoinTable(name = "COMPOSITION_ARRANGER", joinColumns = {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "COMPOSER_ID", referencedColumnName = "ID")})
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     private Set<Composer> arrangers;
 
     @JsonView(Views.Public.class)

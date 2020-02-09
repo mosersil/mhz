@@ -15,6 +15,8 @@
   </ul>
   <div class="spacing">&nbsp;</div>
 
+  <a routerLink="/library/composition/edit"><button class="btn btn-secondary pull-right">Neuer Titel...</button></a>
+
   <div class="form-group">
     <input id="name" type="search" class="form-control" name="name" placeholder="Suche nach Titel..."
            (keyup)="searchTitleKeyUp.next($event.target.value)"
