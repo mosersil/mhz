@@ -13,7 +13,7 @@
   </nav>
   -->
 
-  <form [formGroup]="myForm" (ngSubmit)="submitForm()">
+  <form [formGroup]="compositionForm" (ngSubmit)="submitForm()">
 
 
     <div class="form-group">
@@ -23,10 +23,18 @@
     <div class="form-group">
       <label for="input_title">Titel</label>
       <input id="input_title" class="form-control" formControlName="title" type="text"/>
+      <app-library-form-messages
+        [control]="compositionForm.get('title')"
+        controlName="title">
+      </app-library-form-messages>
     </div>
     <div class="form-group">
       <label for="input_subtitle">Untertitel</label>
       <input id="input_subtitle" class="form-control" formControlName="subtitle" type="text">
+    </div>
+    <div class="form-group">
+      <label for="input_subtitle">Genre</label>
+      <input id="input_genre" class="form-control" formControlName="genre" type="text">
     </div>
     <div class="form-group">
       <label for="input_description">Beschreibung</label>
@@ -39,7 +47,7 @@
       <label for="fieldset_composers">Komponisten</label>
       <fieldset id="fieldset_composers" formArrayName="composers">
         <div class="form-group">
-          <div class="input-group" *ngFor="let c of myForm.get('composers').controls; index as i">
+          <div class="input-group" *ngFor="let c of compositionForm.get('composers').controls; index as i">
             <div class="input-group-append">
               <span class="input-group-text" (click)="removeComposerControl(i)"><i class="fa fa-trash"
                                                                                    aria-hidden="true"></i></span>
@@ -52,7 +60,8 @@
             </datalist>
           </div>
           <div class="button-bar mt-1">
-            <button type="button" (click)="addComposerControl()" class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
+            <button type="button" (click)="addComposerControl()"
+                    class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
           </div>
         </div>
       </fieldset>
@@ -63,7 +72,7 @@
       <label for="fieldset_composers">Arrangeure</label>
       <fieldset id="fieldset_arrangers" formArrayName="arrangers">
         <div class="form-group">
-          <div class="input-group" *ngFor="let c of myForm.get('arrangers').controls; index as i">
+          <div class="input-group" *ngFor="let c of compositionForm.get('arrangers').controls; index as i">
             <div class="input-group-append">
               <span class="input-group-text" (click)="removeArrangerControl(i)"><i class="fa fa-trash"
                                                                                    aria-hidden="true"></i></span>
@@ -75,23 +84,34 @@
             </datalist>
           </div>
           <div class="button-bar mt-1">
-            <button type="button" (click)="addArrangerControl()" class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
+            <button type="button" (click)="addArrangerControl()"
+                    class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
           </div>
 
         </div>
       </fieldset>
     </div>
 
-    <!--
 
+    <div class="form-group" *ngIf="editing">
+      <label for="list_sheets">Noten</label>
+      <fieldset id="list_sheets" formArrayName="sheets">
         <div class="form-group">
-          <label for="list_sheets">Noten</label>
-          <span (click)="addSheet()" class="fa fa-plus fa-lg pull-right" aria-hidden="true"></span>
-          <fieldset id="list_sheets" formArrayName="sheets">
-            <!--
-            <input class="form-control" type="text" *ngFor="let c of myForm.get('sheets').controls; index as i"
+          <div class="input-group" *ngFor="let c of compositionForm.get('sheets').controls; index as i">
+            <input class="form-control" type="text" disabled
                    [formControlName]="i">
-                   -->
+            <div class="input-group-append">
+              <span class="input-group-text" (click)="removeSheetControl(i)"><i class="fa fa-trash"
+                                                                                aria-hidden="true"></i></span>
+            </div>
+          </div>
+          <div class="button-bar mt-1">
+            <button type="button" (click)="addSheet()"
+                    class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
+          </div>
+        </div>
+      </fieldset>
+    </div>
     <!--
             <div id="list_existingsheets" class="list-group" *ngFor="let s of composition.sheets">
               <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
@@ -121,7 +141,7 @@
 
              -->
     <div class="btn-group">
-      <button type="submit" class="btn btn-primary">Speichern</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!compositionForm.valid">Speichern</button>
       <!--button class="btn btn-primary" routerLink="/library/composition/{{composition.id}}">Abbrechen</button-->
     </div>
   </form>

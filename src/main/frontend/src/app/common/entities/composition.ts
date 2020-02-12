@@ -8,7 +8,6 @@ export class Composition {
   title: string;
   subtitle: string;
   genre: string;
-  tag: string;
   description: string;
   composers: Composer[];
   arrangers: Composer[];

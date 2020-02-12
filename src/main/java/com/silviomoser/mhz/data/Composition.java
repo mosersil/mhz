@@ -35,10 +35,6 @@ public class Composition extends AbstractEntity {
     private String inventory;
 
     @JsonView(Views.Public.class)
-    @Column(name = "TAG")
-    private String tag;
-
-    @JsonView(Views.Public.class)
     @JoinTable(name = "COMPOSITION_COMPOSER", joinColumns = {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "COMPOSER_ID", referencedColumnName = "ID")})

@@ -52,6 +52,7 @@ export class LibraryEditComponent implements OnInit, OnChanges {
       id: ['', Validators.required],
       title: [''],
       subtitle: [''],
+      genre: [''],
       description: [''],
       composers: this.buildComposersArray([]),
       arrangers: this.buildComposersArray([])
@@ -74,7 +75,6 @@ export class LibraryEditComponent implements OnInit, OnChanges {
       subtitle: formValue.subtitle,
       description: formValue.description,
       genre: formValue.genre,
-      tag: formValue.tag,
       composers: composers,
       arrangers: arrangers
     };

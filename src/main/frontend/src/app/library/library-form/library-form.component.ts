@@ -17,7 +17,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   @Input() composition: Composition;
   @Input() editing = false;
 
-  myForm: FormGroup;
+  compositionForm: FormGroup;
   composer_list: Composer[];
   addedSheets: Sheet[];
 
@@ -32,34 +32,36 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-      this.initForm();
-      this.setFormValues(this.composition);
+    this.initForm();
+    this.setFormValues(this.composition);
   }
 
 
   private setFormValues(composition: Composition) {
-    this.myForm.patchValue(composition);
-    this.myForm.setControl("composers", this.buildComposersArray(composition.composers));
-    this.myForm.setControl("arrangers", this.buildComposersArray(composition.arrangers));
-    this.myForm.setControl("sheets", this.buildSheetsArray(composition.sheets));
+    this.compositionForm.patchValue(composition)
+    this.compositionForm.setControl("composers", this.buildComposersArray(composition.composers));
+    this.compositionForm.setControl("arrangers", this.buildComposersArray(composition.arrangers));
+    this.compositionForm.setControl("sheets", this.buildSheetsArray(composition.sheets));
   }
 
   private initForm() {
-    if (this.myForm) {
-      return;
-    }
-
 
     this.ls.getComposers().subscribe(data => {
       this.composer_list = data;
     });
+
+    if (this.compositionForm) {
+      return;
+    }
+
     this.addedSheets = new Array();
 
-    this.myForm = this.fb.group({
-      id: ['', Validators.required],
+    this.compositionForm = this.fb.group({
+      id: [''],
       inventory: [''],
-      title: [''],
+      title: ['', [Validators.required, Validators.minLength(3)]],
       subtitle: [''],
+      genre: [''],
       description: [''],
       composers: this.buildComposersArray([]),
       arrangers: this.buildComposersArray([]),
@@ -68,11 +70,11 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   private buildSheetsArray(values: Sheet[]): FormArray {
-    return this.fb.array(values.map(t => t.title + "("+t.id+")"), Validators.required);
+    return this.fb.array(values.map(t => t.title + "(" + t.id + ")"));
   }
 
   private buildComposersArray(values: Composer[]): FormArray {
-    return this.fb.array(values.map(t => t.name), Validators.required);
+    return this.fb.array(values.map(t => t.name));
   }
 
   private getComposerByName(name: string): Composer {
@@ -81,7 +83,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
       return null;
     }
 
-    var composer: Composer =  this.composer_list.find(value => value.name == name);
+    var composer: Composer = this.composer_list.find(value => value.name == name);
 
     if (composer == null) {
       composer = new Composer();
@@ -92,65 +94,42 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   submitForm() {
-    const formValue = this.myForm.value;
+
+
+    const formValue = this.compositionForm.value;
 
     const composers = formValue.composers.map(composer => this.getComposerByName(composer));
     const arrangers = formValue.arrangers.map(arranger => this.getComposerByName(arranger));
+    const sheets = formValue.sheets.map(sheet => this.getSheetById)
 
-    let newComposition: Composition;
-    //if (this.editing) {
-      newComposition = new Composition();
+    let newComposition = new Composition();
 
-      newComposition.id = formValue.id;
-      newComposition.inventory = formValue.inventory;
-      newComposition.title = formValue.title;
-      newComposition.subtitle = formValue.subtitle;
-      newComposition.description = formValue.description;
-      newComposition.genre = formValue.genre;
-      newComposition.tag = formValue.tag;
-      newComposition.composers = composers;
-      newComposition.arrangers = arrangers;
-
-      /*
-    } else {
-      newComposition: <Composition>{
-        id: formValue.id,
-        inventory: formValue.inventory,
-        title: formValue.title,
-        subtitle: formValue.subtitle,
-        description: formValue.description,
-        genre: formValue.genre,
-        tag: formValue.tag,
-        composers: composers,
-        arrangers: arrangers
-      };
-    }
-    */
-
-
-
-    /*
-    if (this.editing) {
-      this.ls.update(newComposition).subscribe(data => {
-      });
-    } else {
-      this.ls.create(newComposition).subscribe(data => {
-      });
-    }
-      this.router.navigate(["/library/composition/"+this.composition.id]);
-    */
+    newComposition.id = formValue.id;
+    newComposition.inventory = formValue.inventory;
+    newComposition.title = formValue.title;
+    newComposition.subtitle = formValue.subtitle;
+    newComposition.description = formValue.description;
+    newComposition.genre = formValue.genre;
+    newComposition.composers = composers;
+    newComposition.arrangers = arrangers;
+    newComposition.sheets = sheets;
 
     this.submitComposition.emit(newComposition);
+    this.compositionForm.reset();
 
 
   }
 
   get composers(): FormArray {
-    return <FormArray>this.myForm.get('composers') as FormArray
+    return <FormArray>this.compositionForm.get('composers') as FormArray
   }
 
   get arrangers(): FormArray {
-    return <FormArray>this.myForm.get('arrangers') as FormArray
+    return <FormArray>this.compositionForm.get('arrangers') as FormArray
+  }
+
+  get sheets(): FormArray {
+    return <FormArray>this.compositionForm.get('sheets') as FormArray
   }
 
   addComposerControl() {
@@ -167,6 +146,10 @@ export class LibraryFormComponent implements OnInit, OnChanges {
 
   removeArrangerControl(index: number) {
     this.arrangers.removeAt(index)
+  }
+
+  removeSheetControl(index: number) {
+    this.sheets.removeAt(index)
   }
 
 
