@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CalendarService} from "../common/services/calendar.service";
 import {environment} from "../../environments/environment";
 import {NewsService} from "../news.service";
+import {Article} from "../common/entities/article";
 
 @Component({
   selector: 'app-home',
@@ -10,9 +11,9 @@ import {NewsService} from "../news.service";
 })
 export class HomeComponent implements OnInit {
 
-  events;
+  events: Event[];
   main_background: string = "url('" + environment.backendUrl + "/public/api/background')";
-  hotArticle: any;
+  hotArticles: Article[];
   now = new Date();
   years_since = (this.now.getFullYear()-1899)
 
@@ -37,7 +38,7 @@ export class HomeComponent implements OnInit {
   getArticle() {
     this._newsService.getArticle().subscribe(
       data => {
-        this.hotArticle = data;
+        this.hotArticles = data;
       },
       //err => console.error(err),
     );

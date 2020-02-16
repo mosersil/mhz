@@ -3,6 +3,7 @@ package com.silviomoser.mhz.services;
 import com.silviomoser.mhz.data.Person;
 import com.silviomoser.mhz.data.specifications.PersonSpecifications;
 import com.silviomoser.mhz.repository.PersonRepository;
+import com.silviomoser.mhz.services.error.ErrorType;
 import com.silviomoser.mhz.utils.FormatUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,10 @@ public class PersonService extends AbstractCrudService<Person> {
     }
 
 
-    public Person add(Person person) throws ServiceException {
+    public Person add(Person person) throws CrudServiceException {
 
         if (person.getEmail()!=null && findByEmail(person.getEmail()) != null) {
-            throw new ServiceException("exception_duplicateemail");
+            throw new CrudServiceException(ErrorType.ALREADY_EXIST, "exception_duplicateemail");
         }
 
         personRepository.save(person);
@@ -41,12 +42,12 @@ public class PersonService extends AbstractCrudService<Person> {
         return personRepository.findAll(PersonSpecifications.filterByNameOrCompany(value));
     }
 
-    public void delete(Person person) throws ServiceException {
+    public void delete(Person person) throws CrudServiceException {
         if (person.getMemberships() == null || person.getMemberships().size() == 0) {
-            personRepository.delete(person);
+            super.delete(person);
             log.info("Deleted person {}", FormatUtils.toFirstLastName(person));
         } else {
-            throw new ServiceException("exception_notdeleteable_activemember");
+            throw new CrudServiceException(ErrorType.BAD_REQUEST, "exception_notdeleteable_activemember");
         }
     }
 }
