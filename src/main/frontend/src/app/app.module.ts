@@ -36,7 +36,6 @@ import {NgxSpinnerModule} from "ngx-spinner";
 import {registerLocaleData} from "@angular/common";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MyDatePickerModule} from 'mydatepicker';
-import {InternationalPhoneNumberModule} from "ngx-international-phone-number";
 import {SignupmemberComponent} from './signupmember/signupmember.component';
 import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-landing.component';
 import {LegalComponent} from './pages/legal/legal.component';
@@ -67,8 +66,7 @@ registerLocaleData(localeDe, 'de');
     ),
     NgxSpinnerModule,
     NgbModule,
-    MyDatePickerModule,
-    InternationalPhoneNumberModule
+    MyDatePickerModule
   ],
   declarations: [
     AppComponent,
