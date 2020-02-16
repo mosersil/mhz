@@ -1,0 +1,13 @@
+<dt>{{event.title}}</dt>
+<dd *ngIf="!event.fullDay">{{event | eventDateFormattingPipe : "EEEE, dd.MM.yyyy"}}<br/>
+  {{event.dateStart | date : "HH:mm"}} Uhr <br>
+  {{event.location}} <br>
+  <i>{{event.remarks}}</i>
+
+</dd>
+<dd *ngIf="event.fullDay">{{event | eventDateFormattingPipe : "EEEE, dd.MM.yyyy"}}<br/>
+  {{event.location}}<br/>
+  <i>{{event.remarks}}</i>
+</dd>
+
+

@@ -10,39 +10,8 @@
     </label>
   </div>
 
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th scope="col">Datum</th>
-      <th scope="col">Anlass</th>
-      <th scope="col">Ort</th>
-      <th scope="col">Downloads</th>
-    </tr>
-    </thead>
-    <tbody>
+  <app-event-list [events]="events"></app-event-list>
 
-    <tr *ngFor="let event of events">
-      <td *ngIf="event.fullDay">{{event.dateStart | date : "EEEE, dd.MM.yyyy"}}</td>
-      <td *ngIf="!event.fullDay">{{event.dateStart | date : "EEEE, dd.MM.yyyy, HH:mm"}}</td>
-      <td>{{event.title}}</td>
-      <td>{{event.location}}</td>
-      <td>
-        <ul *ngFor="let file of event.files" style="list-style-type: none; padding: 0px; margin: 0px">
-          <li *ngIf="file.role==null && file.fileType=='PDF'" (click)="downloadAttachment(file.id, 'application/pdf')">
-            <span
-              class="fa fa-file-pdf-o"
-              aria-hidden="true"></span>&nbsp;{{file.title}}
-          </li>
-          <li *ngIf="file.role==null && file.fileType=='XLSX'">
-            <span
-              class="fa fa-file-excel-o"
-              aria-hidden="true"></span>&nbsp;{{file.title}}
-          </li>
-        </ul>
-      </td>
-    </tr>
-    </tbody>
-  </table>
   <button type="button" class="btn btn-primary" (click)="downloadIcal()" title="Download aller Anlässe im ics Format">
     <i class="fa fa-download" aria-hidden="true"></i>
   </button>
