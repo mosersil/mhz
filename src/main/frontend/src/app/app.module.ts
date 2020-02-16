@@ -41,6 +41,7 @@ import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-
 import {LegalComponent} from './pages/legal/legal.component';
 import {RegistrationComponent} from './common/components/registration/registration.component';
 import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
+import { InternationalPhoneNumberModule } from 'ngx-international-phone-number';
 
 
 registerLocaleData(localeDe, 'de');
@@ -66,7 +67,8 @@ registerLocaleData(localeDe, 'de');
     ),
     NgxSpinnerModule,
     NgbModule,
-    MyDatePickerModule
+    MyDatePickerModule,
+    InternationalPhoneNumberModule
   ],
   declarations: [
     AppComponent,
