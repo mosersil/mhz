@@ -67,10 +67,17 @@ export class LibraryFormComponent implements OnInit, OnChanges {
       arrangers: this.buildComposersArray([]),
       sheets: this.buildSheetsArray([])
     });
+    console.log(this.compositionForm);
   }
 
   private buildSheetsArray(values: Sheet[]): FormArray {
-    return this.fb.array(values.map(t => t.title + "(" + t.id + ")"));
+    return this.fb.array(values.map(t => this.fb.group(
+      {
+        id: [t.id],
+        title: [t.title],
+        location: [t.location]
+      }
+    )));
   }
 
   private buildComposersArray(values: Composer[]): FormArray {
@@ -100,7 +107,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
 
     const composers = formValue.composers.map(composer => this.getComposerByName(composer));
     const arrangers = formValue.arrangers.map(arranger => this.getComposerByName(arranger));
-    const sheets = formValue.sheets.map(sheet => this.getSheetById)
+    const sheets = formValue.sheets.map(sheet => sheet)
 
     let newComposition = new Composition();
 
@@ -129,6 +136,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   get sheets(): FormArray {
+    console.log("gugus")
     return <FormArray>this.compositionForm.get('sheets') as FormArray
   }
 
@@ -170,6 +178,12 @@ export class LibraryFormComponent implements OnInit, OnChanges {
       this.setFormValues(this.composition);
     });
     */
+  }
+
+  pushSheet(sheet:Sheet) {
+    console.log("push sheet " + sheet)
+    this.composition.sheets.push(sheet);
+    this.setFormValues(this.composition);
   }
 
 }

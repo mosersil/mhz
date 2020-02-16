@@ -67,7 +67,7 @@ public class Composition extends AbstractEntity {
     @JoinTable(name = "COMPOSITION_SHEET", joinColumns = {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "SHEET_ID", referencedColumnName = "ID")})
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     private Set<Sheet> sheets;
 
     @JsonView(Views.Public.class)

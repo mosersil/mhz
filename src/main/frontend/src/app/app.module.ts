@@ -50,6 +50,7 @@ import {LibrarySearchComponent} from './library/library-search/library-search.co
 import {LibraryFormComponent} from "./library/library-form/library-form.component";
 import {LibraryCreateCompositionComponent} from './library/library-create-composition/library-create-composition.component';
 import {LibraryFormMessagesComponent} from './library/library-form-messages/library-form-messages.component';
+import {LibraryUploadComponent} from './library/library-upload/library-upload.component';
 
 
 registerLocaleData(localeDe, 'de');
@@ -106,7 +107,8 @@ registerLocaleData(localeDe, 'de');
     LibraryFormComponent,
     AddresslistGeneratorComponent,
     LibraryCreateCompositionComponent,
-    LibraryFormMessagesComponent
+    LibraryFormMessagesComponent,
+    LibraryUploadComponent
   ],
 
   providers: [

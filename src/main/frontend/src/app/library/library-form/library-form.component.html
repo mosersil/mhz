@@ -97,53 +97,36 @@
       <label for="list_sheets">Noten</label>
       <fieldset id="list_sheets" formArrayName="sheets">
         <div class="form-group">
-          <div class="input-group" *ngFor="let c of compositionForm.get('sheets').controls; index as i">
-            <input class="form-control" type="text" disabled
-                   [formControlName]="i">
-            <div class="input-group-append">
+          <ng-container *ngFor="let sheet of compositionForm.controls.sheets.controls; index as i">
+            <div class="input-group" [formGroupName]="i">
+              <div class="input-group-append">
               <span class="input-group-text" (click)="removeSheetControl(i)"><i class="fa fa-trash"
                                                                                 aria-hidden="true"></i></span>
-            </div>
-          </div>
-          <div class="button-bar mt-1">
-            <button type="button" (click)="addSheet()"
-                    class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
-          </div>
-        </div>
-      </fieldset>
-    </div>
-    <!--
-            <div id="list_existingsheets" class="list-group" *ngFor="let s of composition.sheets">
-              <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                {{s.title}} <i class="fa fa-trash" aria-hidden="true"></i>
               </div>
+              <input class="form-control" type="text"
+                     formControlName="title">
             </div>
-    -->
-    <!--
-    <div id="list_newsheets" class="list-group" *ngFor="let f of files">
-      <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-        {{s.title}} <i class="fa fa-trash" aria-hidden="true"></i>
-      </div>
-    </div>
-    -->
-    <!--
-          </fieldset>
-
+          </ng-container>
         </div>
 
+        <!--
+        <div class="button-bar mt-1">
+          <button type="button" (click)="addSheet()"
+                  class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
+        </div>
+        -->
 
-          <div class="form-group">
-            <input type="file"
-                   #file
-                   (change)="onFileAdded()"
-            >
-          </div>
+      </fieldset>
 
-             -->
+
+    </div>
+
     <div class="btn-group">
       <button type="submit" class="btn btn-primary" [disabled]="!compositionForm.valid">Speichern</button>
       <!--button class="btn btn-primary" routerLink="/library/composition/{{composition.id}}">Abbrechen</button-->
     </div>
   </form>
-
+  <div class="btn-group">
+  <app-library-upload *ngIf="editing" [composition]="composition" (uploadEvent)="pushSheet($event)"></app-library-upload>
+  </div>
 </div>
