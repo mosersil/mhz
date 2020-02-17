@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Event} from "../../entities/event";
 
 @Component({
@@ -9,7 +9,7 @@ import {Event} from "../../entities/event";
 export class EventDetailsComponent {
 
   @Input()
-  event: Event;
+  calendarEvent: Event;
 
   constructor() {
   }
