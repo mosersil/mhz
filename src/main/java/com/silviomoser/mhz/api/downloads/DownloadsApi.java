@@ -3,8 +3,8 @@ package com.silviomoser.mhz.api.downloads;
 import com.silviomoser.mhz.api.core.ApiController;
 import com.silviomoser.mhz.api.core.ApiException;
 import com.silviomoser.mhz.data.StaticFile;
+import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.FileService;
-import com.silviomoser.mhz.services.ServiceException;
 import com.silviomoser.mhz.ui.i18.I18Helper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -40,24 +40,18 @@ public class DownloadsApi implements ApiController {
             @ApiResponse(code = 400, message = "Bad request")
     })
     @RequestMapping(value = URL_DOWNLOADS, method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> publicDownload(@RequestParam(name = "id", required = true) Long id) {
+    public ResponseEntity<InputStreamResource> publicDownload(@RequestParam(name = "id", required = true) Long id) throws CrudServiceException {
 
-        try {
-            final StaticFile staticFile = fileService.get(id);
-            if (staticFile.getRole() != null) {
-                log.warn(String.format("rejected attempt to download file id '%s' (unauthorized)", id));
-                throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
-            }
-            try {
-                final ByteArrayInputStream bis = fileService.download(staticFile);
-                return downloadResponse(bis, staticFile);
-            } catch (ServiceException e) {
-                throw new ApiException(e.getMessage());
-            }
+        final StaticFile staticFile = fileService.get(id);
 
-        } catch (ServiceException e) {
-            throw new ApiException("Invalid download", HttpStatus.INTERNAL_SERVER_ERROR);
+        if (staticFile.getRole() != null) {
+            log.warn(String.format("rejected attempt to download file id '%s' (unauthorized)", id));
+            throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
         }
+
+        final ByteArrayInputStream bis = fileService.download(staticFile);
+        return downloadResponse(bis, staticFile);
+
     }
 
 
