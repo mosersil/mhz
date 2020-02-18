@@ -3,7 +3,7 @@ import {ContactResponse} from "../contact-response";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {CaptchaComponent} from "angular-captcha";
-import {NgxSpinnerService} from "ngx-spinner";
+
 
 @Component({
   selector: 'app-contact',
@@ -19,15 +19,14 @@ export class ContactComponent {
   feedback: any;
   error: any;
 
-  @ViewChild(CaptchaComponent,{static:false}) captchaComponent: CaptchaComponent;
+  @ViewChild(CaptchaComponent) captchaComponent: CaptchaComponent;
 
 
-  constructor(private http: HttpClient, private spinner: NgxSpinnerService) {
+  constructor(private http: HttpClient) {
   }
 
   onSubmit() {
     this.processing = true;
-    this.spinner.show();
 
     this.captchaComponent.validateUnsafe((isCaptchaCodeCorrect: boolean) => {
       if (isCaptchaCodeCorrect) {
@@ -41,7 +40,7 @@ export class ContactComponent {
         };
         this.http.post<ContactResponse>(environment.backendUrl + '/api/public/contact', data).subscribe(data => {
           this.error = null;
-          this.spinner.hide();
+
           this.feedback = "Vielen Dank für Ihre Mitteilung";
           this.processing = false;
 
@@ -49,7 +48,6 @@ export class ContactComponent {
           this.error = error1.error.message;
         });
       } else {
-        this.spinner.hide();
         this.error = "Der eingegebene Prüfcode stimmt nicht überein."
         this.feedback = null;
         this.isHuman = false;

@@ -267,8 +267,10 @@
         </div>
         <div class="modal-body col-md-12">
           <form (ngSubmit)="onBirthdayChangeSubmit()" #myForm="ngForm" novalidate>
+            <!--
             <my-date-picker name="mydate" [options]="myDatePickerOptions"
                             [(ngModel)]="modelBirthDate"></my-date-picker>
+                            -->
             <div class="form-group" style="margin-top: 10px;">
               <button class="btn btn-primary pull-right" [disabled]="processing"><i class="fa fa-save"></i>
                 Änderungen
