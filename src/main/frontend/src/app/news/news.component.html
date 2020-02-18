@@ -1,13 +1,13 @@
 <div class="container bg-white rounded shadow p-4">
   <div class="container">
-    <div class="row">
+    <div class="row" *ngFor="let hotArticle of hotArticles; let i = index">
       <div class="col-md-12">
-        <h3>{{hotarticle?.title}}</h3>
-        <div [innerHTML]="hotarticle?.text"></div>
+        <h3>{{hotArticle.title}}</h3>
+        <div [innerHTML]="hotArticle.text"></div>
 
 
-        <div *ngIf="hotarticle.events.length>0" class="row card-group">
-          <div class="col-12" *ngFor="let event of hotarticle.events">
+        <div *ngIf="hotArticle.events.length>0" class="row card-group">
+          <div class="col-12" *ngFor="let event of hotArticle.events">
             <div class="card h-100">
               <div class="card-header">
                 {{event.title}}
