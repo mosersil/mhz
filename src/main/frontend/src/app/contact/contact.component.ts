@@ -5,6 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import {CaptchaComponent} from "angular-captcha";
 import {NgxSpinnerService} from "ngx-spinner";
 
+
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -19,7 +20,7 @@ export class ContactComponent {
   feedback: any;
   error: any;
 
-  @ViewChild(CaptchaComponent,{static:false}) captchaComponent: CaptchaComponent;
+  @ViewChild(CaptchaComponent) captchaComponent: CaptchaComponent;
 
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService) {

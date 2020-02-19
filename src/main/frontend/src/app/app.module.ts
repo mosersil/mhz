@@ -5,7 +5,6 @@ import {AppComponent} from './app.component';
 import {UiModule} from './ui/ui.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CalendarService} from "./common/services/calendar.service";
-import {AppRoutingModule} from './app-routing.module';
 import {AboutusComponent} from './aboutus/aboutus.component';
 import {HomeComponent} from './home/home.component';
 import {ContactComponent} from './contact/contact.component';
@@ -18,7 +17,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthenticationService} from "./authentication.service";
 import {AuthGuardService} from "./auth-guard-service.service";
 import {LoginComponent} from './login/login.component';
-import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {ShopService} from "./shop.service";
 import {RegisterComponent} from './register/register.component';
 import {ForgotComponent} from './forgot/forgot.component';
@@ -42,6 +40,7 @@ import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-
 import {LegalComponent} from './pages/legal/legal.component';
 import {RegistrationComponent} from './common/components/registration/registration.component';
 import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
+import {RouterModule} from "@angular/router";
 
 
 registerLocaleData(localeDe, 'de');
@@ -53,10 +52,9 @@ registerLocaleData(localeDe, 'de');
     BrowserAnimationsModule,
     UiModule,
     HttpClientModule,
-    AppRoutingModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularFontAwesomeModule,
     QRCodeModule,
     NgxPopperModule,
     GalleryModule.withConfig({dots: true, thumbPosition: "top", imageSize: "contain"}),
