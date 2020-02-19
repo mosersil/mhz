@@ -13,13 +13,13 @@
     <h1>Passwort Reset</h1>
     <p>Bitte wählen Sie Ihr neues Passwort. Das Passwort muss aus Gross-/Kleinbuchstaben, Zahlen und Sonderzeichen bestehen.</p>
 
-    <form name="form" #passwordForm="ngForm" (ngSubmit)="onSubmit()">
+    <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
       <div class="form-group">
         <label for="password">Passwort</label>
         <input id="password" type="password" class="form-control" name="password" [(ngModel)]="model.password"
                #password="ngModel"
-               [ngClass]="{ 'is-invalid': passwordForm.submitted && password.invalid }" required/>
-        <div *ngIf="passwordForm.submitted && password.invalid" class="invalid-feedback">
+               [ngClass]="{ 'is-invalid': f.submitted && password.invalid }" required/>
+        <div *ngIf="f.submitted && password.invalid" class="invalid-feedback">
           <div *ngIf="password.errors.required">Bitte Passwort eingeben</div>
         </div>
       </div>
@@ -27,8 +27,8 @@
         <label for="password_confirmation">Passwort (Bestätigung)</label>
         <input id="password_confirmation" type="password" class="form-control" name="passwordconfirm"
                [(ngModel)]="model.passwordconfirm" #passwordconfirm="ngModel"
-               [ngClass]="{ 'is-invalid': passwordForm.submitted && passwordconfirm.invalid }" required/>
-        <div *ngIf="passwordForm.submitted && passwordconfirm.invalid" class="invalid-feedback">
+               [ngClass]="{ 'is-invalid': f.submitted && passwordconfirm.invalid }" required/>
+        <div *ngIf="f.submitted && passwordconfirm.invalid" class="invalid-feedback">
           <div *ngIf="passwordconfirm.errors.required">Bitte Passwort eingeben</div>
         </div>
         <input type="hidden" formControlName="token" [(ngModel)]="model.token">

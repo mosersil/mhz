@@ -41,8 +41,6 @@ import {LegalComponent} from './pages/legal/legal.component';
 import {RegistrationComponent} from './common/components/registration/registration.component';
 import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
 import {RouterModule} from "@angular/router";
-import {MatDatepicker} from "@angular/material/datepicker";
-import {MatSlider} from "@angular/material/slider";
 
 
 registerLocaleData(localeDe, 'de');
