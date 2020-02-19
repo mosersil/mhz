@@ -41,8 +41,8 @@ import {LegalComponent} from './pages/legal/legal.component';
 import {RegistrationComponent} from './common/components/registration/registration.component';
 import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
 import {RouterModule} from "@angular/router";
-import { EventDetailsComponent } from './common/components/event-details/event-details.component';
-import { EventListComponent } from './common/components/event-list/event-list.component';
+import {EventDetailsComponent} from './common/components/event-details/event-details.component';
+import {EventListComponent} from './common/components/event-list/event-list.component';
 import {EventDateFormattingPipe} from "./common/pipes/event-date-formatting-pipe";
 
 
