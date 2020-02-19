@@ -33,12 +33,16 @@ import {BotDetectCaptchaModule} from "angular-captcha";
 import {NgxSpinnerModule} from "ngx-spinner";
 import {registerLocaleData} from "@angular/common";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {MyDatePickerModule} from 'mydatepicker';
+import {InternationalPhoneNumberModule} from "ngx-international-phone-number";
 import {SignupmemberComponent} from './signupmember/signupmember.component';
 import {SignupmemberLandingComponent} from './signupmember-landing/signupmember-landing.component';
 import {LegalComponent} from './pages/legal/legal.component';
 import {RegistrationComponent} from './common/components/registration/registration.component';
 import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
 import {RouterModule} from "@angular/router";
+import {MatDatepicker} from "@angular/material/datepicker";
+import {MatSlider} from "@angular/material/slider";
 
 
 registerLocaleData(localeDe, 'de');
@@ -62,7 +66,9 @@ registerLocaleData(localeDe, 'de');
       }
     ),
     NgxSpinnerModule,
-    NgbModule
+    NgbModule,
+    MyDatePickerModule,
+    InternationalPhoneNumberModule
   ],
   declarations: [
     AppComponent,

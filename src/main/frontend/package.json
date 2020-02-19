@@ -42,6 +42,7 @@
     "intl-tel-input": "^16.0.8",
     "jquery": "^3.4.0",
     "jwt-decode": "^2.2.0",
+    "mydatepicker": "^2.6.9",
     "ngx-bootstrap": "^5.2.0",
     "ngx-international-phone-number": "^1.0.6",
     "ngx-intl-tel-input": "^2.1.1",
