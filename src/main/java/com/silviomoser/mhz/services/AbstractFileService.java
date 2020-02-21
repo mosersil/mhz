@@ -65,9 +65,6 @@ public abstract class AbstractFileService {
 
         byte[] returnBytes;
         try {
-            //final MinioClient minioClient = new MinioClient(imageServiceConfiguration.getEndpoint(), imageServiceConfiguration.getAccessKey(),
-                    //imageServiceConfiguration.getSecretKey());
-
             final InputStream inputStream = minioClient.getObject(bucket, name);
             returnBytes = IOUtils.toByteArray(inputStream);
             try {
