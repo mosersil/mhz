@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/repertoire")
+@RequestMapping(value = RepertoireApi.API_CONTEXTROOT)
 public class RepertoireApi extends CrudApi<Repertoire> {
+
+    public static final String API_CONTEXTROOT = "/api/repertoire";
 }

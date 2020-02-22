@@ -1,11 +1,19 @@
 <div class="container bg-white rounded shadow p-4" *ngIf="composition">
 
+  <app-library-navigation></app-library-navigation>
+
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item" routerLink="/library">Bibliothek</li>
       <li class="breadcrumb-item active" aria-current="page">{{composition.title}}</li>
     </ol>
   </nav>
+
+  <ul class="nav" *ngIf="isAdmin">
+    <li class="nav-item">
+      <a class="nav-link active" routerLink="/library/composition/edit/{{composition.id}}"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;Bearbeiten...</a>
+    </li>
+  </ul>
 
   <!--
   <button (click)="backClicked()">
@@ -15,7 +23,6 @@
 
   <div class="card">
     <div class="card-body">
-      <a routerLink="/library/composition/edit/{{composition.id}}"><button class="btn btn-secondary pull-right">Bearbeiten</button></a>
       <dl class="row">
         <dt class="col-sm-3">Titel:</dt>
         <dd class="col-sm-9">{{composition?.title}}</dd>

@@ -2,19 +2,7 @@
   <h3>Notenbibliothek</h3>
   <div class="spacing">&nbsp;</div>
 
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a [routerLink]="['/library']" class="nav-link active">Aktuelles Repertoire</a>
-    </li>
-    <li class="nav-item">
-      <a [routerLink]="['/library/archive']"class="nav-link" href="#">Notenarchiv</a>
-    </li>
-    <!--
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#">Komponisten</a>
-    </li>
-    -->
-  </ul>
+  <app-library-navigation></app-library-navigation>
   Die aktuellen Titel im Repertoire vom MHZ-Oberstrass mit detailierten Informationen, Hörbeispiele und Noten-Downloads.
   <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
     <ng-container *ngFor="let r of repertoires">

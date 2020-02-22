@@ -1,21 +1,12 @@
 <div class="container bg-white rounded shadow p-4">
-  <h3>Notenbibliothek</h3>
-  <div class="spacing">&nbsp;</div>
 
-  <ul class="nav nav-tabs">
+  <app-library-navigation></app-library-navigation>
+
+  <ul class="nav" *ngIf="isAdmin">
     <li class="nav-item">
-      <a [routerLink]="['/library']" class="nav-link">Aktuelles Repertoire</a>
-    </li>
-    <li class="nav-item">
-      <a [routerLink]="['/library/search']"class="nav-link active" href="#">Notenarchiv</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#">Komponisten</a>
+      <a class="nav-link active" routerLink="/library/create"><i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Neu...</a>
     </li>
   </ul>
-  <div class="spacing">&nbsp;</div>
-
-  <a routerLink="/library/composition/edit"><button class="btn btn-secondary pull-right">Neuer Titel...</button></a>
 
   <div class="form-group">
     <input id="name" type="search" class="form-control" name="name" placeholder="Suche nach Titel..."

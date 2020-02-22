@@ -28,7 +28,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-public class SheedDownload {
+public class SheetDownload {
+
+    public static final String CONTEXTROOT = "/api/sheetdownload";
 
     @Autowired
     private FileBucketService fileBucketService;
@@ -42,7 +44,7 @@ public class SheedDownload {
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    @RequestMapping(path = "/api/sheetdownload/{location}", method = GET)
+    @RequestMapping(path = CONTEXTROOT+"/{location}", method = GET)
     public ResponseEntity<InputStreamResource> publicDownload(@PathVariable(name = "location") String location) {
 
         try {
@@ -65,7 +67,7 @@ public class SheedDownload {
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    @RequestMapping(path = "/api/sheetdownload", method = POST)
+    @RequestMapping(path = CONTEXTROOT, method = POST)
     public Sheet uploadSheet(@ModelAttribute SheetUpload sheetUpload) throws CrudServiceException{
             return sheetService.upload(sheetUpload);
     }

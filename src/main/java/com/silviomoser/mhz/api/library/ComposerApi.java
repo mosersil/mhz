@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/composer")
+@RequestMapping(value = ComposerApi.API_CONTEXTROOT)
 public class ComposerApi extends CrudApi<Composer> {
+
+    public static final String API_CONTEXTROOT = "/api/composer";
 }

@@ -7,7 +7,7 @@
   </thead>
   <tbody>
   <tr *ngFor="let c of compositions" routerLink="/library/composition/{{c.id}}">
-    <td>{{c.title}}</td>
+    <td><a routerLink="/library/composition/{{c.id}}">{{c.title}}</a>&nbsp;<a *ngIf="isAdmin" routerLink="/library/composition/edit/{{c.id}}"><i class="fa fa-edit" aria-hidden="true"></i></a> </td>
     <td>{{c.genre}}</td>
   </tr>
   </tbody>

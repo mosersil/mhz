@@ -19,10 +19,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RestController
 public class SampleDownload {
 
+    public static final String CONTEXTROOT = "/api/sampledownload";
+
     @Autowired
     private FileBucketService fileBucketService;
 
-    @RequestMapping(method = GET, path = "/api/sampledownload/{location}")
+    @RequestMapping(method = GET, path = CONTEXTROOT+"/{location}")
     @ResponseBody
     public void stream(HttpServletResponse response, @PathVariable String location) {
         try {

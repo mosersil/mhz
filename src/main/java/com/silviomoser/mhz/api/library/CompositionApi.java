@@ -21,8 +21,10 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/composition")
+@RequestMapping(value = CompositionApi.API_CONTEXTROOT)
 public class CompositionApi extends CrudApi<Composition> {
+
+    public static final String API_CONTEXTROOT = "/api/composition";
 
     @Autowired
     private CompositionService compositionService;

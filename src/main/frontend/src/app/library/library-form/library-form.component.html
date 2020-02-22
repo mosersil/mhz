@@ -1,132 +1,132 @@
-<div class="container bg-white rounded shadow p-4">
-
-  <!--
-  <nav aria-label="breadcrumb" *ngIf="composition">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item" routerLink="/library">Bibliothek</li>
-      <li class="breadcrumb-item" routerLink="/library/composition/{{composition.id}}">{{composition.title}}</li>
-      <li class="breadcrumb-item active" routerLink="/library/composition/edit/{{composition.id}}" aria-current="page">
-        Bearbeiten
-      </li>
-
-    </ol>
-  </nav>
-  -->
-
-  <form [formGroup]="compositionForm" (ngSubmit)="submitForm()">
+<app-library-navigation></app-library-navigation>
 
 
-    <div class="form-group">
-      <label for="input_id">Inventar-Nummer</label>
-      <input id="input_id" class="form-control" formControlName="inventory" type="text">
-    </div>
-    <div class="form-group">
-      <label for="input_title">Titel</label>
-      <input id="input_title" class="form-control" formControlName="title" type="text"/>
-      <app-library-form-messages
-        [control]="compositionForm.get('title')"
-        controlName="title">
-      </app-library-form-messages>
-    </div>
-    <div class="form-group">
-      <label for="input_subtitle">Untertitel</label>
-      <input id="input_subtitle" class="form-control" formControlName="subtitle" type="text">
-    </div>
-    <div class="form-group">
-      <label for="input_subtitle">Genre</label>
-      <input id="input_genre" class="form-control" formControlName="genre" type="text">
-    </div>
-    <div class="form-group">
-      <label for="input_description">Beschreibung</label>
-      <textarea id="input_description" class="form-control" formControlName="description" type="text"
-                rows="4"></textarea>
-    </div>
+<nav aria-label="breadcrumb" *ngIf="composition">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" routerLink="/library/archive">Bibliothek</li>
+    <li class="breadcrumb-item" routerLink="/library/composition/{{composition.id}}">{{composition.title}}</li>
+    <li class="breadcrumb-item active" routerLink="/library/composition/edit/{{composition.id}}" aria-current="page">
+      Bearbeiten
+    </li>
+  </ol>
+</nav>
 
 
-    <div class="form-group">
-      <label for="fieldset_composers">Komponisten</label>
-      <fieldset id="fieldset_composers" formArrayName="composers">
-        <div class="form-group">
-          <div class="input-group" *ngFor="let c of compositionForm.get('composers').controls; index as i">
-            <div class="input-group-append">
+<form [formGroup]="compositionForm" (ngSubmit)="submitForm()">
+
+
+  <div class="form-group">
+    <label for="input_id">Inventar-Nummer</label>
+    <input id="input_id" class="form-control" formControlName="inventory" type="text">
+  </div>
+  <div class="form-group">
+    <label for="input_title">Titel</label>
+    <input id="input_title" class="form-control" formControlName="title" type="text"/>
+    <app-library-form-messages
+      [control]="compositionForm.get('title')"
+      controlName="title">
+    </app-library-form-messages>
+  </div>
+  <div class="form-group">
+    <label for="input_subtitle">Untertitel</label>
+    <input id="input_subtitle" class="form-control" formControlName="subtitle" type="text">
+  </div>
+  <div class="form-group">
+    <label for="input_subtitle">Genre</label>
+    <input id="input_genre" class="form-control" formControlName="genre" type="text">
+  </div>
+  <div class="form-group">
+    <label for="input_description">Beschreibung</label>
+    <textarea id="input_description" class="form-control" formControlName="description" type="text"
+              rows="4"></textarea>
+  </div>
+
+
+  <div class="form-group">
+    <label for="fieldset_composers">Komponisten</label>
+    <fieldset id="fieldset_composers" formArrayName="composers">
+      <div class="form-group">
+        <div class="input-group" *ngFor="let c of compositionForm.get('composers')['controls']; index as i">
+          <div class="input-group-append">
               <span class="input-group-text" (click)="removeComposerControl(i)"><i class="fa fa-trash"
                                                                                    aria-hidden="true"></i></span>
-            </div>
-            <input class="form-control" type="text"
-                   [formControlName]="i" list="composerlist">
+          </div>
+          <input class="form-control" type="text"
+                 [formControlName]="i" list="composerlist">
 
-            <datalist id="composerlist">
-              <option *ngFor="let c of composer_list" [value]="c.name"></option>
-            </datalist>
-          </div>
-          <div class="button-bar mt-1">
-            <button type="button" (click)="addComposerControl()"
-                    class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
-          </div>
+          <datalist id="composerlist">
+            <option *ngFor="let c of composer_list" [value]="c.name"></option>
+          </datalist>
         </div>
-      </fieldset>
-    </div>
-
-
-    <div class="form-group">
-      <label for="fieldset_composers">Arrangeure</label>
-      <fieldset id="fieldset_arrangers" formArrayName="arrangers">
-        <div class="form-group">
-          <div class="input-group" *ngFor="let c of compositionForm.get('arrangers').controls; index as i">
-            <div class="input-group-append">
-              <span class="input-group-text" (click)="removeArrangerControl(i)"><i class="fa fa-trash"
-                                                                                   aria-hidden="true"></i></span>
-            </div>
-            <input class="form-control" type="text"
-                   [formControlName]="i" list="arrangerlist" required="true">
-            <datalist id="arrangerlist">
-              <option *ngFor="let c of composer_list" [value]="c.name"></option>
-            </datalist>
-          </div>
-          <div class="button-bar mt-1">
-            <button type="button" (click)="addArrangerControl()"
-                    class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
-          </div>
-
-        </div>
-      </fieldset>
-    </div>
-
-
-    <div class="form-group" *ngIf="editing">
-      <label for="list_sheets">Noten</label>
-      <fieldset id="list_sheets" formArrayName="sheets">
-        <div class="form-group">
-          <ng-container *ngFor="let sheet of compositionForm.controls.sheets.controls; index as i">
-            <div class="input-group" [formGroupName]="i">
-              <div class="input-group-append">
-              <span class="input-group-text" (click)="removeSheetControl(i)"><i class="fa fa-trash"
-                                                                                aria-hidden="true"></i></span>
-              </div>
-              <input class="form-control" type="text"
-                     formControlName="title">
-            </div>
-          </ng-container>
-        </div>
-
-        <!--
         <div class="button-bar mt-1">
-          <button type="button" (click)="addSheet()"
+          <button type="button" (click)="addComposerControl()"
                   class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
         </div>
-        -->
-
-      </fieldset>
-
-
-    </div>
-
-    <div class="btn-group">
-      <button type="submit" class="btn btn-primary" [disabled]="!compositionForm.valid">Speichern</button>
-      <!--button class="btn btn-primary" routerLink="/library/composition/{{composition.id}}">Abbrechen</button-->
-    </div>
-  </form>
-  <div class="btn-group">
-  <app-library-upload *ngIf="editing" [composition]="composition" (uploadEvent)="pushSheet($event)"></app-library-upload>
+      </div>
+    </fieldset>
   </div>
+
+
+  <div class="form-group">
+    <label for="fieldset_composers">Arrangeure</label>
+    <fieldset id="fieldset_arrangers" formArrayName="arrangers">
+      <div class="form-group">
+        <div class="input-group" *ngFor="let c of compositionForm.get('arrangers')['controls']; index as i">
+          <div class="input-group-append">
+              <span class="input-group-text" (click)="removeArrangerControl(i)"><i class="fa fa-trash"
+                                                                                   aria-hidden="true"></i></span>
+          </div>
+          <input class="form-control" type="text"
+                 [formControlName]="i" list="arrangerlist" required="true">
+          <datalist id="arrangerlist">
+            <option *ngFor="let c of composer_list" [value]="c.name"></option>
+          </datalist>
+        </div>
+        <div class="button-bar mt-1">
+          <button type="button" (click)="addArrangerControl()"
+                  class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
+        </div>
+
+      </div>
+    </fieldset>
+  </div>
+
+
+  <div class="form-group" *ngIf="editing">
+    <label for="list_sheets">Noten</label>
+    <fieldset id="list_sheets" formArrayName="sheets">
+      <div class="form-group">
+        <ng-container *ngFor="let sheet of compositionForm.controls.sheets.controls; index as i">
+          <div class="input-group" [formGroupName]="i">
+            <div class="input-group-append">
+              <span class="input-group-text" (click)="removeSheetControl(i)"><i class="fa fa-trash"
+                                                                                aria-hidden="true"></i></span>
+            </div>
+            <input class="form-control" type="text"
+                   formControlName="title">
+          </div>
+        </ng-container>
+      </div>
+
+      <!--
+      <div class="button-bar mt-1">
+        <button type="button" (click)="addSheet()"
+                class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
+      </div>
+      -->
+
+    </fieldset>
+
+
+  </div>
+
+  <div class="btn-group">
+    <button type="submit" class="btn btn-primary" [disabled]="!compositionForm.valid">Speichern</button>
+    <!--button class="btn btn-primary" routerLink="/library/composition/{{composition.id}}">Abbrechen</button-->
+  </div>
+</form>
+<div class="btn-group">
+  <app-library-upload *ngIf="editing" [composition]="composition"
+                      (uploadEvent)="pushSheet($event)"></app-library-upload>
 </div>
+
