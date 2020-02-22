@@ -87,8 +87,7 @@ public abstract class AbstractFileService {
     public List<FileDescriptor> listFileNames(String bucket) throws ServiceException {
         List<FileDescriptor> files = null;
         try {
-            boolean found = minioClient.bucketExists(bucket);
-            if (found) {
+            if (minioClient.bucketExists(bucket)) {
                 final Iterable<Result<Item>> myObjects = minioClient.listObjects(bucket);
                 int numberOfAvailableImages = IterableUtils.size(myObjects);
                 files = new ArrayList<>(numberOfAvailableImages);
@@ -111,6 +110,18 @@ public abstract class AbstractFileService {
         }
         log.debug("Returning {} background images ", files.size());
         return files;
+    }
+
+    public void putFile(String bucket, String name, InputStream inputStream, String contentType) throws ServiceException {
+        try {
+            if (minioClient.bucketExists(bucket)) {
+                minioClient.putObject(bucket, name, inputStream, contentType);
+                log.debug(String.format("%s uploaded successfully to bucket %s", name, bucket));
+            }
+        }catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 
 }
