@@ -40,7 +40,7 @@ public abstract class CrudApi<T extends AbstractEntity> {
             @ApiResponse(code = 200, message = "Success", response = Article.class),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    public T getById(@PathVariable("id") Integer id) throws CrudServiceException {
+    public T getById(@PathVariable("id") Long id) throws CrudServiceException {
         return service.get(id);
     }
 
@@ -81,7 +81,7 @@ public abstract class CrudApi<T extends AbstractEntity> {
 
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") Integer id) throws CrudServiceException {
+    public void delete(@PathVariable("id") Long id) throws CrudServiceException {
         checkNotNull(id);
         service.delete(id);
     }

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -21,7 +22,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-public abstract class AbstractFileService {
+@Service
+public class AbstractFileService {
 
     private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.jpg");
 

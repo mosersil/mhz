@@ -3,6 +3,7 @@ package com.silviomoser.mhz.api.images;
 
 import com.silviomoser.mhz.api.core.ApiController;
 import com.silviomoser.mhz.api.core.ApiException;
+import com.silviomoser.mhz.data.FileDescriptor;
 import com.silviomoser.mhz.services.ImageService;
 import com.silviomoser.mhz.services.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +32,11 @@ public class ImagesApi implements ApiController {
 
     @RequestMapping(value = URL_PUBLIC_IMAGES, method = RequestMethod.GET)
     public @ResponseBody
-    List<ImageDescriptor> getImageWithMediaType() {
+    List<FileDescriptor> getImageWithMediaType() {
         try {
-            final List<ImageDescriptor> imageDescriptors = imageService.getImages();
-            Collections.shuffle(imageDescriptors);
-            return imageDescriptors;
+            final List<FileDescriptor> fileDescriptors = imageService.getImages();
+            Collections.shuffle(fileDescriptors);
+            return fileDescriptors;
         } catch (ServiceException se) {
             throw new ApiException("Unexpected error: " + se.getMessage(), se);
         }
