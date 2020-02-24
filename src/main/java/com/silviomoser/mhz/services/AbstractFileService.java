@@ -111,7 +111,7 @@ public class AbstractFileService {
             log.error(e.getMessage(), e);
             throw new ServiceException(e.getMessage(), e);
         }
-        log.debug("Returning {} background images ", files.size());
+        log.debug("Returning {} background images ", files == null ? null : files.size());
         return files;
     }
 

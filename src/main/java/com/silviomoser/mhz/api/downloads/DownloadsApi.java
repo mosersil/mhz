@@ -19,16 +19,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 
 @RestController
 @Slf4j
+@RequestMapping(value = DownloadsApi.API_CONTEXTROOT)
 public class DownloadsApi extends CrudApi<StaticFile> {
 
     public static final String API_CONTEXTROOT = "/api/staticfiles";
@@ -76,8 +73,8 @@ public class DownloadsApi extends CrudApi<StaticFile> {
 
         final ByteArrayInputStream bis = new ByteArrayInputStream(fileService.getFile("downloads", staticFile.getLocation()));
         return downloadResponse(bis, staticFile);
-
     }
+
 
     //TODO: To be removed
     @RequestMapping(value = "/public/api/download", method = RequestMethod.GET)

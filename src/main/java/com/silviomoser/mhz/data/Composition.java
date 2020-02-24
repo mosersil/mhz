@@ -1,21 +1,9 @@
 package com.silviomoser.mhz.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -68,13 +56,13 @@ public class Composition extends AbstractEntity {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "SHEET_ID", referencedColumnName = "ID")})
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    private Set<Sheet> sheets;
+    private Set<StaticFile> sheets;
 
     @JsonView(Views.Public.class)
     @JoinTable(name = "COMPOSITION_SAMPLE", joinColumns = {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "SAMPLE_ID", referencedColumnName = "ID")})
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Sample> samples;
+    private Set<StaticFile> samples;
 
 }

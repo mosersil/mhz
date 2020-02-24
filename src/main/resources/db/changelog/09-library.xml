@@ -58,17 +58,6 @@
             </column>
         </createTable>
 
-        <createTable tableName="SHEET">
-            <column name="ID" type="bigint" autoIncrement="true">
-                <constraints nullable="false" unique="true" primaryKey="true" />
-            </column>
-            <column name="TITLE" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="LOCATION" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-        </createTable>
 
         <createTable tableName="COMPOSITION_SHEET">
             <column name="COMPOSITION_ID" type="bigint">
@@ -79,17 +68,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="SAMPLE">
-            <column name="ID" type="bigint">
-                <constraints nullable="false" unique="true" primaryKey="true"/>
-            </column>
-            <column name="TITLE" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="LOCATION" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-        </createTable>
+
 
         <createTable tableName="COMPOSITION_SAMPLE">
             <column name="COMPOSITION_ID" type="bigint">
@@ -128,6 +107,7 @@
         </createTable>
 
 
+        <!--
         <loadData tableName="COMPOSER" file="../static/composer.csv" relativeToChangelogFile="true" quotchar="'"/>
         <loadData tableName="COMPOSITION" file="../static/composition.csv" relativeToChangelogFile="true" quotchar="'"/>
         <loadData tableName="COMPOSITION_COMPOSER" file="../static/composition_composer.csv"
@@ -146,6 +126,8 @@
 
         <loadData tableName="REPERTOIRE_COMPOSITION" file="../static/repertoire_composition.csv" relativeToChangelogFile="true"
                   quotchar="'"/>
+
+                  -->
 
     </changeSet>
 </databaseChangeLog>
