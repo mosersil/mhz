@@ -30,6 +30,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class CrudApi<T extends AbstractEntity> {
 
 
+
+
     @Autowired
     protected AbstractCrudService<T> service;
 

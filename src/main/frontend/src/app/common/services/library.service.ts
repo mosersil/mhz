@@ -14,7 +14,8 @@ const SHEET_API = environment.backendUrl + '/api/sheet';
 const COMPOSITION_API = environment.backendUrl + '/api/composition';
 const COMPOSER_API = environment.backendUrl + '/api/composer';
 const REPERTOIRE_API = environment.backendUrl + '/api/repertoire';
-const SHEETDOWNLOAD = environment.backendUrl + '/api/sheetdownload';
+const SHEETDOWNLOAD = environment.backendUrl + '/api/securedownload';
+const SHEETUPLOAD = environment.backendUrl + '/api/uploadstaticfile';
 const SAMPLEDOWNLOAD = environment.backendUrl + '/api/sampledownload';
 
 @Injectable({
@@ -88,7 +89,7 @@ export class LibraryService {
     formData.append('file', file, file.name);
 
     // send the http-request and subscribe for progress-updates
-    return this.http.post<any>(SHEETDOWNLOAD, formData);
+    return this.http.post<any>(SHEETUPLOAD, formData);
 
   }
 

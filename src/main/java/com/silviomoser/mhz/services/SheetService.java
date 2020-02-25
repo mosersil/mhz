@@ -1,7 +1,7 @@
 package com.silviomoser.mhz.services;
 
 import com.silviomoser.mhz.data.Sheet;
-import com.silviomoser.mhz.data.SheetUpload;
+import com.silviomoser.mhz.data.StaticFileUpload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import java.io.IOException;
 public class SheetService extends AbstractCrudService<Sheet> {
 
 
-    private AbstractFileService sheetFileService = new AbstractFileService() {};
+    private FileBucketService sheetFileService = new FileBucketService() {};
 
 
-    public Sheet upload(SheetUpload sheetUpload) throws CrudServiceException {
+    public Sheet upload(StaticFileUpload sheetUpload) throws CrudServiceException {
         try {
             sheetFileService.putFile("sheets", sheetUpload.getTitle(), sheetUpload.getFile().getInputStream(), sheetUpload.getFile().getContentType(), true);
             final Sheet newSheet = Sheet.builder()

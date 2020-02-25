@@ -14,7 +14,7 @@ import java.util.List;
 public class ImageService {
 
     @Autowired
-    AbstractFileService abstractFileService;
+    FileBucketService abstractFileService;
 
 
     private static final String BUCKET_IMAGES = "images";

@@ -1,14 +1,16 @@
 package com.silviomoser.mhz.api.downloads;
 
 import com.silviomoser.mhz.api.core.ApiException;
-import com.silviomoser.mhz.api.core.CrudApi;
 import com.silviomoser.mhz.data.StaticFile;
+import com.silviomoser.mhz.data.StaticFileUpload;
+import com.silviomoser.mhz.data.type.FileType;
 import com.silviomoser.mhz.security.utils.SecurityUtils;
-import com.silviomoser.mhz.services.AbstractFileService;
 import com.silviomoser.mhz.services.CrudServiceException;
-import com.silviomoser.mhz.services.FileService;
+import com.silviomoser.mhz.services.FileBucketService;
 import com.silviomoser.mhz.services.ServiceException;
+import com.silviomoser.mhz.services.StaticFileService;
 import com.silviomoser.mhz.ui.i18.I18Helper;
+import com.silviomoser.mhz.utils.FileNameUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -19,22 +21,27 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RestController
 @Slf4j
-@RequestMapping(value = DownloadsApi.API_CONTEXTROOT)
-public class DownloadsApi extends CrudApi<StaticFile> {
-
-    public static final String API_CONTEXTROOT = "/api/staticfiles";
+public class StaticFileDownload {
 
     @Autowired
-    private  FileService legacyFileService;
+    private StaticFileService legacyFileService;
 
     @Autowired
-    private AbstractFileService fileService;
+    private FileBucketService fileService;
+
 
     @Autowired
     private I18Helper i18Helper;
@@ -48,7 +55,7 @@ public class DownloadsApi extends CrudApi<StaticFile> {
     @RequestMapping(value = "/api/publicdownload", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> publicDownload(@RequestParam(name = "id") Long id) throws CrudServiceException, ServiceException {
 
-        final StaticFile staticFile = getById(id);
+        final StaticFile staticFile = legacyFileService.get(id);
 
         if (staticFile.getRole() != null) {
             log.warn(String.format("rejected attempt to download file id '%s' (unauthorized)", id));
@@ -63,7 +70,7 @@ public class DownloadsApi extends CrudApi<StaticFile> {
     @RequestMapping(value = "/api/securedownload", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> secureDownload(@RequestParam(name = "id") Long id) throws CrudServiceException, ServiceException {
 
-        final StaticFile staticFile = getById(id);
+        final StaticFile staticFile = legacyFileService.get(id);
 
         if (staticFile.getRole() != null) {
             if (!SecurityUtils.hasRole(staticFile.getRole().getType())) {
@@ -99,7 +106,6 @@ public class DownloadsApi extends CrudApi<StaticFile> {
     }
 
 
-
     private ResponseEntity<InputStreamResource> downloadResponse(ByteArrayInputStream bis, StaticFile staticFile) {
         final HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", String.format("inline; filename=%s", staticFile.getLocation()));
@@ -110,4 +116,29 @@ public class DownloadsApi extends CrudApi<StaticFile> {
                 .contentType(MediaType.valueOf(staticFile.getFileType().getMime()))
                 .body(new InputStreamResource(bis));
     }
+
+
+    @CrossOrigin(origins = "*")
+    @ApiOperation(value = "Upload a new sheet")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad request")
+    })
+    @RequestMapping(path = "/api/uploadstaticfile", method = RequestMethod.POST)
+    public StaticFile uploadFile(@ModelAttribute StaticFileUpload staticFileUpload) throws IOException, ServiceException, CrudServiceException {
+
+        final String fileLocation = FileNameUtils.normalizeFileName(staticFileUpload.getTitle());
+        fileService.putFile("downloads", fileLocation, staticFileUpload.getFile().getInputStream(), staticFileUpload.getFile().getContentType(), true);
+
+        final StaticFile staticFile = StaticFile.builder()
+                .title(staticFileUpload.getTitle())
+                .created(LocalDateTime.now())
+                .person(SecurityUtils.getMe())
+                .fileType(FileType.PDF)
+                .location(fileLocation)
+                .build();
+        return legacyFileService.add(staticFile);
+
+    }
+
 }

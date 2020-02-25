@@ -7,7 +7,7 @@ import com.silviomoser.mhz.data.type.StaticFileCategory;
 import com.silviomoser.mhz.repository.RoleRepository;
 import com.silviomoser.mhz.security.utils.SecurityUtils;
 import com.silviomoser.mhz.services.FileHandle;
-import com.silviomoser.mhz.services.FileService;
+import com.silviomoser.mhz.services.StaticFileService;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Page;
@@ -39,7 +39,7 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
     RoleRepository roleRepository;
 
     @Autowired
-    FileService fileService;
+    StaticFileService fileService;
 
     @Override
     public Layout initLayout() {

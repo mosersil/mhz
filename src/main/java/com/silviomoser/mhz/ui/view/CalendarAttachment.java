@@ -6,7 +6,7 @@ import com.silviomoser.mhz.data.StaticFile;
 import com.silviomoser.mhz.repository.RoleRepository;
 import com.silviomoser.mhz.repository.StaticFileRepository;
 import com.silviomoser.mhz.services.FileHandle;
-import com.silviomoser.mhz.services.FileService;
+import com.silviomoser.mhz.services.StaticFileService;
 import com.silviomoser.mhz.ui.i18.I18Helper;
 import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
@@ -59,7 +59,7 @@ public class CalendarAttachment extends Window {
     private RoleRepository roleRepository;
 
     @Autowired
-    private FileService fileService;
+    private StaticFileService fileService;
 
     private final ComboBox<Role> roleEditor = new ComboBox<>(i18Helper.getMessage("file_authorization"));
     private final Grid<StaticFile> fileGrid = new Grid("Verknüpfte Anhänge");

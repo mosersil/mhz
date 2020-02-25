@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @Data
-public class SheetUpload {
+public class StaticFileUpload {
     private int id;
     private String title;
     private MultipartFile file;

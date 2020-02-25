@@ -181,7 +181,6 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   pushSheet(sheet:Sheet) {
-    console.log("push sheet " + sheet)
     this.composition.sheets.push(sheet);
     this.setFormValues(this.composition);
   }
