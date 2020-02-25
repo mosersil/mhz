@@ -1,9 +1,12 @@
 package com.silviomoser.mhz.api.downloads;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.silviomoser.mhz.api.core.ApiException;
 import com.silviomoser.mhz.data.StaticFile;
 import com.silviomoser.mhz.data.StaticFileUpload;
+import com.silviomoser.mhz.data.Views;
 import com.silviomoser.mhz.data.type.FileType;
+import com.silviomoser.mhz.data.type.StaticFileCategory;
 import com.silviomoser.mhz.security.utils.SecurityUtils;
 import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.FileBucketService;
@@ -21,12 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -67,6 +65,7 @@ public class StaticFileDownload {
 
     }
 
+    @JsonView(Views.Public.class)
     @RequestMapping(value = "/api/securedownload", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> secureDownload(@RequestParam(name = "id") Long id) throws CrudServiceException, ServiceException {
 
@@ -136,6 +135,8 @@ public class StaticFileDownload {
                 .person(SecurityUtils.getMe())
                 .fileType(FileType.PDF)
                 .location(fileLocation)
+                .staticFileCategory(StaticFileCategory.GENERIC)
+                .description(staticFileUpload.getTitle())
                 .build();
         return legacyFileService.add(staticFile);
 
