@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Sheet} from "../../common/entities/sheet";
+import {StaticFile} from "../../common/entities/staticfile";
 import {LibraryService} from "../../common/services/library.service";
 import {Composition} from "../../common/entities/composition";
 
@@ -22,7 +22,7 @@ export class LibraryUploadComponent implements OnInit {
   @Input()
   composition:Composition;
 
-  @Output() uploadEvent = new EventEmitter<Sheet>();
+  @Output() uploadEvent = new EventEmitter<StaticFile>();
 
   constructor(private ls:LibraryService) { }
 
@@ -41,12 +41,13 @@ export class LibraryUploadComponent implements OnInit {
       if (!isNaN(parseInt(key))) {
         this.files.add(files[key]);
 
-        const sheet: Sheet = new Sheet();
+        const sheet: StaticFile = new StaticFile();
         sheet.title = files[key].name;
         sheet.location = files[key].name;
+
         this.ls.uploadSheet(this.composition.id, sheet.title, files[key]).subscribe(response =>
         {
-          let sheet:Sheet = response;
+          let sheet:StaticFile = response;
           this.uploadEvent.emit(sheet);
         });
 

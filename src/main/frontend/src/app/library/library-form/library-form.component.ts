@@ -4,7 +4,7 @@ import {LibraryService} from "../../common/services/library.service";
 import {Composer} from "../../common/entities/composer";
 import {Composition} from "../../common/entities/composition";
 import {Router} from "@angular/router";
-import {Sheet} from "../../common/entities/sheet";
+import {StaticFile} from "../../common/entities/staticfile";
 
 @Component({
   selector: 'app-library-form',
@@ -19,7 +19,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
 
   compositionForm: FormGroup;
   composer_list: Composer[];
-  addedSheets: Sheet[];
+  addedSheets: StaticFile[];
 
   @ViewChild('file', {static: true}) file;
   public files: Set<File> = new Set();
@@ -70,11 +70,13 @@ export class LibraryFormComponent implements OnInit, OnChanges {
     console.log(this.compositionForm);
   }
 
-  private buildSheetsArray(values: Sheet[]): FormArray {
+  private buildSheetsArray(values: StaticFile[]): FormArray {
     return this.fb.array(values.map(t => this.fb.group(
       {
         id: [t.id],
         title: [t.title],
+        created: [t.created],
+        staticFileCategory: [t.staticFileCategory],
         location: [t.location]
       }
     )));
@@ -136,7 +138,6 @@ export class LibraryFormComponent implements OnInit, OnChanges {
   }
 
   get sheets(): FormArray {
-    console.log("gugus")
     return <FormArray>this.compositionForm.get('sheets') as FormArray
   }
 
@@ -180,7 +181,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
     */
   }
 
-  pushSheet(sheet:Sheet) {
+  pushSheet(sheet:StaticFile) {
     this.composition.sheets.push(sheet);
     this.setFormValues(this.composition);
   }

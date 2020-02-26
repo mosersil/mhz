@@ -1,5 +1,5 @@
 import {Composer} from "./composer";
-import {Sheet} from "./sheet";
+import {StaticFile} from "./staticfile";
 import {Sample} from "./sample";
 
 export class Composition {
@@ -11,6 +11,6 @@ export class Composition {
   description: string;
   composers: Composer[];
   arrangers: Composer[];
-  sheets: Sheet[];
+  sheets: StaticFile[];
   samples: Sample[];
 }

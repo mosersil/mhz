@@ -6,7 +6,7 @@ import {saveAs} from "file-saver";
 import {Repertoire} from "../entities/repertoire";
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from "@angular/core";
-import {Sheet} from "../entities/sheet";
+import {StaticFile} from "../entities/staticfile";
 
 
 const SAMPLE_API = environment.backendUrl + '/api/sample';
@@ -80,7 +80,7 @@ export class LibraryService {
   }
 
 
-  uploadSheet(compositionId: number, name: string, file: File):Observable<Sheet> {
+  uploadSheet(compositionId: number, name: string, file: File):Observable<StaticFile> {
 
     // create a new multipart-form for every file
     const formData: FormData = new FormData();
