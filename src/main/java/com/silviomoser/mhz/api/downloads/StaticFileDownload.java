@@ -24,12 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -55,8 +50,8 @@ public class StaticFileDownload {
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    @RequestMapping(value = "/api/publicdownload", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> publicDownload(@RequestParam(name = "id") Long id) throws CrudServiceException, ServiceException {
+    @RequestMapping(value = "/api/publicdownload/{id}", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> publicDownload(@PathVariable Long id) throws CrudServiceException, ServiceException {
 
         final StaticFile staticFile = legacyFileService.get(id);
 
@@ -71,8 +66,8 @@ public class StaticFileDownload {
     }
 
     @JsonView(Views.Public.class)
-    @RequestMapping(value = "/api/securedownload", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> secureDownload(@RequestParam(name = "id") Long id) throws CrudServiceException, ServiceException {
+    @RequestMapping(value = "/api/securedownload/{id}", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> secureDownload(@PathVariable Long id) throws CrudServiceException, ServiceException {
 
         final StaticFile staticFile = legacyFileService.get(id);
 
@@ -138,7 +133,6 @@ public class StaticFileDownload {
         final StaticFile staticFile = StaticFile.builder()
                 .title(staticFileUpload.getTitle())
                 .created(LocalDateTime.now())
-                .person(SecurityUtils.getMe())
                 .fileType(FileType.PDF)
                 .location(fileLocation)
                 .staticFileCategory(StaticFileCategory.GENERIC)

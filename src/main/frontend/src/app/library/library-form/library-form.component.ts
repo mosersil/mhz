@@ -75,9 +75,11 @@ export class LibraryFormComponent implements OnInit, OnChanges {
       {
         id: [t.id],
         title: [t.title],
+        description: [t.description],
         created: [t.created],
         staticFileCategory: [t.staticFileCategory],
-        location: [t.location]
+        location: [t.location],
+        fileType: [t.fileType]
       }
     )));
   }

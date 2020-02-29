@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 @Service
 public class FileBucketService {
 
-    private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.jpg");
+    private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.[A-Za-z0-9]+");
 
     @Autowired
     private MinioClient minioClient;

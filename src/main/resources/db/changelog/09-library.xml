@@ -106,6 +106,7 @@
             </column>
         </createTable>
 
+        <dropNotNullConstraint tableName="STATIC_FILE" columnName="PERSON_ID" columnDataType="bigint" />
 
         <!--
         <loadData tableName="COMPOSER" file="../static/composer.csv" relativeToChangelogFile="true" quotchar="'"/>

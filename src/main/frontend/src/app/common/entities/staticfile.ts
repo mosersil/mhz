@@ -3,7 +3,7 @@ export class StaticFile {
   created: Date;
   title: string;
   staticFileCategory: string;
-  description; string;
+  description: string;
   fileType: string;
   role: string;
   keywords: string;

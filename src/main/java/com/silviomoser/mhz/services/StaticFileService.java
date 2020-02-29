@@ -92,7 +92,6 @@ public class StaticFileService extends AbstractCrudService<StaticFile> {
     public StaticFile save(FileHandle fileHandle, String title, String description, Role role, String keywords, CalendarEvent event) {
 
         final StaticFile staticFile = StaticFile.builder()
-                .person(SecurityUtils.getMe())
                 .fileType(fileHandle.getFileType())
                 .title(title)
                 .staticFileCategory(StaticFileCategory.GENERIC)
