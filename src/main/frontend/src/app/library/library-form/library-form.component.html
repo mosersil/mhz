@@ -6,7 +6,7 @@
     <li class="breadcrumb-item" routerLink="/library/archive">Bibliothek</li>
     <li class="breadcrumb-item" routerLink="/library/composition/{{composition.id}}">{{composition.title}}</li>
     <li class="breadcrumb-item active" routerLink="/library/composition/edit/{{composition.id}}" aria-current="page">
-      Bearbeiten
+      <i>Bearbeiten</i>
     </li>
   </ol>
 </nav>
@@ -107,17 +107,25 @@
           </div>
         </ng-container>
       </div>
-
-      <!--
-      <div class="button-bar mt-1">
-        <button type="button" (click)="addSheet()"
-                class="btn btn-secondary btn-sm fa fa-plus fa-lg"></button>
-      </div>
-      -->
-
     </fieldset>
+  </div>
 
-
+  <div class="form-group" *ngIf="editing">
+    <label for="list_sheets">Hörbeispiele</label>
+    <fieldset id="list_samples" formArrayName="samples">
+      <div class="form-group">
+        <ng-container *ngFor="let sample of compositionForm.controls.samples.controls; index as i">
+          <div class="input-group" [formGroupName]="i">
+            <div class="input-group-append">
+              <span class="input-group-text" (click)="removeSampleControl(i)"><i class="fa fa-trash"
+                                                                                aria-hidden="true"></i></span>
+            </div>
+            <input class="form-control" type="text"
+                   formControlName="title">
+          </div>
+        </ng-container>
+      </div>
+    </fieldset>
   </div>
 
   <div class="btn-group">
@@ -127,6 +135,13 @@
 </form>
 <div class="btn-group">
   <app-library-upload *ngIf="editing" [composition]="composition"
-                      (uploadEvent)="pushSheet($event)"></app-library-upload>
+                      type="LIBRARY_SHEETS"
+                      (uploadStaticFileEvent)="pushSheet($event)"
+  ></app-library-upload>
+  <app-library-upload *ngIf="editing" [composition]="composition"
+                      type="LIBRARY_SAMPLES"
+                      (uploadStaticFileEvent)="pushSample($event)"
+  ></app-library-upload>
+
 </div>
 

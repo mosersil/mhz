@@ -41,7 +41,8 @@ export class LibraryFormComponent implements OnInit, OnChanges {
     this.compositionForm.patchValue(composition)
     this.compositionForm.setControl("composers", this.buildComposersArray(composition.composers));
     this.compositionForm.setControl("arrangers", this.buildComposersArray(composition.arrangers));
-    this.compositionForm.setControl("sheets", this.buildSheetsArray(composition.sheets));
+    this.compositionForm.setControl("sheets", this.buildStaticFileArray(composition.sheets));
+    this.compositionForm.setControl("samples", this.buildStaticFileArray(composition.samples));
   }
 
   private initForm() {
@@ -65,12 +66,13 @@ export class LibraryFormComponent implements OnInit, OnChanges {
       description: [''],
       composers: this.buildComposersArray([]),
       arrangers: this.buildComposersArray([]),
-      sheets: this.buildSheetsArray([])
+      sheets: this.buildStaticFileArray([]),
+      samples: this.buildStaticFileArray([])
     });
     console.log(this.compositionForm);
   }
 
-  private buildSheetsArray(values: StaticFile[]): FormArray {
+  private buildStaticFileArray(values: StaticFile[]): FormArray {
     return this.fb.array(values.map(t => this.fb.group(
       {
         id: [t.id],
@@ -111,7 +113,8 @@ export class LibraryFormComponent implements OnInit, OnChanges {
 
     const composers = formValue.composers.map(composer => this.getComposerByName(composer));
     const arrangers = formValue.arrangers.map(arranger => this.getComposerByName(arranger));
-    const sheets = formValue.sheets.map(sheet => sheet)
+    const sheets = formValue.sheets.map(sheet => sheet);
+    const samples = formValue.samples.map(sample => sample);
 
     let newComposition = new Composition();
 
@@ -124,6 +127,7 @@ export class LibraryFormComponent implements OnInit, OnChanges {
     newComposition.composers = composers;
     newComposition.arrangers = arrangers;
     newComposition.sheets = sheets;
+    newComposition.samples = samples;
 
     this.submitComposition.emit(newComposition);
     this.compositionForm.reset();
@@ -141,6 +145,10 @@ export class LibraryFormComponent implements OnInit, OnChanges {
 
   get sheets(): FormArray {
     return <FormArray>this.compositionForm.get('sheets') as FormArray
+  }
+
+  get samples(): FormArray {
+    return <FormArray>this.compositionForm.get('samples') as FormArray
   }
 
   addComposerControl() {
@@ -163,28 +171,18 @@ export class LibraryFormComponent implements OnInit, OnChanges {
     this.sheets.removeAt(index)
   }
 
-
-  onFileAdded() {
-    /*
-    const files: { [key: string]: File } = this.file.nativeElement.files;
-    for (let key in files) {
-      if (!isNaN(parseInt(key))) {
-        this.files.add(files[key]);
-        const sheet: Sheet = new Sheet();
-        sheet.title = files[key].name;
-        sheet.location = files[key].name;
-        this.ls.uploadSheet(this.composition.id, sheet.title, files[key]);
-      }
-    }
-    this.ls.getComposition(String(this.composition.id)).subscribe(data => {
-      this.composition = data;
-      this.setFormValues(this.composition);
-    });
-    */
+  removeSampleControl(index: number) {
+    this.samples.removeAt(index)
   }
+
 
   pushSheet(sheet:StaticFile) {
     this.composition.sheets.push(sheet);
+    this.setFormValues(this.composition);
+  }
+
+  pushSample(sheet:StaticFile) {
+    this.composition.samples.push(sheet);
     this.setFormValues(this.composition);
   }
 

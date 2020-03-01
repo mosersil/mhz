@@ -8,5 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class StaticFileUpload {
     private int id;
     private String title;
+    private String category;
+    private String role;
     private MultipartFile file;
 }

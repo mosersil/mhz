@@ -80,12 +80,29 @@ export class LibraryService {
   }
 
 
-  uploadSheet(compositionId: number, name: string, file: File):Observable<StaticFile> {
+  uploadSheet(compositionId: number, name: string, category: string, file: File):Observable<StaticFile> {
 
     // create a new multipart-form for every file
     const formData: FormData = new FormData();
     formData.append('id', "" + compositionId);
     formData.append('title', name);
+    formData.append('category', category);
+    formData.append('role', "USER");
+    formData.append('file', file, file.name);
+
+    // send the http-request and subscribe for progress-updates
+    return this.http.post<any>(SHEETUPLOAD, formData);
+
+  }
+
+  uploadSample(compositionId: number, name: string, file: File):Observable<StaticFile> {
+
+    // create a new multipart-form for every file
+    const formData: FormData = new FormData();
+    formData.append('id', "" + compositionId);
+    formData.append('title', name);
+    formData.append('category', "LIBRARY_SAMPLES");
+    formData.append('role', "USER");
     formData.append('file', file, file.name);
 
     // send the http-request and subscribe for progress-updates

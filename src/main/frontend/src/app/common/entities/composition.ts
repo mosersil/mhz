@@ -1,6 +1,5 @@
 import {Composer} from "./composer";
 import {StaticFile} from "./staticfile";
-import {Sample} from "./sample";
 
 export class Composition {
   id: number;
@@ -12,5 +11,5 @@ export class Composition {
   composers: Composer[];
   arrangers: Composer[];
   sheets: StaticFile[];
-  samples: Sample[];
+  samples: StaticFile[];
 }

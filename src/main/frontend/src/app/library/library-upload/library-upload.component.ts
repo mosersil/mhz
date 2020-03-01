@@ -18,21 +18,30 @@ export class LibraryUploadComponent implements OnInit {
   showCancelButton = true
   uploading = false
   uploadSuccessful = false
+  btn_label:string
 
   @Input()
-  composition:Composition;
+  composition: Composition;
 
-  @Output() uploadEvent = new EventEmitter<StaticFile>();
+  @Input()
+  type: string
 
-  constructor(private ls:LibraryService) { }
+  @Output() uploadStaticFileEvent = new EventEmitter<StaticFile>();
+
+  constructor(private ls: LibraryService) {
+  }
 
   ngOnInit() {
+    if (this.type === "LIBRARY_SHEETS") {
+      this.btn_label = "Noten hinzufügen";
+    }
+    if (this.type === "LIBRARY_SAMPLES") {
+      this.btn_label = "Hörbeispiel hinzufügen";
+    }
   }
 
   addFiles() {
     this.file.nativeElement.click();
-
-    console.log("addFiles called. file="+this.file);
   }
 
   onFilesAdded() {
@@ -41,19 +50,12 @@ export class LibraryUploadComponent implements OnInit {
       if (!isNaN(parseInt(key))) {
         this.files.add(files[key]);
 
-        const sheet: StaticFile = new StaticFile();
-        sheet.title = files[key].name;
-        sheet.location = files[key].name;
-
-        this.ls.uploadSheet(this.composition.id, sheet.title, files[key]).subscribe(response =>
-        {
-          let sheet:StaticFile = response;
-          this.uploadEvent.emit(sheet);
+        this.ls.uploadSheet(this.composition.id, files[key].name, this.type, files[key]).subscribe(response => {
+          let uploadedStaticFile: StaticFile = response;
+          this.uploadStaticFileEvent.emit(uploadedStaticFile);
         });
 
       }
     }
-
   }
-
 }

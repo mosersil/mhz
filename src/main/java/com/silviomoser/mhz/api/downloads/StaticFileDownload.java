@@ -6,10 +6,12 @@ import com.silviomoser.mhz.data.StaticFile;
 import com.silviomoser.mhz.data.StaticFileUpload;
 import com.silviomoser.mhz.data.Views;
 import com.silviomoser.mhz.data.type.FileType;
+import com.silviomoser.mhz.data.type.RoleType;
 import com.silviomoser.mhz.data.type.StaticFileCategory;
 import com.silviomoser.mhz.security.utils.SecurityUtils;
 import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.FileBucketService;
+import com.silviomoser.mhz.services.RoleService;
 import com.silviomoser.mhz.services.ServiceException;
 import com.silviomoser.mhz.services.StaticFileService;
 import com.silviomoser.mhz.ui.i18.I18Helper;
@@ -24,7 +26,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,6 +47,9 @@ public class StaticFileDownload {
 
     @Autowired
     private FileBucketService fileService;
+
+    @Autowired
+    private RoleService roleService;
 
 
     @Autowired
@@ -60,12 +71,12 @@ public class StaticFileDownload {
             throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
         }
 
-        final ByteArrayInputStream bis = new ByteArrayInputStream(fileService.getFile("downloads", staticFile.getLocation()));
+        final ByteArrayInputStream bis = new ByteArrayInputStream(fileService.getFile(staticFile.getStaticFileCategory().getBucketName(), staticFile.getLocation()));
         return downloadResponse(bis, staticFile);
 
     }
 
-    @JsonView(Views.Public.class)
+
     @RequestMapping(value = "/api/securedownload/{id}", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> secureDownload(@PathVariable Long id) throws CrudServiceException, ServiceException {
 
@@ -77,7 +88,7 @@ public class StaticFileDownload {
             }
         }
 
-        final ByteArrayInputStream bis = new ByteArrayInputStream(fileService.getFile("downloads", staticFile.getLocation()));
+        final ByteArrayInputStream bis = new ByteArrayInputStream(fileService.getFile(staticFile.getStaticFileCategory().getBucketName(), staticFile.getLocation()));
         return downloadResponse(bis, staticFile);
     }
 
@@ -107,7 +118,7 @@ public class StaticFileDownload {
 
     private ResponseEntity<InputStreamResource> downloadResponse(ByteArrayInputStream bis, StaticFile staticFile) {
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", String.format("inline; filename=%s", staticFile.getLocation()));
+        headers.add("Content-Disposition", String.format("attachment; filename=%s", staticFile.getLocation()));
 
         return ResponseEntity
                 .ok()
@@ -128,16 +139,21 @@ public class StaticFileDownload {
     public StaticFile uploadFile(@ModelAttribute StaticFileUpload staticFileUpload) throws IOException, ServiceException, CrudServiceException {
 
         final String fileLocation = FileNameUtils.normalizeFileName(staticFileUpload.getTitle());
-        fileService.putFile("downloads", fileLocation, staticFileUpload.getFile().getInputStream(), staticFileUpload.getFile().getContentType(), true);
+
+        log.debug("Detected filetype: " + staticFileUpload.getFile().getContentType());
 
         final StaticFile staticFile = StaticFile.builder()
                 .title(staticFileUpload.getTitle())
                 .created(LocalDateTime.now())
-                .fileType(FileType.PDF)
+                .fileType(FileType.byMimeType(staticFileUpload.getFile().getContentType()))
                 .location(fileLocation)
-                .staticFileCategory(StaticFileCategory.GENERIC)
+                .staticFileCategory(StaticFileCategory.valueOf(staticFileUpload.getCategory()))
                 .description(staticFileUpload.getTitle())
+                .role(roleService.getByRoleType(RoleType.findByType(staticFileUpload.getRole())))
                 .build();
+
+        fileService.putFile(staticFile.getStaticFileCategory().getBucketName(), fileLocation, staticFileUpload.getFile().getInputStream(), staticFileUpload.getFile().getContentType(), true);
+
         return legacyFileService.add(staticFile);
 
     }
