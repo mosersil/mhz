@@ -18,14 +18,12 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 public class FileBucketService {
 
-    private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.[A-Za-z0-9]+");
+    //private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.[A-Za-z0-9]+");
 
     @Autowired
     private MinioClient minioClient;
@@ -64,10 +62,12 @@ public class FileBucketService {
 
 
     public byte[] getFile(String bucket, String name) throws ServiceException {
+        /*
         Matcher matcher = VALID_NAME.matcher(name);
         if (!matcher.matches()) {
             throw new ServiceException("Invalid resource name");
         }
+        */
 
         byte[] returnBytes;
         try {

@@ -6,7 +6,14 @@ import com.silviomoser.mhz.api.calendar.CalendarApi;
 import com.silviomoser.mhz.api.library.ComposerApi;
 import com.silviomoser.mhz.api.library.CompositionApi;
 import com.silviomoser.mhz.api.library.RepertoireApi;
-import com.silviomoser.mhz.security.*;
+import com.silviomoser.mhz.security.AuthRole;
+import com.silviomoser.mhz.security.AuthUser;
+import com.silviomoser.mhz.security.AuthenticationResult;
+import com.silviomoser.mhz.security.JwtAuthenticationFilter;
+import com.silviomoser.mhz.security.JwtTokenProvider;
+import com.silviomoser.mhz.security.SecurityUserDetails;
+import com.silviomoser.mhz.security.SecurityUserDetailsService;
+import com.silviomoser.mhz.security.UsernamePasswordFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -181,6 +188,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, RepertoireApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
                 .antMatchers(HttpMethod.PUT, RepertoireApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
                 .antMatchers(HttpMethod.DELETE, RepertoireApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+
+                //Downloads
+                .antMatchers("/api/securedownload/**").authenticated()
 
                 .antMatchers("/internal/api/**").hasRole("USER")
                 .antMatchers("/api/protected/**").hasRole("USER")

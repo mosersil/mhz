@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -62,7 +63,7 @@ public class StaticFileDownload {
             @ApiResponse(code = 400, message = "Bad request")
     })
     @RequestMapping(value = "/api/publicdownload/{id}", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> publicDownload(@PathVariable Long id) throws CrudServiceException, ServiceException {
+    public ResponseEntity<ByteArrayResource> publicDownload(@PathVariable Long id) throws CrudServiceException, ServiceException {
 
         final StaticFile staticFile = legacyFileService.get(id);
 
@@ -71,14 +72,21 @@ public class StaticFileDownload {
             throw new ApiException(i18Helper.getMessage("unauthorized"), HttpStatus.UNAUTHORIZED);
         }
 
-        final ByteArrayInputStream bis = new ByteArrayInputStream(fileService.getFile(staticFile.getStaticFileCategory().getBucketName(), staticFile.getLocation()));
-        return downloadResponse(bis, staticFile);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=%s", staticFile.getLocation()));
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.valueOf(staticFile.getFileType().getMime()))
+                .body(new ByteArrayResource(fileService.getFile(staticFile.getStaticFileCategory().getBucketName(), staticFile.getLocation())));
+
 
     }
 
 
     @RequestMapping(value = "/api/securedownload/{id}", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> secureDownload(@PathVariable Long id) throws CrudServiceException, ServiceException {
+    public ResponseEntity<ByteArrayResource> secureDownload(@PathVariable Long id) throws CrudServiceException, ServiceException {
 
         final StaticFile staticFile = legacyFileService.get(id);
 
@@ -88,8 +96,14 @@ public class StaticFileDownload {
             }
         }
 
-        final ByteArrayInputStream bis = new ByteArrayInputStream(fileService.getFile(staticFile.getStaticFileCategory().getBucketName(), staticFile.getLocation()));
-        return downloadResponse(bis, staticFile);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=%s", staticFile.getLocation()));
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.valueOf(staticFile.getFileType().getMime()))
+                .body(new ByteArrayResource(fileService.getFile(staticFile.getStaticFileCategory().getBucketName(), staticFile.getLocation())));
     }
 
 
