@@ -39,8 +39,4 @@ export class LibraryDetailsComponent implements OnInit {
     this.libraryService.downloadFile(id);
   }
 
-  playerDownload(id: string) {
-    this.libraryService.downloadSample(id);
-  }
-
 }

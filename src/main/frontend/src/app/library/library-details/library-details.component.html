@@ -64,20 +64,12 @@
         <dt class="col-sm-3">Hörbeispiele:</dt>
         <dd class="col-sm-9">
           <ng-container *ngFor="let sample of composition.samples">
-          <audio src="http://localhost:8085/api/securedownload/{{sample.id}}" controls="controls" preload="none">
+          <audio src="/api/securedownload/{{sample.id}}" controls="controls" preload="none">
             <!--<audio src="http://localhost:8085/api/public/sample/rename.mp3" controls="controls" preload="none"-->
             Your browser does not support the audio element.
 
           </audio>
           </ng-container>
-          <!--
-          <ng-container *ngFor="let sample of composition.samples">
-            <a (click)="download(sample.location)">
-            <span
-              class="fa fa-download" aria-hidden="true"></span>&nbsp;{{sample.title}}<br/>
-            </a>
-          </ng-container>
-          -->
         </dd>
 
       </dl>

@@ -16,7 +16,6 @@ const COMPOSER_API = environment.backendUrl + '/api/composer';
 const REPERTOIRE_API = environment.backendUrl + '/api/repertoire';
 const SHEETDOWNLOAD = environment.backendUrl + '/api/securedownload';
 const SHEETUPLOAD = environment.backendUrl + '/api/uploadstaticfile';
-const SAMPLEDOWNLOAD = environment.backendUrl + '/api/sampledownload';
 
 @Injectable({
   providedIn: 'root'
@@ -65,13 +64,6 @@ export class LibraryService {
       responseType: 'arraybuffer'
     })
       .subscribe(response => this.downLoadFile(response, "application/pdf", "download.pdf"));
-  }
-
-  downloadSample(sampleId: string) {
-    this.http.get(SAMPLEDOWNLOAD + "/" + sampleId, {
-      responseType: 'arraybuffer'
-    })
-      .subscribe(response => this.downLoadFile(response, "audio/mpeg", "download.mp3"));
   }
 
   downLoadFile(data: any, type: string, filename: string) {

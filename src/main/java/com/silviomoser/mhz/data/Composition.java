@@ -1,9 +1,21 @@
 package com.silviomoser.mhz.data;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -26,13 +38,13 @@ public class Composition extends AbstractEntity {
     @JoinTable(name = "COMPOSITION_COMPOSER", joinColumns = {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "COMPOSER_ID", referencedColumnName = "ID")})
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<Composer> composers;
     @JsonView(Views.Public.class)
     @JoinTable(name = "COMPOSITION_ARRANGER", joinColumns = {
             @JoinColumn(name = "COMPOSITION_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
             @JoinColumn(name = "COMPOSER_ID", referencedColumnName = "ID")})
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<Composer> arrangers;
 
     @JsonView(Views.Public.class)
