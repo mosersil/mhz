@@ -41,6 +41,16 @@ import {LegalComponent} from './pages/legal/legal.component';
 import {RegistrationComponent} from './common/components/registration/registration.component';
 import {AddresslistGeneratorComponent} from './common/components/addresslist-generator/addresslist-generator.component';
 import {RouterModule} from "@angular/router";
+import {LibraryListComponent} from './library/library-list/library-list.component';
+import {LibraryDetailsComponent} from './library/library-details/library-details.component';
+import {LibraryHomeComponent} from './library/library-home/library-home.component';
+import {LibraryEditComponent} from './library/library-edit/library-edit.component';
+import {LibrarySearchComponent} from './library/library-search/library-search.component';
+import {LibraryFormComponent} from "./library/library-form/library-form.component";
+import {LibraryCreateCompositionComponent} from './library/library-create-composition/library-create-composition.component';
+import {LibraryFormMessagesComponent} from './library/library-form-messages/library-form-messages.component';
+import {LibraryUploadComponent} from './library/library-upload/library-upload.component';
+import {LibraryNavigationComponent} from './library/library-navigation/library-navigation.component';
 
 
 registerLocaleData(localeDe, 'de');
@@ -88,7 +98,17 @@ registerLocaleData(localeDe, 'de');
     SignupmemberLandingComponent,
     LegalComponent,
     RegistrationComponent,
-    AddresslistGeneratorComponent
+    LibraryListComponent,
+    LibraryDetailsComponent,
+    LibraryHomeComponent,
+    LibraryEditComponent,
+    LibrarySearchComponent,
+    LibraryFormComponent,
+    AddresslistGeneratorComponent,
+    LibraryCreateCompositionComponent,
+    LibraryFormMessagesComponent,
+    LibraryUploadComponent,
+    LibraryNavigationComponent
   ],
 
   providers: [

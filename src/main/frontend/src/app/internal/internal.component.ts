@@ -7,6 +7,8 @@ import {saveAs} from "file-saver";
 import {ChangePasswordResponse} from "../change-password-response";
 import {IMyDpOptions} from 'mydatepicker';
 import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Composition} from "../common/entities/composition";
+import {LibraryService} from "../common/services/library.service";
 
 
 @Component({
@@ -38,14 +40,18 @@ export class InternalComponent implements OnInit {
   error_confirmpassword_msg: string;
   today = new Date();
   closeResult: string;
+  currentCompositions: Composition[];
 
 
-  constructor(private http: HttpClient, private _authenticationService: AuthenticationService, private modalService: NgbModal) {
+  constructor(private libraryService: LibraryService, private http: HttpClient, private _authenticationService: AuthenticationService, private modalService: NgbModal) {
   }
 
   ngOnInit() {
     this.reloadData();
     this.getAvailableFiles();
+    this.libraryService.current().subscribe(data => {
+      this.currentCompositions=data;
+    });
   }
 
   open(content) {

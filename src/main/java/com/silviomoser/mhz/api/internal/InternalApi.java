@@ -11,8 +11,8 @@ import com.silviomoser.mhz.security.utils.SecurityUtils;
 import com.silviomoser.mhz.services.AddresslistService;
 import com.silviomoser.mhz.services.CalendarService;
 import com.silviomoser.mhz.services.CrudServiceException;
-import com.silviomoser.mhz.services.FileService;
 import com.silviomoser.mhz.services.PersonService;
+import com.silviomoser.mhz.services.StaticFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -44,7 +44,7 @@ public class InternalApi implements ApiController {
     CalendarService calendarService;
 
     @Autowired
-    private FileService fileService;
+    private StaticFileService fileService;
 
     @Autowired
     private AddresslistService addresslistService;

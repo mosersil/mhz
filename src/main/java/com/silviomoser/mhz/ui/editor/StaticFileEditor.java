@@ -5,23 +5,14 @@ import com.silviomoser.mhz.data.StaticFile;
 import com.silviomoser.mhz.data.type.FileType;
 import com.silviomoser.mhz.data.type.StaticFileCategory;
 import com.silviomoser.mhz.repository.RoleRepository;
-import com.silviomoser.mhz.security.utils.SecurityUtils;
 import com.silviomoser.mhz.services.FileHandle;
-import com.silviomoser.mhz.services.FileService;
+import com.silviomoser.mhz.services.StaticFileService;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.ItemCaptionGenerator;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.RadioButtonGroup;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.FileOutputStream;
@@ -39,7 +30,7 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
     RoleRepository roleRepository;
 
     @Autowired
-    FileService fileService;
+    StaticFileService fileService;
 
     @Override
     public Layout initLayout() {
@@ -114,7 +105,7 @@ public class StaticFileEditor extends AbstractEditor<StaticFile> {
         public void uploadSucceeded(Upload.SucceededEvent event) {
             actualEntity.setFileType(FileType.byMimeType(event.getMIMEType().toUpperCase()));
             actualEntity.setLocation(this.fileHandle.getName());
-            actualEntity.setPerson(SecurityUtils.getMe());
+            //actualEntity.setPerson(SecurityUtils.getMe());
         }
     }
 }

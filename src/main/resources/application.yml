@@ -2,6 +2,12 @@ server:
   port: 8085
 
 
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
 ---
 spring:
   profiles: local
@@ -79,3 +85,4 @@ spring:
             trust: '*'
           starttls:
             enable: true
+

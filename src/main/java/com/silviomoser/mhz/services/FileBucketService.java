@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -17,13 +18,12 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
-public abstract class AbstractFileService {
+@Service
+public class FileBucketService {
 
-    private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.jpg");
+    //private static Pattern VALID_NAME = Pattern.compile("[\\sA-Za-z0-9_-]+.[A-Za-z0-9]+");
 
     @Autowired
     private MinioClient minioClient;
@@ -62,10 +62,12 @@ public abstract class AbstractFileService {
 
 
     public byte[] getFile(String bucket, String name) throws ServiceException {
+        /*
         Matcher matcher = VALID_NAME.matcher(name);
         if (!matcher.matches()) {
             throw new ServiceException("Invalid resource name");
         }
+        */
 
         byte[] returnBytes;
         try {
@@ -109,7 +111,7 @@ public abstract class AbstractFileService {
             log.error(e.getMessage(), e);
             throw new ServiceException(e.getMessage(), e);
         }
-        log.debug("Returning {} background images ", files.size());
+        log.debug("Returning {} background images ", files == null ? null : files.size());
         return files;
     }
 

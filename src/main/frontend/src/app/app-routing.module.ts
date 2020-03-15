@@ -17,6 +17,10 @@ import {TransactionsComponent} from "./transactions/transactions.component";
 import {ForgotLandingComponent} from "./forgot-landing/forgot-landing.component";
 import {SignupmemberComponent} from "./signupmember/signupmember.component";
 import {SignupmemberLandingComponent} from "./signupmember-landing/signupmember-landing.component";
+import {LibraryDetailsComponent} from "./library/library-details/library-details.component";
+import {LibraryEditComponent} from "./library/library-edit/library-edit.component";
+import {LibrarySearchComponent} from "./library/library-search/library-search.component";
+import {LibraryCreateCompositionComponent} from "./library/library-create-composition/library-create-composition.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -37,6 +41,11 @@ const routes: Routes = [
   {path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: 'app', redirectTo: '/app'},
+  {path: 'library', component: LibrarySearchComponent, canActivate: [AuthGuard]},
+  {path: 'library/archive', component: LibrarySearchComponent, canActivate: [AuthGuard]},
+  {path: 'library/create', component: LibraryCreateCompositionComponent, canActivate: [AuthGuard]},
+  {path: 'library/composition/edit/:id', component: LibraryEditComponent, canActivate: [AuthGuard]},
+  {path: 'library/composition/:id', component: LibraryDetailsComponent,canActivate: [AuthGuard]},
   {path: '**', component: HomeComponent},
 
 

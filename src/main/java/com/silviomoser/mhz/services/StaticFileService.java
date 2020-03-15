@@ -33,7 +33,7 @@ import static com.silviomoser.mhz.utils.StringUtils.isBlank;
 @Getter
 @Setter
 @Slf4j
-public class FileService extends AbstractCrudService<StaticFile> {
+public class StaticFileService extends AbstractCrudService<StaticFile> {
 
     @Autowired
     private FileServiceConfiguration fileServiceConfiguration;
@@ -41,6 +41,7 @@ public class FileService extends AbstractCrudService<StaticFile> {
     @Autowired
     private StaticFileRepository staticFileRepository;
 
+    @Deprecated
     public FileHandle create(String mimeType) {
         final UUID uuid = UUID.randomUUID();
         final File file = StaticFileUtils.assembleTargetFile(fileServiceConfiguration.getDirectory(), uuid.toString(), mimeType);
@@ -52,12 +53,13 @@ public class FileService extends AbstractCrudService<StaticFile> {
                 .build();
     }
 
-
+    @Deprecated
     public ByteArrayInputStream download(long id) throws CrudServiceException {
         final StaticFile staticFile = get(id);
         return download(staticFile);
     }
 
+    @Deprecated
     public ByteArrayInputStream download(StaticFile staticFile) throws CrudServiceException {
         if (staticFile.getRole() != null) {
             log.debug("file {} requires authorization. Required role: {} ", staticFile.getId(), staticFile.getRole());
@@ -86,10 +88,10 @@ public class FileService extends AbstractCrudService<StaticFile> {
         }
     }
 
+    @Deprecated
     public StaticFile save(FileHandle fileHandle, String title, String description, Role role, String keywords, CalendarEvent event) {
 
         final StaticFile staticFile = StaticFile.builder()
-                .person(SecurityUtils.getMe())
                 .fileType(fileHandle.getFileType())
                 .title(title)
                 .staticFileCategory(StaticFileCategory.GENERIC)
@@ -107,6 +109,7 @@ public class FileService extends AbstractCrudService<StaticFile> {
     }
 
 
+    @Deprecated
     public List<StaticFile> getFiles(String category) {
         if (isBlank(category)) {
             return staticFileRepository.findAll();

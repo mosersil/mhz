@@ -1,0 +1,18 @@
+<div class="container bg-white rounded shadow p-4">
+
+  <app-library-navigation></app-library-navigation>
+
+  <ul class="nav" *ngIf="isAdmin">
+    <li class="nav-item">
+      <a class="nav-link active" routerLink="/library/create"><i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Neu...</a>
+    </li>
+  </ul>
+
+  <div class="form-group">
+    <input id="name" type="search" class="form-control" name="name" placeholder="Suche nach Titel..."
+           (keyup)="searchTitleKeyUp.next($event.target.value)"
+    />
+  </div>
+
+  <app-library-list [compositions]="foundCompositions"></app-library-list>
+</div>

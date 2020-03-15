@@ -6,7 +6,7 @@ import com.silviomoser.mhz.data.StaticFile;
 import com.silviomoser.mhz.data.type.DressCode;
 import com.silviomoser.mhz.repository.RoleRepository;
 import com.silviomoser.mhz.services.FileHandle;
-import com.silviomoser.mhz.services.FileService;
+import com.silviomoser.mhz.services.StaticFileService;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -40,7 +40,7 @@ import java.util.HashSet;
 public class CalendarEditor extends AbstractEditor<CalendarEvent> {
 
     @Autowired
-    FileService fileService;
+    StaticFileService fileService;
 
     @Autowired
     RoleRepository roleRepository;
