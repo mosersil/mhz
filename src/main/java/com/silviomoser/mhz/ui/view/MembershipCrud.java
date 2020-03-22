@@ -3,6 +3,7 @@ package com.silviomoser.mhz.ui.view;
 import com.silviomoser.mhz.data.Membership;
 import com.silviomoser.mhz.data.Organization;
 import com.silviomoser.mhz.data.Person;
+import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.MembershipService;
 import com.silviomoser.mhz.services.OrganizationService;
 import com.silviomoser.mhz.services.PersonService;
@@ -116,24 +117,16 @@ public class MembershipCrud implements View {
 
             crud.setAddOperation(p -> {
                 p.setOrganization(organization);
-                try {
-                    return membershipService.addOrUpdate(p);
-                } catch (ServiceException e) {
-                    throw new RuntimeException(e.getLocalizedMessage());
-                }
+                return membershipService.addOrUpdate(p);
             });
 
             crud.setUpdateOperation(p -> {
-                try {
-                    return membershipService.addOrUpdate(p);
-                } catch (ServiceException e) {
-                    throw new RuntimeException(e.getLocalizedMessage());
-                }
+                return membershipService.addOrUpdate(p);
             });
             crud.setDeleteOperation(article -> {
                 try {
                     membershipService.delete(article);
-                } catch (ServiceException e) {
+                } catch (CrudServiceException e) {
                     throw new RuntimeException(e.getLocalizedMessage());
                 }
             });

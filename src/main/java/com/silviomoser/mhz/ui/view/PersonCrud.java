@@ -3,8 +3,8 @@ package com.silviomoser.mhz.ui.view;
 import com.silviomoser.mhz.data.Person;
 import com.silviomoser.mhz.data.type.Gender;
 import com.silviomoser.mhz.data.type.PreferredChannel;
+import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.PersonService;
-import com.silviomoser.mhz.services.ServiceException;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -94,7 +94,7 @@ public class PersonCrud  implements View {
         crud.setAddOperation(p -> {
             try {
                 return personService.add(p);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });
@@ -102,14 +102,14 @@ public class PersonCrud  implements View {
         crud.setUpdateOperation(p -> {
             try {
                 return personService.update(p);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });
         crud.setDeleteOperation(person -> {
             try {
                 personService.delete(person);
-            } catch (ServiceException e) {
+            } catch (CrudServiceException e) {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
         });

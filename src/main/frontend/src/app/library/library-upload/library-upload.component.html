@@ -1,0 +1,23 @@
+<input
+  type="file"
+  #file
+  style="display: none"
+  (change)="onFilesAdded()"
+  multiple
+/>
+
+<button
+  [disabled]="uploading || uploadSuccessful"
+  class="btn btn-primary"
+  (click)="addFiles()"
+>
+  {{btn_label}}
+</button>
+
+
+
+<ul class="list-group" *ngFor="let file of files">
+  <li class="list-group-item">{{file.name}}</li>
+</ul>
+
+

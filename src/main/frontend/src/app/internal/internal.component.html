@@ -19,6 +19,10 @@
     </li>
 
     <li class="nav-item" *ngIf="person.organizations.includes('Aktivmitglied')">
+      <a class="nav-link" id="repertoire-tab" href="#repertoire" role="tab" data-toggle="tab">Repertoire</a>
+    </li>
+
+    <li class="nav-item" *ngIf="person.organizations.includes('Aktivmitglied')">
       <a class="nav-link" id="practice-tab" href="#practice" role="tab" data-toggle="tab">Übungsmaterial</a>
     </li>
 
@@ -461,6 +465,13 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="repertoire" aria-labelledby="repertoire-tab">
+      <div class="container mt-3">
+        <h3>Repertoire</h3>
+        <app-library-list [compositions]="currentCompositions"></app-library-list>
       </div>
     </div>
 

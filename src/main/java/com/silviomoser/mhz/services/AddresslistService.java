@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -16,7 +17,8 @@ public class AddresslistService {
     private AddressListRepository addressListRepository;
 
     public List<AddressListEntry> generateAddressList(List<String> organization) {
-        return addressListRepository.findByOrganization(organization);
+        List<AddressListEntry> results = addressListRepository.findByOrganization(organization);
+        return results.stream().distinct().collect(Collectors.toList());
     }
 
 }

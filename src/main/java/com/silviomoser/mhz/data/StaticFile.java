@@ -62,6 +62,7 @@ public class StaticFile extends AbstractEntity {
     @ToString.Exclude
     private Person person;
 
+    @JsonView(Views.Public.class)
     @Column(name = "LOCATION")
     @Size(max = 100)
     private String location;

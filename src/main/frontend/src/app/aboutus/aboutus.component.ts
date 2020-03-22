@@ -148,42 +148,42 @@ export class AboutusComponent implements OnInit {
       });
 
       this.president = this.members_vorstand.filter(item => {
-        if (item.function === 'Präsident') {
+        if (item.function === 'Präsident' || item.function === 'Präsidentin') {
           return item;
         }
       });
 
 
       this.cashier = this.members_vorstand.filter(item => {
-          if (item.function === 'Kassier') {
+          if (item.function === 'Kassier' || item.function === 'Kassierin') {
             return item;
           }
         }
       );
 
       this.secretary = this.members_vorstand.filter(item => {
-          if (item.function === 'Aktuar') {
+          if (item.function === 'Aktuar'  || item.function === 'Aktuarin') {
             return item;
           }
         }
       );
 
       this.librarian = this.members_vorstand.filter(item => {
-          if (item.function === 'Notenverwalter' || item.function === 'Bibliothekar') {
+          if (item.function === 'Notenverwalter'  || item.function === 'Notenverwalterin' || item.function === 'Bibliothekar'  || item.function === 'Bibliothekarin') {
             return item;
           }
         }
       );
 
       this.logistics = this.members_vorstand.filter(item => {
-          if (item.function === 'Materialverwalter') {
+          if (item.function === 'Materialverwalter'  || item.function === 'Materialverwalterin') {
             return item;
           }
         }
       );
 
       this.board_member = this.members_vorstand.filter(item => {
-          if (item.function === 'Beisitzer') {
+          if (item.function === 'Beisitzer'  || item.function === 'Beisitzerin') {
             return item;
           }
         }

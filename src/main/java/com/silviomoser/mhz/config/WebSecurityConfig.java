@@ -1,6 +1,11 @@
 package com.silviomoser.mhz.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.silviomoser.mhz.api.article.ArticleApi;
+import com.silviomoser.mhz.api.calendar.CalendarApi;
+import com.silviomoser.mhz.api.library.ComposerApi;
+import com.silviomoser.mhz.api.library.CompositionApi;
+import com.silviomoser.mhz.api.library.RepertoireApi;
 import com.silviomoser.mhz.security.AuthRole;
 import com.silviomoser.mhz.security.AuthUser;
 import com.silviomoser.mhz.security.AuthenticationResult;
@@ -13,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -51,6 +57,9 @@ import java.util.stream.Collectors;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_USER = "USER";
+
     @Autowired
     private SecurityUserDetailsService userDetailsService;
 
@@ -83,16 +92,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         try {
             if (e instanceof BadCredentialsException) {
                 httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Falscher Benutzername oder falsches Passwort");
-            }
-            else if (e instanceof DisabledException) {
+            } else if (e instanceof DisabledException) {
                 httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Zugang wurde deaktiviert");
-            }
-            else {
+            } else {
                 httpServletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unbekannter Login-Fehler");
                 log.error("Caught unexpected exception: " + e.getClass(), e);
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            log.error("Caught unexpected exceptoin : " + e.getMessage(), ioe);
         }
     }
 
@@ -156,6 +163,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/vaadinServlet/UIDL/**").hasRole("ADMIN")
                 .antMatchers("/app/**").hasRole("ADMIN")
                 .antMatchers("/app").hasRole("ADMIN")
+
+                //Article API
+                .antMatchers(HttpMethod.POST, ArticleApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PUT, ArticleApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.DELETE, ArticleApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+
+                //Calendar API
+                .antMatchers(HttpMethod.POST, CalendarApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PUT, CalendarApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.DELETE, CalendarApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+
+                //Composer API
+                .antMatchers(HttpMethod.POST, ComposerApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PUT, ComposerApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.DELETE, ComposerApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+
+                //Composition API
+                .antMatchers(HttpMethod.POST, CompositionApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PUT, CompositionApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.DELETE, CompositionApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+
+                //Repertoire API
+                .antMatchers(HttpMethod.POST, RepertoireApi.API_CONTEXTROOT).hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PUT, RepertoireApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.DELETE, RepertoireApi.API_CONTEXTROOT + "/**").hasRole(ROLE_ADMIN)
+
+                //Downloads
+                .antMatchers("/api/securedownload/**").authenticated()
+
                 .antMatchers("/internal/api/**").hasRole("USER")
                 .antMatchers("/api/protected/**").hasRole("USER")
                 .and()

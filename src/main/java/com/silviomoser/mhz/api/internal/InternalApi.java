@@ -10,9 +10,9 @@ import com.silviomoser.mhz.data.type.AddressListFormat;
 import com.silviomoser.mhz.security.utils.SecurityUtils;
 import com.silviomoser.mhz.services.AddresslistService;
 import com.silviomoser.mhz.services.CalendarService;
-import com.silviomoser.mhz.services.FileService;
+import com.silviomoser.mhz.services.CrudServiceException;
 import com.silviomoser.mhz.services.PersonService;
-import com.silviomoser.mhz.services.ServiceException;
+import com.silviomoser.mhz.services.StaticFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -44,7 +44,7 @@ public class InternalApi implements ApiController {
     CalendarService calendarService;
 
     @Autowired
-    private FileService fileService;
+    private StaticFileService fileService;
 
     @Autowired
     private AddresslistService addresslistService;
@@ -102,7 +102,7 @@ public class InternalApi implements ApiController {
 
 
     @RequestMapping(value = URL_INTERNAL_ADDRESS, method = RequestMethod.POST)
-    public void postAddress(@RequestBody PostAddressForm postAddressForm) throws ServiceException {
+    public void postAddress(@RequestBody PostAddressForm postAddressForm) throws CrudServiceException {
         final Person person = SecurityUtils.getMe();
         person.setGender(postAddressForm.getGender());
         person.setCompany(isBlank(postAddressForm.getCompany()) ? null : postAddressForm.getCompany());
@@ -118,7 +118,7 @@ public class InternalApi implements ApiController {
 
 
     @RequestMapping(value = URL_INTERNAL_CONTACTDETAILS, method = RequestMethod.POST)
-    public void postAddress(@RequestBody PostContactForm postAddressForm) throws ServiceException {
+    public void postAddress(@RequestBody PostContactForm postAddressForm) throws CrudServiceException {
         final Person person = SecurityUtils.getMe();
         person.setEmail(isBlank(postAddressForm.getEmail()) ? null : postAddressForm.getEmail());
         person.setMobile(isBlank(postAddressForm.getMobile()) ? null : postAddressForm.getMobile());
@@ -128,7 +128,7 @@ public class InternalApi implements ApiController {
     }
 
     @RequestMapping(value = URL_INTERNAL_BIRTHDAY, method = RequestMethod.POST)
-    public void postBirthDay(@RequestBody BirthdayForm birthdayForm) throws ServiceException {
+    public void postBirthDay(@RequestBody BirthdayForm birthdayForm) throws CrudServiceException {
         final Person person = SecurityUtils.getMe();
         person.setBirthDate(birthdayForm.getDate());
         personService.update(person);
@@ -137,18 +137,16 @@ public class InternalApi implements ApiController {
 
     @PreAuthorize("hasAuthority('ROLE_DATAVIEWER')")
     @RequestMapping(value = URL_INTERNAL_DOWNLOAD, method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> staticFileDownload(@RequestParam(name = "id") Long id) {
+    public ResponseEntity<InputStreamResource> staticFileDownload(@RequestParam(name = "id") Long id) throws CrudServiceException {
+
+        final StaticFile staticFile = fileService.get(id);
         try {
-            final StaticFile staticFile = fileService.get(id);
-            try {
-                final ByteArrayInputStream bis = fileService.download(staticFile);
-                return downloadResponse(bis, staticFile);
-            } catch (ServiceException e) {
-                throw new ApiException(e.getMessage());
-            }
-        } catch (ServiceException e) {
+            final ByteArrayInputStream bis = fileService.download(staticFile);
+            return downloadResponse(bis, staticFile);
+        } catch (CrudServiceException e) {
             throw new ApiException(e.getMessage());
         }
+
     }
 
 

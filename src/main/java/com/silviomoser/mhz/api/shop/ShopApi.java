@@ -149,7 +149,13 @@ public class ShopApi {
 
     @RequestMapping(value = "/api/protected/shop/receipt", method = RequestMethod.GET)
     public ModelAndView getReceipt(@RequestParam(name = "id") long id) {
-        ShopTransaction shopTransaction = shopTransactionRepository.findById(id).get();
+        final Optional<ShopTransaction> optionalShopTransaction = shopTransactionRepository.findById(id);
+        if (!optionalShopTransaction.isPresent()) {
+            log.warn(String.format("Could not find shop transaction with ID '%s'", id));
+            throw new ApiException(String.format("Could not find shop transaction with ID '%s'", id));
+        }
+        final ShopTransaction shopTransaction = optionalShopTransaction.get();
+
         if (shopTransaction.getPerson().equals(SecurityUtils.getMe())) {
             try {
                 log.debug("Assemble document {} in format {}", id, "PDF");

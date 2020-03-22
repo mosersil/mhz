@@ -1,7 +1,6 @@
 package com.silviomoser.mhz.ui.view;
 
 import com.silviomoser.mhz.data.StaticFile;
-import com.silviomoser.mhz.security.utils.SecurityUtils;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Grid;
 
@@ -23,7 +22,7 @@ public class StaticFileView extends AbstractCrudView<StaticFile> {
 
     @Override
     public StaticFile createNew() {
-        return StaticFile.builder().person(SecurityUtils.getMe()).created(LocalDateTime.now()).build();
+        return StaticFile.builder().created(LocalDateTime.now()).build();
     }
 
     @Override

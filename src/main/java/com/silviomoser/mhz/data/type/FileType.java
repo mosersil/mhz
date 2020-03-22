@@ -9,7 +9,8 @@ public enum FileType {
     XLS("application/vnd.ms-excel", ".xls", "excel"),
     XLSX("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx", "excel"),
     MPEG_AUDIO("audio/mpeg", ".mp3", "audio"),
-    MP3_AUDIO("audio/mp3", ".mp3", "audio");
+    MP3_AUDIO("audio/mp3", ".mp3", "audio"),
+    JPG("image/jpeg", ".jpg", "image");
 
 
     private String mime;
@@ -28,7 +29,7 @@ public enum FileType {
                 return fileType;
             }
         }
-        throw new IllegalArgumentException(String.format("%s is not a supported MIME type type"));
+        throw new IllegalArgumentException(String.format("%s is not a supported MIME type type", mime));
     }
 
     public String getMime() {
